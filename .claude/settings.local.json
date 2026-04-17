@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:www.belenios.org)",
+      "WebFetch(domain:opavote.com)",
+      "WebFetch(domain:framagit.org)",
+      "WebFetch(domain:strawpoll.com)",
+      "WebFetch(domain:electionbuddy.com)",
+      "WebFetch(domain:florence-chatelot.fr)",
+      "WebFetch(domain:civs1.civs.us)",
+      "WebFetch(domain:elekto.dev)",
+      "WebFetch(domain:www.balotilo.org)",
+      "WebFetch(domain:opensourcepolitics.eu)"
+    ]
+  }
+}
