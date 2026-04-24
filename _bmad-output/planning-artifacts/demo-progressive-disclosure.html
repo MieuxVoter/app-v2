@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MieuxVoter — démo dévoilement progressif</title>
+<style>
+  :root {
+    --bg: #f6f7f9;
+    --card: #ffffff;
+    --ink: #1b1f27;
+    --ink-soft: #5a6374;
+    --ink-faint: #8a95a8;
+    --line: #e3e7ee;
+    --brand: #e87a1e;
+    --brand-soft: #fff2e6;
+    --ok: #2f9d5a;
+    --shadow: 0 1px 2px rgba(15,20,30,.04), 0 8px 24px rgba(15,20,30,.06);
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink);
+    font: 15px/1.5 -apple-system, "Segoe UI", system-ui, Roboto, Helvetica, Arial, sans-serif; }
+  .page { max-width: 1080px; margin: 0 auto; padding: 32px 24px 80px; }
+  header.intro { margin-bottom: 28px; }
+  header.intro h1 { font-size: 22px; margin: 0 0 6px; letter-spacing: -.01em; }
+  header.intro p { color: var(--ink-soft); margin: 0; max-width: 70ch; }
+  .legend {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: #eef4ff; color: #2a4a9c; border: 1px solid #d6e2f9;
+    padding: 6px 10px; border-radius: 999px; font-size: 12px; margin-top: 10px;
+  }
+  .stage {
+    display: grid; grid-template-columns: 1fr; gap: 20px;
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    box-shadow: var(--shadow); padding: 28px;
+  }
+  @media (min-width: 820px) {
+    .stage { grid-template-columns: 1.1fr .9fr; align-items: start; }
+  }
+  .mock h2 { font-size: 13px; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--ink-faint); margin: 0 0 14px; font-weight: 600; }
+  .mock label { display: block; font-size: 13px; color: var(--ink-soft); margin: 14px 0 6px; }
+  .mock input[type="text"] {
+    width: 100%; padding: 11px 12px; border: 1px solid var(--line); border-radius: 8px;
+    font-size: 15px; background: #fbfcfd; color: var(--ink);
+  }
+  .mock input[type="text"]:focus { outline: 2px solid var(--brand-soft); border-color: var(--brand); }
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  .option-row { display: flex; gap: 8px; }
+  .option-row input { flex: 1; }
+  .btn-primary {
+    margin-top: 18px; width: 100%; padding: 12px 16px; border: 0; border-radius: 8px;
+    background: var(--brand); color: #fff; font-weight: 600; font-size: 15px; cursor: pointer;
+  }
+  .btn-primary:hover { filter: brightness(.96); }
+
+  /* the single, quiet entry point into organisational features */
+  .intent-link {
+    margin-top: 18px; padding-top: 16px; border-top: 1px dashed var(--line);
+    font-size: 13px; color: var(--ink-faint); text-align: center;
+  }
+  .intent-link button {
+    background: none; border: 0; padding: 0; color: var(--ink-soft);
+    text-decoration: underline; cursor: pointer; font: inherit;
+  }
+  .intent-link button:hover { color: var(--brand); }
+
+  /* right column: explanation + state switcher */
+  .explain { padding: 6px 0; }
+  .explain h2 { font-size: 13px; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--ink-faint); margin: 0 0 14px; font-weight: 600; }
+  .state-pill {
+    display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 12px;
+    background: var(--brand-soft); color: #a04a00; font-weight: 600;
+  }
+  .state-title { font-size: 17px; margin: 10px 0 6px; }
+  .state-desc { color: var(--ink-soft); margin: 0 0 14px; }
+  .principle { background: #fafbfd; border: 1px solid var(--line); border-radius: 8px;
+    padding: 12px 14px; font-size: 13px; color: var(--ink-soft); }
+  .principle strong { color: var(--ink); }
+
+  /* the intent modal */
+  .modal-backdrop {
+    position: fixed; inset: 0; background: rgba(15,20,30,.45);
+    display: none; align-items: center; justify-content: center; padding: 20px; z-index: 20;
+  }
+  .modal-backdrop.open { display: flex; }
+  .modal {
+    background: #fff; border-radius: var(--radius); box-shadow: var(--shadow);
+    max-width: 440px; width: 100%; padding: 24px;
+  }
+  .modal h3 { margin: 0 0 6px; font-size: 17px; }
+  .modal p { margin: 0 0 16px; color: var(--ink-soft); font-size: 14px; }
+  .modal label { display: block; font-size: 13px; color: var(--ink-soft); margin: 10px 0 4px; }
+  .modal input { width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; }
+  .modal .row { display: flex; gap: 8px; margin-top: 14px; }
+  .modal .row button { flex: 1; padding: 10px 14px; border-radius: 8px; font-size: 14px; cursor: pointer; }
+  .modal .row .cancel { background: #fff; border: 1px solid var(--line); color: var(--ink-soft); }
+  .modal .row .confirm { background: var(--brand); border: 0; color: #fff; font-weight: 600; }
+
+  /* extra fields shown after account */
+  .advanced { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); }
+  .advanced-head {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+    font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--ok);
+  }
+  .advanced-head .dot { width: 8px; height: 8px; border-radius: 999px; background: var(--ok); }
+  .advanced textarea {
+    width: 100%; min-height: 70px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px;
+    font: inherit; resize: vertical;
+  }
+  .toggles { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+  .toggle { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--ink); }
+  .toggle input { accent-color: var(--brand); }
+
+  .reset-bar { margin-top: 22px; text-align: center; }
+  .reset-bar button { background: none; border: 0; color: var(--ink-faint);
+    text-decoration: underline; cursor: pointer; font-size: 12px; }
+
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="intro">
+    <h1>Démo — dévoilement progressif par intention</h1>
+    <p>
+      Un seul produit, un seul parcours. Par défaut, seul le strict nécessaire est visible.
+      Les fonctionnalités organisationnelles n'apparaissent que lorsque l'utilisateur exprime
+      l'intention de s'en servir.
+    </p>
+    <div class="legend" id="legend">État actuel : <strong style="margin-left:4px;">informel (anonyme)</strong></div>
+  </header>
+
+  <section class="stage">
+
+    <!-- left: the product mock -->
+    <div class="mock">
+      <h2>Créer un vote</h2>
+
+      <label for="q">Question posée aux votants</label>
+      <input id="q" type="text" placeholder="Où mange-t-on vendredi soir ?" />
+
+      <label>Propositions</label>
+      <div class="options">
+        <div class="option-row"><input type="text" placeholder="Le bistrot d'en face" /></div>
+        <div class="option-row"><input type="text" placeholder="La pizzeria rue Lafayette" /></div>
+        <div class="option-row"><input type="text" placeholder="+ Ajouter une proposition" /></div>
+      </div>
+
+      <!-- Advanced block: hidden by default, revealed after the user expresses an intent -->
+      <div class="advanced hidden" id="advanced">
+        <div class="advanced-head"><span class="dot"></span> Options organisationnelles activées</div>
+
+        <label for="emails">Inviter nominativement (emails, un par ligne)</label>
+        <textarea id="emails" placeholder="marie@exemple.fr&#10;paul@exemple.fr"></textarea>
+
+        <div class="toggles">
+          <label class="toggle"><input type="checkbox" checked /> Liste d'émargement (voir qui a voté)</label>
+          <label class="toggle"><input type="checkbox" /> Relancer automatiquement les non-votants</label>
+          <label class="toggle"><input type="checkbox" /> Export PDF / CSV à la clôture</label>
+        </div>
+      </div>
+
+      <button class="btn-primary">Créer et partager le vote</button>
+
+      <!-- The ONLY entry point to organisational features, before the user expresses intent -->
+      <div class="intent-link" id="intentLink">
+        <button id="openIntent">Besoin d'inviter des personnes précises ou de suivre qui a voté ?</button>
+      </div>
+    </div>
+
+    <!-- right: narrative + state switcher -->
+    <aside class="explain">
+      <h2>Principe</h2>
+      <div id="stateBlock">
+        <span class="state-pill" id="statePill">État 1 · parcours par défaut</span>
+        <p class="state-title" id="stateTitle">3 champs, zéro friction.</p>
+        <p class="state-desc" id="stateDesc">
+          L'utilisateur qui veut juste choisir un restaurant ne voit que la question, les options, et le bouton de partage.
+          Aucune mention de compte, d'émargement, de relance ou d'export.
+        </p>
+        <div class="principle">
+          <strong>Règle</strong> — le compte n'est jamais promu comme une feature.
+          Il est invoqué uniquement quand l'utilisateur clique sur un besoin qui l'exige
+          (ici : <em>« inviter des personnes précises / suivre qui a voté »</em>).
+        </div>
+      </div>
+
+      <div class="reset-bar">
+        <button id="reset">Revenir à l'état initial</button>
+      </div>
+    </aside>
+  </section>
+
+</div>
+
+<!-- account modal triggered by the user's intent -->
+<div class="modal-backdrop" id="modal">
+  <div class="modal">
+    <h3>Créer un compte pour activer ces options</h3>
+    <p>
+      Inviter nominativement, suivre qui a voté, relancer les absents, exporter les résultats :
+      ces options nécessitent un compte (pour que tu puisses y revenir et piloter ton élection).
+    </p>
+    <label for="email">Email</label>
+    <input id="email" type="email" placeholder="toi@exemple.fr" />
+    <label for="pass">Mot de passe</label>
+    <input id="pass" type="password" placeholder="••••••••" />
+    <div class="row">
+      <button class="cancel" id="cancel">Pas maintenant</button>
+      <button class="confirm" id="confirm">Créer mon compte</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const openBtn   = document.getElementById('openIntent');
+  const modal     = document.getElementById('modal');
+  const cancel    = document.getElementById('cancel');
+  const confirm   = document.getElementById('confirm');
+  const advanced  = document.getElementById('advanced');
+  const intentLink= document.getElementById('intentLink');
+  const legend    = document.getElementById('legend');
+  const pill      = document.getElementById('statePill');
+  const title     = document.getElementById('stateTitle');
+  const desc      = document.getElementById('stateDesc');
+  const reset     = document.getElementById('reset');
+
+  function setState(step) {
+    if (step === 1) {
+      advanced.classList.add('hidden');
+      intentLink.classList.remove('hidden');
+      modal.classList.remove('open');
+      legend.innerHTML = 'État actuel : <strong style="margin-left:4px;">informel (anonyme)</strong>';
+      pill.textContent = 'État 1 · parcours par défaut';
+      title.textContent = '3 champs, zéro friction.';
+      desc.textContent = "L'utilisateur qui veut juste choisir un restaurant ne voit que la question, les options, et le bouton de partage. Aucune mention de compte, d'émargement, de relance ou d'export.";
+    }
+    if (step === 2) {
+      modal.classList.add('open');
+      legend.innerHTML = 'État actuel : <strong style="margin-left:4px;">intention exprimée → compte proposé</strong>';
+      pill.textContent = 'État 2 · intention captée';
+      title.textContent = "Le besoin déclenche le compte.";
+      desc.textContent = "L'utilisateur a cliqué sur un besoin (inviter nominativement / suivre qui a voté). Le compte n'est plus un obstacle abstrait : il est la contrepartie naturelle d'un besoin qu'il vient lui-même d'exprimer.";
+    }
+    if (step === 3) {
+      modal.classList.remove('open');
+      advanced.classList.remove('hidden');
+      intentLink.classList.add('hidden');
+      legend.innerHTML = 'État actuel : <strong style="margin-left:4px;">organisationnel (connecté)</strong>';
+      pill.textContent = 'État 3 · options débloquées';
+      title.textContent = "Les features orga apparaissent, et seulement celles-là.";
+      desc.textContent = "Une fois connecté, les options organisationnelles apparaissent dans le même formulaire. Pas de bascule vers une autre app, pas d'écran de choix initial : l'utilisateur continue là où il en était.";
+    }
+  }
+
+  openBtn.addEventListener('click', () => setState(2));
+  cancel .addEventListener('click', () => setState(1));
+  confirm.addEventListener('click', () => setState(3));
+  reset  .addEventListener('click', () => setState(1));
+</script>
+</body>
+</html>
