@@ -123,19 +123,19 @@ L'avantage structurel : la combinaison accessibilité + légitimité académique
 - Expansion européenne (multilingue)
 - Application mobile native
 
-## Modes de Vote
+## Matrix d'option de vote et traduction de leurs intentions
 
 MieuxVoter v2 supporte six modes de vote correspondant à des intentions et contextes distincts :
 
-| Nom | Contexte | Type | Admin | Vote validé par mail | Qui a voté (admin) | Qui a voté (tous) | Qui a voté quoi | Description | Usage estimé |
-|---|---|---|---|---|---|---|---|---|---|
-| **Vote rapide** | Informel | Public | Anonyme ou loggé | Non | Non | Non | Non | Choix collectif anonyme sans friction — les utilisateurs peuvent voter plusieurs fois. | ⭐ Rare |
-| **Vote rapide semi-transparent** | Informel | Public | loggé | Non | N/A | Oui | Non | Choix collectif où la liste d'émargement est visible mais on n'a pas le détail des votes. | ⭐⭐⭐⭐⭐ Très fréquent |
-| **Vote rapide transparent** | Informel | Public | Loggé | Non | N/A | N/A | Oui | Choix collectif transparent — tout le monde voit comment tout le monde a voté. | ⭐⭐⭐⭐⭐ Très fréquent |
-| **Sondage** | Organisé | Public | Loggé | Oui | Non | Non | Non | Recueil d'avis ouvert avec traçabilité — un email est requis pour limiter les votes multiples. | ⭐⭐ Occasionnel |
-| **Scrutin** | Organisé | Sur invitation | Loggé | N/A | Oui | Non | Non | Vote formel sur liste fermée — secret du vote garanti, émargement privé pour l'organisateur. | ⭐⭐⭐⭐ Fréquent |
-| **Scrutin avec liste d'émargement publique** | Organisé | Sur invitation | Loggé | N/A | Oui | Oui (nom choisi) | Non | Vote formel sur liste fermée — émargement visible par tous avec le nom choisi par l'électeur. Utile pour les AG avec obligation statutaire de transparence sur la participation. | ⭐⭐ Occasionnel |
-| **Scrutin transparent** | Organisé | Sur invitation | Loggé | N/A | N/A | N/A | Oui | Décision collégiale transparente — jury, comité de recrutement, CA. Chaque membre voit les votes de tous. | ⭐⭐ Occasionnel |
+| Nom | Contexte | Type | Admin | Vote validé par mail | Qui a voté (admin) | Qui a voté (tous) | Qui a voté quoi | Suppression auto | Option résultat | Description | Usage estimé |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| **Vote rapide** | Informel | Public | Anonyme ou loggé | Non | Non | Non | Non | 30j | Résultat direct | Choix collectif anonyme sans friction — les utilisateurs peuvent voter plusieurs fois. | ⭐ Rare |
+| **Vote rapide semi-transparent** | Informel | Public | loggé | Non | N/A | Oui | Non | 30J | Résultat direct | Choix collectif où la liste d'émargement est visible mais on n'a pas le détail des votes. | ⭐⭐⭐⭐⭐ Très fréquent |
+| **Vote rapide transparent** | Informel | Public | Loggé | Non | N/A | N/A | Oui | 30J | Résultat direct | Choix collectif transparent — tout le monde voit comment tout le monde a voté. | ⭐⭐⭐⭐⭐ Très fréquent |
+| **Sondage** | Organisé | Public | Loggé | Oui | Non | Non | Non | Non | Configurable (immédiat / à la clôture) | Recueil d'avis ouvert avec traçabilité — un email est requis pour limiter les votes multiples. | ⭐⭐ Occasionnel |
+| **Scrutin** | Organisé | Sur invitation | Loggé | N/A | Oui | Non | Non | Non | Configurable (immédiat / à la clôture) | Vote formel sur liste fermée — secret du vote garanti, émargement privé pour l'organisateur. | ⭐⭐⭐⭐ Fréquent |
+| **Scrutin avec liste d'émargement publique** | Organisé | Sur invitation | Loggé | N/A | Oui | Oui (nom choisi) | Non | Non | Configurable (immédiat / à la clôture) | Vote formel sur liste fermée — émargement visible par tous avec le nom choisi par l'électeur. Utile pour les AG avec obligation statutaire de transparence sur la participation. | ⭐⭐ Occasionnel |
+| **Scrutin transparent** | Organisé | Sur invitation | Loggé | N/A | N/A | N/A | Oui | Non | Configurable (immédiat / à la clôture) | Décision collégiale transparente — jury, comité de recrutement, CA. Chaque membre voit les votes de tous. | ⭐⭐ Occasionnel |
 
 ## Parcours Utilisateurs
 
