@@ -377,7 +377,7 @@ La combinaison token hashé + URL de vérification appliquée à un outil grand 
 
 - FR-01 : L'organisateur peut créer une élection sans compte en moins de 2 minutes (de l'ouverture de l'app à la génération du lien de partage).
 - FR-02 : L'organisateur peut créer une élection avec un compte (magic-link email) — aucun mot de passe requis.
-- FR-03 : La création d'élection expose les 7 modes de vote définis dans la matrice d'options ; chaque mode est accompagné d'une description de son intention et de ses effets sur la transparence.
+- FR-03 : La création d'élection expose les 7 modes de vote définis dans la matrice d'options ; chaque mode est accompagné d'au moins une phrase décrivant son intention et d'une indication explicite de son niveau de transparence (qui voit quoi).
 - FR-04 : L'organisateur saisit un titre, une question, et au minimum 2 options de réponse.
 - FR-05 : Les CGU sont présentées et doivent être acceptées à la création de toute élection ou de tout compte.
 - FR-06 : L'IP et le timestamp de création sont enregistrés systématiquement pour toute élection (traçabilité LCEN).
@@ -424,6 +424,7 @@ La combinaison token hashé + URL de vérification appliquée à un outil grand 
 - FR-24 : Le tableau de bord invitations affiche pour chaque électeur son statut en temps réel : lien non ouvert / lien ouvert / a voté.
 - FR-25 : L'organisateur peut envoyer une relance ciblée aux électeurs n'ayant pas encore voté, sans accéder au contenu de leurs votes.
 - FR-26 : L'organisateur peut exporter la liste d'émargement en PDF et CSV à tout moment après la clôture.
+- FR-27 : L'organisateur peut générer un QR code unique par élection affichable en salle, permettant aux participants présents physiquement de voter depuis leur téléphone sans lien d'invitation préalable (compatible avec tous les modes publics).
 
 ---
 
@@ -463,6 +464,10 @@ La combinaison token hashé + URL de vérification appliquée à un outil grand 
 - NFR-15 : L'interface de vote est conforme WCAG 2.1 niveau AA pour les parcours critiques : création d'élection, vote, consultation des résultats.
 - NFR-16 : Le bulletin de vote est utilisable au clavier seul (navigation par tabulation, validation par Entrée) et compatible avec les lecteurs d'écran courants (VoiceOver, NVDA).
 - NFR-17 : Le contraste des éléments interactifs (boutons, mentions de vote) respecte un ratio minimum de 4,5:1.
+
+### Compatibilité navigateurs
+
+- NFR-20 : L'application est fonctionnelle sur les deux dernières versions majeures des navigateurs suivants : Chrome, Firefox, Safari, Edge — couvrant au minimum 95 % des parts de marché navigateurs mesurées sur le trafic v1.
 
 ### Internationalisation
 
