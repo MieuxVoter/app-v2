@@ -130,8 +130,8 @@ MieuxVoter v2 supporte six modes de vote correspondant à des intentions et cont
 | Nom | Contexte | Type | Admin | Vote validé par mail | Qui a voté (admin) | Qui a voté (tous) | Qui a voté quoi | Suppression auto | Option résultat | Description | Usage estimé |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | **Vote rapide** | Informel | Public | Anonyme ou loggé | Non | Non | Non | Non | 30j | Résultat direct | Choix collectif anonyme sans friction — les utilisateurs peuvent voter plusieurs fois. | ⭐ Rare |
-| **Vote rapide semi-transparent** | Informel | Public | loggé | Non | N/A | Oui | Non | 30J | Résultat direct | Choix collectif où la liste d'émargement est visible mais on n'a pas le détail des votes. | ⭐⭐⭐⭐⭐ Très fréquent |
-| **Vote rapide transparent** | Informel | Public | Loggé | Non | N/A | N/A | Oui | 30J | Résultat direct | Choix collectif transparent — tout le monde voit comment tout le monde a voté. | ⭐⭐⭐⭐⭐ Très fréquent |
+| **Vote rapide semi-transparent** | Informel | Public | Anonyme ou loggé | Non | N/A | Oui | Non | 30J | Résultat direct | Choix collectif où la liste d'émargement est visible mais on n'a pas le détail des votes. | ⭐⭐⭐⭐⭐ Très fréquent |
+| **Vote rapide transparent** | Informel | Public | Anonyme ou loggé | Non | N/A | N/A | Oui | 30J | Résultat direct | Choix collectif transparent — tout le monde voit comment tout le monde a voté. | ⭐⭐⭐⭐⭐ Très fréquent |
 | **Sondage** | Organisé | Public | Loggé | Oui | Non | Non | Non | Non | Configurable (immédiat / à la clôture) | Recueil d'avis ouvert avec traçabilité — un email est requis pour limiter les votes multiples. | ⭐⭐ Occasionnel |
 | **Scrutin** | Organisé | Sur invitation | Loggé | N/A | Oui | Non | Non | Non | Configurable (immédiat / à la clôture) | Vote formel sur liste fermée — secret du vote garanti, émargement privé pour l'organisateur. | ⭐⭐⭐⭐ Fréquent |
 | **Scrutin avec liste d'émargement publique** | Organisé | Sur invitation | Loggé | N/A | Oui | Oui (nom choisi) | Non | Non | Configurable (immédiat / à la clôture) | Vote formel sur liste fermée — émargement visible par tous avec le nom choisi par l'électeur. Utile pour les AG avec obligation statutaire de transparence sur la participation. | ⭐⭐ Occasionnel |
@@ -139,48 +139,55 @@ MieuxVoter v2 supporte six modes de vote correspondant à des intentions et cont
 
 ## Parcours Utilisateurs
 
-### 1. Sophie — L'organisatrice informelle (Référendum)
+### 1. Sophie — L'organisatrice informelle (Vote rapide)
 
 **Profil :** Sophie, 28 ans, chef de projet. Chaque vendredi son équipe de 8 personnes débat pendant 20 minutes pour choisir où déjeuner. C'est épuisant et ça finit toujours par le choix de celui qui parle le plus fort.
 
 **Scène d'ouverture :** Lundi matin, Sophie découvre MieuxVoter via un lien partagé sur Twitter. Elle a 2 minutes avant sa réunion.
 
 **Déroulé :**
-1. Elle ouvre l'app sur mobile, **crée un compte via magic-link** (son email, c'est tout)
+1. Elle ouvre l'app sur mobile — **sans créer de compte**
 2. Elle saisit la question ("Où déjeune-t-on vendredi ?") et 4 options (Sushi, Italien, Libanais, Burger)
-3. Elle choisit le mode **Référendum** — elle veut que tout le monde voie comment chacun a voté
+3. Elle choisit le mode **Vote rapide semi-transparent** — tout le monde verra qui a voté, mais pas le détail des votes
 4. Elle copie le lien et le colle dans le Slack de l'équipe
 5. Les 8 collègues votent dans la journée depuis leur téléphone
-6. Sophie voit en temps réel qui a voté et comment — le Libanais gagne haut la main
+6. Sophie voit en temps réel la liste des participants et les résultats agrégés — le Libanais gagne haut la main
 7. Vendredi : personne ne conteste, tout le monde avait son mot à dire
+8. L'élection est automatiquement supprimée au bout de 30 jours
 
-**Moment clé :** En moins de 90 secondes après la création de compte, Sophie a un lien prêt à partager.
+**Moment clé :** En moins de 90 secondes, Sophie a un lien prêt à partager — zéro compte, zéro friction.
 
-**Nouvelle réalité :** Sophie utilise MieuxVoter tous les vendredis. Six mois plus tard, elle le propose à son association de quartier pour élire son bureau.
+**Nouvelle réalité :** Sophie utilise MieuxVoter tous les vendredis. Six mois plus tard, elle le propose à son association de quartier pour élire son bureau — et là elle crée un compte.
 
-**Capabilities révélées :** compte organisateur magic-link, flux mobile ultra-rapide, partage par lien, résultats en temps réel avec attribution, mode Référendum.
+**Capabilities révélées :** création sans compte, flux mobile ultra-rapide, partage par lien, résultats en temps réel, suppression automatique 30j, mode Vote rapide semi-transparent.
+
+> **Variante — Vote rapide (anonyme) :** même parcours, mais personne ne voit qui a voté. Idéal quand le groupe est sensible à l'influence sociale. Les utilisateurs peuvent voter plusieurs fois.
+>
+> **Variante — Vote rapide transparent :** même parcours, mais chacun voit le détail des votes de tous. Adapté aux petits groupes qui veulent une totale transparence (ex. jury informel, choix de design).
 
 ---
 
-### 2. Lucas — L'utilisateur anonyme (Sondage)
+### 2. Karim — L'organisateur engagé (Sondage)
 
-**Profil :** Lucas, 32 ans, développeur. Son groupe d'amis doit choisir une destination pour un week-end. Il sait déjà qu'il préfère Bordeaux, mais il ne veut pas influencer les autres — et il ne veut pas non plus qu'on sache qu'il a voté contre Amsterdam.
+**Profil :** Karim, 38 ans, responsable bénévole d'une association culturelle de 200 membres. Il veut recueillir l'avis de ses membres sur la programmation de la prochaine saison. Il a besoin d'un résultat crédible — pas d'un vote multiple bourré par deux ou trois militants.
 
-**Scène d'ouverture :** Lucas cherche une alternative à Doodle qui permette de vraiment hiérarchiser les préférences, pas juste de cocher des cases.
+**Scène d'ouverture :** Karim prépare son sondage depuis son ordinateur. Il a une liste d'adhérents mais pas envie de gérer des invitations individuelles — il veut juste s'assurer que chacun ne vote qu'une fois.
 
 **Déroulé :**
-1. Il crée un vote **sans compte**, saisit 5 destinations
-2. Il choisit le mode **Sondage** — anonyme, personne ne verra qui a voté quoi
-3. Il partage le lien dans le groupe WhatsApp
-4. Chaque ami note chaque destination (Excellent / Bien / Passable / Insuffisant)
-5. Les résultats affichent le classement par jugement majoritaire — sans révéler les votes individuels
-6. Bordeaux l'emporte. Lucas sourit discrètement.
+1. Karim **crée un compte** via magic-link (son email, c'est tout)
+2. Il crée une élection en mode **Sondage** — public, mais chaque vote est validé par email
+3. Il saisit sa question et ses options de programmation
+4. Il configure l'affichage des résultats : à la clôture uniquement (pour éviter les effets de meute)
+5. Il partage le lien dans sa newsletter et sur les réseaux de l'association
+6. Chaque votant saisit son email pour valider son vote — un seul vote par adresse
+7. À la clôture, Karim consulte les résultats — sans voir qui a voté quoi, seulement les agrégats
+8. Il publie les résultats à ses membres avec confiance
 
-**Moment clé :** Lucas comprend que le jugement majoritaire évite le vote stratégique — ses amis ont exprimé leurs vraies préférences sans se soucier de "gâcher" leur vote.
+**Moment clé :** Karim peut partager le lien publiquement sans craindre le bourrage — l'email agit comme garde-fou sans friction excessive pour les votants légitimes.
 
-**Nouvelle réalité :** Lucas devient l'évangéliste JM de son cercle. Il explique la méthode à ses amis après le résultat.
+**Nouvelle réalité :** Karim utilise MieuxVoter pour tous ses sondages annuels. Il commence à envisager le mode Scrutin pour l'AG.
 
-**Capabilities révélées :** création sans compte, mode Sondage, pédagogie embarquée sur le JM, résultats agrégés sans attribution.
+**Capabilities révélées :** compte organisateur magic-link, mode Sondage, validation email par votant, résultats configurables (immédiat / à la clôture), résultats agrégés sans attribution.
 
 ---
 
@@ -191,8 +198,8 @@ MieuxVoter v2 supporte six modes de vote correspondant à des intentions et cont
 **Scène d'ouverture :** Michel prépare l'AG de juin. Il a la liste des 120 membres adhérents à jour. Il veut un outil qui lui évite le cauchemar de l'an dernier.
 
 **Déroulé :**
-1. Michel crée un compte (magic-link email — pas de mot de passe à retenir)
-2. Il crée une élection en mode **Scrutin** — liste fermée, secret du vote, émargement pour lui
+1. Michel **crée un compte** (magic-link email — pas de mot de passe à retenir)
+2. Il crée une élection en mode **Scrutin** — liste fermée, secret du vote, émargement privé pour lui
 3. Il importe sa liste de 120 emails membres
 4. Chaque membre reçoit un lien unique personnalisé
 5. Michel suit en temps réel : 67/120 ont voté, 12 liens n'ont pas été ouverts
@@ -205,7 +212,11 @@ MieuxVoter v2 supporte six modes de vote correspondant à des intentions et cont
 
 **Nouvelle réalité :** Michel recommande MieuxVoter à 3 autres associations de son réseau.
 
-**Capabilities révélées :** compte organisateur magic-link, import liste emails, liens uniques par électeur, tableau de bord invitations avec statuts, relances ciblées, liste d'émargement exportable, preuve de vote vérifiable.
+**Capabilities révélées :** compte organisateur magic-link, import liste emails, liens uniques par électeur, tableau de bord invitations avec statuts, relances ciblées, liste d'émargement exportable, résultats configurables, preuve de vote vérifiable.
+
+> **Variante — Scrutin avec liste d'émargement publique :** même parcours, mais la liste des participants (avec leur nom choisi) est visible par tous les électeurs. Utile pour les AG avec obligation statutaire de transparence sur la participation.
+>
+> **Variante — Scrutin transparent :** même parcours sur invitation, mais chaque membre voit le détail des votes de tous. Adapté aux décisions collégiales (jury, comité de recrutement, CA) où la transparence totale est souhaitée.
 
 ---
 
@@ -220,16 +231,19 @@ MieuxVoter v2 supporte six modes de vote correspondant à des intentions et cont
 2. L'app s'ouvre directement sur le bulletin de vote — pas de compte, pas de friction
 3. Un court encart lui explique le jugement majoritaire en 2 phrases et un exemple visuel
 4. Elle évalue chaque candidat avec les mentions (Très bien / Bien / Passable / Insuffisant / À rejeter)
-5. Elle choisit le nom affiché : "Aïcha M." (elle aurait pu mettre n'importe quoi)
-6. Elle valide — une animation confirme que son vote est enregistré
-7. Elle reçoit sa preuve de vote avec un identifiant unique
-8. Trois jours plus tard, curieuse, elle clique sur le lien de vérification : "Votre vote est bien dans l'urne ✓"
+5. Elle valide — une animation confirme que son vote est enregistré
+6. Elle reçoit sa preuve de vote avec un identifiant unique
+7. Trois jours plus tard, curieuse, elle clique sur le lien de vérification : "Votre vote est bien dans l'urne ✓"
 
 **Moment clé :** La confirmation visuelle et la preuve de vote lui donnent confiance dans le processus — elle n'a aucun doute que son vote compte.
 
 **Nouvelle réalité :** Aïcha parle de l'expérience à Michel ("c'était vraiment simple") et suggère de l'utiliser pour d'autres décisions du CA.
 
-**Capabilities révélées :** lien unique par électeur, onboarding pédagogique JM, bulletin de vote mobile-first, choix libre du nom affiché, confirmation visuelle, preuve de vote avec identifiant, vérification ultérieure.
+**Capabilities révélées :** lien unique par électeur, onboarding pédagogique JM, bulletin de vote mobile-first, confirmation visuelle, preuve de vote avec identifiant, vérification ultérieure.
+
+> **Note — Scrutin semi-transparent ou transparent :** après avoir voté, Aïcha peut voir la liste des participants (semi-transparent) ou le détail des votes de tous (transparent). L'app l'en informe avant qu'elle valide.
+>
+> **Note — Flux Sondage :** au lieu d'un lien unique, Aïcha accède au bulletin via un lien public et saisit son email pour valider son vote. Pas de preuve de vote dans ce cas — seulement la confirmation de prise en compte.
 
 ---
 
@@ -258,21 +272,22 @@ MieuxVoter v2 supporte six modes de vote correspondant à des intentions et cont
 
 ### Synthèse des capabilities révélées par les parcours
 
-| Capability | Sophie | Lucas | Michel | Aïcha | Admin |
+| Capability | Sophie (Vote rapide) | Karim (Sondage) | Michel (Scrutin) | Aïcha (Électrice) | Admin |
 |---|---|---|---|---|---|
-| Création sans compte | | ✓ | | | |
-| Compte organisateur (magic-link) | ✓ | | ✓ | | |
-| Flux mobile < 2 min | ✓ | ✓ | | | |
-| Modes de vote (Référendum, Sondage, Scrutin) | ✓ | ✓ | ✓ | | |
-| Pédagogie JM embarquée | | ✓ | | ✓ | |
+| Création sans compte | ✓ | | | | |
+| Compte organisateur (magic-link) | | ✓ | ✓ | | |
+| Flux mobile < 2 min | ✓ | | | | |
+| Suppression automatique 30j | ✓ | | | | |
+| Validation email par votant | | ✓ | | | |
+| Résultats configurables (immédiat / clôture) | | ✓ | ✓ | | |
 | Import liste emails | | | ✓ | | |
 | Liens uniques par électeur | | | ✓ | ✓ | |
-| Tableau de bord invitations | | | ✓ | | |
+| Tableau de bord invitations avec statuts | | | ✓ | | |
 | Relances ciblées | | | ✓ | | |
-| Liste d'émargement export | | | ✓ | | |
+| Liste d'émargement exportable | | | ✓ | | |
+| Pédagogie JM embarquée | | | | ✓ | |
 | Preuve de vote + vérification | | | | ✓ | |
 | Confirmation visuelle du vote | | | | ✓ | |
-| Choix libre du nom affiché | | | | ✓ | |
 | Interface modération plateforme | | | | | ✓ |
 | Signalement + notice-and-action | | | | | ✓ |
 | Journal de modération LCEN | | | | | ✓ |
