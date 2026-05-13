@@ -1,5 +1,5 @@
 ---
-stepsCompleted: ["step-01-init", "step-02-discovery", "step-02b-vision", "step-02c-executive-summary", "step-03-success", "step-04-journeys", "step-05-domain", "step-06-innovation"]
+stepsCompleted: ["step-01-init", "step-02-discovery", "step-02b-vision", "step-02c-executive-summary", "step-03-success", "step-04-journeys", "step-05-domain", "step-06-innovation", "step-e-01-discovery", "step-e-02-review", "step-e-03-edit"]
 inputDocuments:
   - "_bmad-output/planning-artifacts/product-brief-perso-app.mieuxvoter.fr-v2.md"
 briefCount: 1
@@ -12,6 +12,10 @@ classification:
   domain: govtech_civic
   complexity: high
   projectContext: greenfield
+lastEdited: '2026-05-13'
+editHistory:
+  - date: '2026-05-13'
+    changes: 'Réécriture des parcours utilisateurs (1-4) alignée sur la nouvelle matrice d'options (7 modes). Ajout des sections Functional Requirements (MVP/Post-MVP) et Non-Functional Requirements (performance, scalabilité, confidentialité, sécurité, RGPD, accessibilité, i18n).'
 ---
 
 # Product Requirements Document - perso-app.mieuxvoter.fr-v2
@@ -94,6 +98,8 @@ L'avantage structurel : la combinaison accessibilité + légitimité académique
 - Baseline v2 établie dans les 30 premiers jours
 
 ## Périmètre Produit
+
+> **Note UX à trancher en aval :** la présentation des modes de vote dans l'interface de création est une décision UX, pas une règle métier. Deux approches sont possibles : (a) présenter les 7 modes directement avec leurs options, (b) proposer une interface simplifiée pour les non-loggués avec invitation à créer un compte pour accéder à plus d'options. Ce choix est à prendre lors de la phase UX Design, en cohérence avec le principe de dévoilement progressif.
 
 ### MVP — Minimum Viable Product
 
@@ -308,6 +314,15 @@ MieuxVoter v2 supporte six modes de vote correspondant à des intentions et cont
 - Conservation des données admins : durée à définir avec un juriste (cible indicative : 3 ans post-clôture de l'élection)
 - Aucune conservation des données personnelles des votants au-delà du nécessaire
 
+**Droit à l'effacement — noms dans les listes d'émargement (à clarifier juridiquement) :**
+
+Deux modes exposent des noms choisis librement par les électeurs dans une liste d'émargement visible : **Vote rapide semi-transparent** (suppression auto 30j) et **Scrutin avec émargement public** (durée à définir).
+
+La question ouverte : une durée de conservation définie et communiquée à l'électeur avant la saisie de son nom suffit-elle à écarter une demande d'effacement anticipée au titre de l'Art. 17 RGPD ?
+
+- **Hypothèse de travail v2 :** MieuxVoter traite les demandes d'effacement anticipées manuellement et ponctuellement (anonymisation du nom affiché, le vote restant comptabilisé). La suppression auto constitue le filet de sécurité final.
+- **Action requise :** valider avec un juriste RGPD si la durée de conservation documentée + information préalable suffisent à couvrir ce cas, ou si un mécanisme d'anonymisation en libre-service est nécessaire. **Objectif : avant mise en production.**
+
 **Responsabilité juridique :**
 - MieuxVoter se protège via une **clause limitative de responsabilité** dans les CGU — l'outil ne se substitue pas à un huissier ou prestataire certifié pour les scrutins à valeur légale obligatoire
 - Disclaimer affiché dans l'interface pour les scrutins à enjeux formels
@@ -353,3 +368,103 @@ La taxonomie en 6 modes (informel/organisé × public/invitation × niveaux de t
 
 **4. Preuve de vote vérifiable sans révéler le contenu**
 La combinaison token hashé + URL de vérification appliquée à un outil grand public est peu courante hors des systèmes institutionnels. Elle rend la confiance dans l'urne tangible et visible pour chaque électeur, sans complexité cryptographique en v2 — et est conçue pour évoluer vers une vérifiabilité de type Belenios sans reconstruction.
+
+## Exigences Fonctionnelles
+
+### MVP
+
+#### Création d'élection
+
+- FR-01 : L'organisateur peut créer une élection sans compte en moins de 2 minutes (de l'ouverture de l'app à la génération du lien de partage).
+- FR-02 : L'organisateur peut créer une élection avec un compte (magic-link email) — aucun mot de passe requis.
+- FR-03 : La création d'élection expose les 7 modes de vote définis dans la matrice d'options ; chaque mode est accompagné d'une description de son intention et de ses effets sur la transparence.
+- FR-04 : L'organisateur saisit un titre, une question, et au minimum 2 options de réponse.
+- FR-05 : Les CGU sont présentées et doivent être acceptées à la création de toute élection ou de tout compte.
+- FR-06 : L'IP et le timestamp de création sont enregistrés systématiquement pour toute élection (traçabilité LCEN).
+- FR-06b : Pour tout organisateur non authentifié, les contraintes suivantes s'appliquent sans exception : type de vote public, résultats affichés immédiatement, suppression automatique de l'élection après 30 jours. Aucune option ne permet de déroger à ces trois règles sans création de compte.
+
+#### Modes de vote — comportements
+
+- FR-07 : Les 3 modes "Vote rapide" (anonyme, semi-transparent, transparent) sont accessibles sans compte ; les résultats sont affichés immédiatement ; l'élection est supprimée automatiquement après 30 jours.
+- FR-08 : Le mode "Sondage" est accessible avec compte ; chaque vote est conditionné à la validation d'une adresse email unique ; les résultats sont configurables (immédiat ou à la clôture).
+- FR-09 : Les 3 modes "Scrutin" (secret, émargement public, transparent) sont accessibles avec compte ; l'élection est sur liste fermée d'invités ; les résultats sont configurables (immédiat ou à la clôture).
+- FR-10 : Le mode "Vote rapide" (anonyme) n'implémente aucune protection contre le vote multiple — ce comportement est documenté dans l'interface.
+
+#### Vote
+
+- FR-11 : L'électeur accède au bulletin de vote via un lien partagé (modes publics) ou un lien unique personnel (modes sur invitation) — sans compte, sans friction.
+- FR-12 : Le bulletin de vote affiche un encart pédagogique expliquant le jugement majoritaire (2 phrases + exemple visuel), dismissable après première lecture.
+- FR-13 : L'électeur attribue une mention à chaque option parmi : Très bien / Bien / Assez bien / Passable / Insuffisant / À rejeter.
+- FR-14 : La validation du vote déclenche une confirmation visuelle immédiate et la génération d'une preuve de vote (token unique hashé).
+- FR-15 : L'électeur peut vérifier à tout moment que son vote est comptabilisé dans l'urne via l'URL de vérification associée à sa preuve — sans révéler le contenu du vote.
+
+#### Résultats
+
+- FR-16 : Les résultats sont calculés par l'algorithme du jugement majoritaire (méthode Balinski & Laraki) et affichent le classement des options avec leur mention majoritaire.
+- FR-17 : L'affichage des résultats respecte la configuration choisie par l'organisateur : immédiat (visible dès le premier vote) ou à la clôture.
+
+#### Conformité minimale
+
+- FR-18 : Un bouton de signalement est accessible sur chaque élection publique.
+- FR-19 : L'administrateur MieuxVoter peut consulter, suspendre et documenter les signalements depuis un tableau de bord d'administration.
+- FR-20 : Chaque action de modération (suspension, notification organisateur) est enregistrée dans un journal horodaté (traçabilité LCEN notice-and-action).
+
+#### Analytics
+
+- FR-21 : L'instrumentation analytique (Plausible, Posthog ou équivalent RGPD-compatible) est opérationnelle dès le premier jour de mise en production, avec tracking segmenté informel / organisationnel.
+
+---
+
+### Post-MVP
+
+#### Compte organisateur
+
+- FR-22 : L'organisateur peut consulter un tableau de bord listant toutes ses élections avec leur statut (active, clôturée, suspendue).
+- FR-23 : L'organisateur peut importer une liste d'emails pour générer des liens d'invitation uniques et non-devinables par électeur.
+- FR-24 : Le tableau de bord invitations affiche pour chaque électeur son statut en temps réel : lien non ouvert / lien ouvert / a voté.
+- FR-25 : L'organisateur peut envoyer une relance ciblée aux électeurs n'ayant pas encore voté, sans accéder au contenu de leurs votes.
+- FR-26 : L'organisateur peut exporter la liste d'émargement en PDF et CSV à tout moment après la clôture.
+
+---
+
+## Exigences Non-Fonctionnelles
+
+### Performance
+
+- NFR-01 : Le temps de chargement initial de l'app est inférieur à 3 secondes sur une connexion mobile 4G médiane (mesuré par Lighthouse sur mobile, score performance ≥ 80).
+- NFR-02 : La soumission d'un vote est confirmée à l'écran en moins de 2 secondes dans 95 % des cas sous charge normale.
+- NFR-03 : La génération et l'affichage d'une preuve de vote s'effectuent en moins de 1 seconde après validation du vote.
+
+### Scalabilité
+
+- NFR-04 : La plateforme supporte 5 000 votants simultanés sans dégradation de performance (temps de réponse API < 500 ms au 95e percentile), validé par test de charge avant mise en production.
+- NFR-05 : L'architecture du moteur de vote est découplée du reste de la plateforme via une abstraction propre, permettant l'ajout futur d'une couche de vérifiabilité cryptographique (type Belenios) sans reconstruction du système.
+
+### Confidentialité des votes
+
+- NFR-06 : Les données d'identité (qui a voté) et les données de vote (comment a voté) sont stockées dans des tables séparées, liées uniquement par un token opaque non-réversible.
+- NFR-07 : Les votes sont collectés dans un buffer et mélangés avant enregistrement — l'ordre d'arrivée des votes ne peut pas être corrélé à l'identité de l'électeur.
+- NFR-08 : Les tokens de preuve de vote sont stockés sous forme hashée — la plateforme ne peut pas reconstituer le token original à partir de la base de données.
+
+### Sécurité
+
+- NFR-09 : Les liens d'invitation (modes sur invitation) sont générés avec au moins 128 bits d'entropie, non-réutilisables après usage, et expirés à la clôture de l'élection.
+- NFR-10 : La validation email des votes (mode Sondage) empêche le vote multiple par adresse — une tentative de double vote depuis la même adresse est rejetée avec message explicite.
+- NFR-11 : L'interface d'administration est accessible uniquement aux comptes disposant du rôle administrateur MieuxVoter — toute tentative d'accès non autorisé retourne une erreur 403.
+
+### Conformité RGPD
+
+- NFR-12 : Aucune donnée personnelle de votant (email, IP) n'est collectée pour les modes "Vote rapide" — seuls les votes agrégés sont stockés.
+- NFR-13 : Les données d'identification des organisateurs (email, IP de création) sont conservées au maximum 3 ans après la clôture de l'élection, puis supprimées automatiquement (durée indicative — à valider avec un juriste).
+- NFR-14 : L'organisateur est informé lors de la création d'élection qu'il est responsable de traitement pour les données personnelles qu'il importe (emails des électeurs invités).
+
+### Accessibilité
+
+- NFR-15 : L'interface de vote est conforme WCAG 2.1 niveau AA pour les parcours critiques : création d'élection, vote, consultation des résultats.
+- NFR-16 : Le bulletin de vote est utilisable au clavier seul (navigation par tabulation, validation par Entrée) et compatible avec les lecteurs d'écran courants (VoiceOver, NVDA).
+- NFR-17 : Le contraste des éléments interactifs (boutons, mentions de vote) respecte un ratio minimum de 4,5:1.
+
+### Internationalisation
+
+- NFR-18 : L'architecture front-end supporte l'internationalisation (i18n) dès la v2 — toutes les chaînes de caractères de l'interface sont externalisées dans des fichiers de traduction.
+- NFR-19 : La v2 est livrée en français uniquement ; l'architecture i18n doit permettre l'ajout d'une langue supplémentaire sans modification du code applicatif.
