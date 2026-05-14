@@ -364,6 +364,8 @@
     border: 5px solid transparent; border-top-color: rgba(255,255,255,0.2);
   }
   .emarg-chip.active .tooltip { display: block; }
+  .merit-seg.active .tooltip { display: block; }
+  .merit-seg { position: relative; }
   .tooltip-name { display: flex; align-items: center; gap: 5px; padding: 2px 0; }
 
   /* VERIFICATION */
@@ -402,6 +404,43 @@
   .spacer    { height: 14px; }
   .spacer-sm { height: 7px; }
   .cta-bar   { padding-top: 12px; margin-top: 6px; }
+
+  /* BOUTON INFO (?) */
+  .info-btn {
+    width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.35);
+    background: transparent; color: white; font-size: 12px; font-weight: 700;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Sans', sans-serif; flex-shrink: 0;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .info-btn:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.6); }
+
+  /* MODALE INFO */
+  .info-modal {
+    display: none; position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+    align-items: flex-end; justify-content: center;
+  }
+  .info-modal.open { display: flex; }
+  .info-modal-sheet {
+    background: var(--darker); border-radius: 18px 18px 0 0;
+    padding: 24px 20px 36px; width: 100%; max-width: 420px;
+  }
+  .info-modal-pill {
+    width: 36px; height: 4px; background: rgba(255,255,255,0.2);
+    border-radius: 2px; margin: 0 auto 20px;
+  }
+  .info-modal-title { font-size: 15px; font-weight: 700; margin-bottom: 14px; }
+  .info-item { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.07); }
+  .info-item:last-child { border-bottom: none; }
+  .info-item-name { font-size: 13px; font-weight: 600; margin-bottom: 3px; display: flex; align-items: center; gap: 6px; }
+  .info-item-desc { font-size: 12px; opacity: 0.55; line-height: 1.45; }
+
+  /* LIEN PLUS D'OPTIONS */
+  .more-options-link {
+    display: block; text-align: center; font-size: 12px; color: #9B8FFF;
+    text-decoration: underline; cursor: pointer; margin-top: 14px; padding-bottom: 2px;
+  }
 </style>
 </head>
 <body>
@@ -420,6 +459,9 @@
   <button class="nav-btn" onclick="show('d10')">10 · Invitations</button>
   <button class="nav-btn" onclick="show('d11')">11 · Mes élections</button>
   <button class="nav-btn" onclick="show('d12')">12 · Magic-link</button>
+  <button class="nav-btn" onclick="show('d13')">13 · Vote Rapide (variante)</button>
+  <button class="nav-btn" onclick="show('d14')">14 · Sondage mail vérifié</button>
+  <button class="nav-btn" onclick="show('d15')">15 · Scrutin</button>
 </nav>
 
 <!-- ══ D1 — ACCUEIL ══ -->
@@ -966,16 +1008,10 @@
 
 <!-- ══ D8 — RÉSULTATS + ÉMARGEMENT ══ -->
 <div id="d8" class="direction">
-  <div class="direction-label">8 — Résultats · Mobile (avec liste d'émargement)</div>
+  <div class="direction-label">8 — Résultats · Mobile (émargement — clic segment → tooltip votants)</div>
   <div class="phone phone-dark">
     <div style="font-size:15px;font-weight:700;margin-bottom:4px;">Syndicat 2025</div>
     <div style="font-size:11px;opacity:0.4;margin-bottom:14px;">5 participants · Clôturé</div>
-
-    <div class="tabs">
-      <div class="tab tab-active">Résultats</div>
-      <div class="tab">Émargement (5)</div>
-      <div class="tab">🔐 Mon vote</div>
-    </div>
 
     <div class="merit-winner-badge" style="margin-bottom:10px;">
       <div style="font-size:20px;">🏆</div>
@@ -986,30 +1022,52 @@
     </div>
 
     <div class="merit-row">
-      <div class="merit-label"><span style="font-size:12px;">1. Cameron W.</span><span class="merit-mention" style="color:var(--m6);font-size:11px;">Très bien</span></div>
+      <div class="merit-label"><span style="font-size:12px;">1. Cameron W.</span></div>
       <div class="merit-bar-wrap">
         <div class="merit-bar">
-          <div class="merit-seg" style="width:30%;background:var(--m7);"></div>
-          <div class="merit-seg" style="width:40%;background:var(--m6);"></div>
-          <div class="merit-seg" style="width:10%;background:var(--m5);"></div>
-          <div class="merit-seg" style="width:10%;background:var(--m4);"></div>
-          <div class="merit-seg" style="width:10%;background:var(--m3);"></div>
+          <div class="merit-seg" style="width:30%;background:var(--m7);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip">👤 Michel D.<br>👤 Sarah M.</div>
+          </div>
+          <div class="merit-seg" style="width:40%;background:var(--m6);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip">👤 Esther H.<br>👤 Jean-P. K.<br>👤 Aïcha B.</div>
+          </div>
+          <div class="merit-seg" style="width:10%;background:var(--m5);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip">👤 Sarah M.</div>
+          </div>
+          <div class="merit-seg" style="width:10%;background:var(--m4);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip">👤 Michel D.</div>
+          </div>
+          <div class="merit-seg" style="width:10%;background:var(--m3);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip">👤 Aïcha B.</div>
+          </div>
         </div>
-        <div class="merit-median" style="left:50%;"><div class="merit-median-label">médiane</div></div>
+        <div class="merit-median" style="left:50%;"><div class="merit-median-label" style="color:var(--m6);">Très bien</div></div>
       </div>
     </div>
     <div class="merit-row">
-      <div class="merit-label"><span style="font-size:12px;">2. Esther H.</span><span class="merit-mention" style="color:var(--m4);font-size:11px;">Assez bien</span></div>
+      <div class="merit-label"><span style="font-size:12px;">2. Esther H.</span></div>
       <div class="merit-bar-wrap">
         <div class="merit-bar">
-          <div class="merit-seg" style="width:10%;background:var(--m6);"></div>
-          <div class="merit-seg" style="width:20%;background:var(--m5);"></div>
-          <div class="merit-seg" style="width:30%;background:var(--m4);"></div>
-          <div class="merit-seg" style="width:20%;background:var(--m3);"></div>
-          <div class="merit-seg" style="width:10%;background:var(--m2);"></div>
-          <div class="merit-seg" style="width:10%;background:var(--m1);"></div>
+          <div class="merit-seg" style="width:10%;background:var(--m6);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip">👤 Esther H.</div>
+          </div>
+          <div class="merit-seg" style="width:20%;background:var(--m5);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip">👤 Michel D.</div>
+          </div>
+          <div class="merit-seg" style="width:30%;background:var(--m4);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip">👤 Sarah M.<br>👤 Jean-P. K.</div>
+          </div>
+          <div class="merit-seg" style="width:20%;background:var(--m3);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip">👤 Aïcha B.</div>
+          </div>
+          <div class="merit-seg" style="width:10%;background:var(--m2);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip">👤 Sarah M.</div>
+          </div>
+          <div class="merit-seg" style="width:10%;background:var(--m1);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip">👤 Michel D.</div>
+          </div>
         </div>
-        <div class="merit-median" style="left:50%;"><div class="merit-median-label">médiane</div></div>
+        <div class="merit-median" style="left:50%;"><div class="merit-median-label" style="color:var(--m4);">Assez bien</div></div>
       </div>
     </div>
 
@@ -1026,16 +1084,10 @@
 
 <!-- ══ D9 — RÉSULTATS TRANSPARENTS ══ -->
 <div id="d9" class="direction">
-  <div class="direction-label">9 — Résultats · Mobile (transparent — clic sur chip → tooltip votants)</div>
+  <div class="direction-label">9 — Résultats · Mobile (transparent — clic segment → tooltip votants + émargement)</div>
   <div class="phone phone-dark">
     <div style="font-size:15px;font-weight:700;margin-bottom:4px;">Syndicat 2025</div>
     <div style="font-size:11px;opacity:0.4;margin-bottom:14px;">5 participants · Mode transparent</div>
-
-    <div class="tabs">
-      <div class="tab tab-active">Résultats</div>
-      <div class="tab">Détail votes</div>
-      <div class="tab">🔐 Mon vote</div>
-    </div>
 
     <div class="merit-winner-badge" style="margin-bottom:10px;">
       <div style="font-size:20px;">🏆</div>
@@ -1046,163 +1098,263 @@
     </div>
 
     <div class="merit-row">
-      <div class="merit-label"><span style="font-size:12px;">1. Cameron W.</span><span class="merit-mention" style="color:var(--m6);font-size:11px;">Très bien</span></div>
+      <div class="merit-label"><span style="font-size:12px;">1. Cameron W.</span></div>
       <div class="merit-bar-wrap">
         <div class="merit-bar">
-          <div class="merit-seg" style="width:30%;background:var(--m7);"></div>
-          <div class="merit-seg" style="width:40%;background:var(--m6);"></div>
-          <div class="merit-seg" style="width:10%;background:var(--m5);"></div>
-          <div class="merit-seg" style="width:10%;background:var(--m4);"></div>
-          <div class="merit-seg" style="width:10%;background:var(--m3);"></div>
+          <div class="merit-seg" style="width:30%;background:var(--m7);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip">Excellent<br>👤 Michel D.<br>👤 Sarah M.</div>
+          </div>
+          <div class="merit-seg" style="width:40%;background:var(--m6);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip">Très bien<br>👤 Esther H.<br>👤 Jean-P. K.<br>👤 Aïcha B.</div>
+          </div>
+          <div class="merit-seg" style="width:10%;background:var(--m5);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip">Bien<br>👤 Sarah M.</div>
+          </div>
+          <div class="merit-seg" style="width:10%;background:var(--m4);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip">Assez bien<br>👤 Michel D.</div>
+          </div>
+          <div class="merit-seg" style="width:10%;background:var(--m3);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip">Passable<br>👤 Aïcha B.</div>
+          </div>
         </div>
-        <div class="merit-median" style="left:50%;"><div class="merit-median-label">médiane</div></div>
+        <div class="merit-median" style="left:50%;"><div class="merit-median-label" style="color:var(--m6);">Très bien</div></div>
       </div>
     </div>
     <div class="merit-row">
-      <div class="merit-label"><span style="font-size:12px;">2. Esther H.</span><span class="merit-mention" style="color:var(--m4);font-size:11px;">Assez bien</span></div>
+      <div class="merit-label"><span style="font-size:12px;">2. Esther H.</span></div>
       <div class="merit-bar-wrap">
         <div class="merit-bar">
-          <div class="merit-seg" style="width:10%;background:var(--m6);"></div>
-          <div class="merit-seg" style="width:20%;background:var(--m5);"></div>
-          <div class="merit-seg" style="width:30%;background:var(--m4);"></div>
-          <div class="merit-seg" style="width:20%;background:var(--m3);"></div>
-          <div class="merit-seg" style="width:10%;background:var(--m2);"></div>
-          <div class="merit-seg" style="width:10%;background:var(--m1);"></div>
+          <div class="merit-seg" style="width:10%;background:var(--m6);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip">Très bien<br>👤 Esther H.</div>
+          </div>
+          <div class="merit-seg" style="width:20%;background:var(--m5);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip">Bien<br>👤 Michel D.</div>
+          </div>
+          <div class="merit-seg" style="width:30%;background:var(--m4);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip">Assez bien<br>👤 Sarah M.<br>👤 Jean-P. K.</div>
+          </div>
+          <div class="merit-seg" style="width:20%;background:var(--m3);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip">Passable<br>👤 Aïcha B.</div>
+          </div>
+          <div class="merit-seg" style="width:10%;background:var(--m2);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip">Insuffisant<br>👤 Sarah M.</div>
+          </div>
+          <div class="merit-seg" style="width:10%;background:var(--m1);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip">À rejeter<br>👤 Michel D.</div>
+          </div>
         </div>
-        <div class="merit-median" style="left:50%;"><div class="merit-median-label">médiane</div></div>
+        <div class="merit-median" style="left:50%;"><div class="merit-median-label" style="color:var(--m4);">Assez bien</div></div>
       </div>
     </div>
 
-    <!-- Tableau détaillé avec chips cliquables -->
-    <div class="stitle" style="margin-top:16px;">Détail — qui a voté quoi <span style="font-style:italic;font-weight:400;text-transform:none;letter-spacing:0;opacity:0.6;">(tapez une mention pour voir)</span></div>
-    <div style="overflow-x:auto;">
-      <table style="width:100%;border-collapse:collapse;font-size:11px;">
-        <thead>
-          <tr>
-            <th style="text-align:left;padding:5px 4px;opacity:0.4;font-weight:600;border-bottom:1px solid rgba(255,255,255,0.08);">Votant</th>
-            <th style="text-align:center;padding:5px 4px;opacity:0.4;font-weight:600;border-bottom:1px solid rgba(255,255,255,0.08);">Cameron</th>
-            <th style="text-align:center;padding:5px 4px;opacity:0.4;font-weight:600;border-bottom:1px solid rgba(255,255,255,0.08);">Esther</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td style="padding:7px 4px;border-bottom:1px solid rgba(255,255,255,0.05);">Michel D.</td>
-            <td style="padding:7px 4px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.05);">
-              <span class="emarg-chip" style="background:var(--m7);" onclick="toggleTip(this)">Excellent
-                <div class="tooltip">👤 Michel D.<br>👤 Sarah M.</div>
-              </span>
-            </td>
-            <td style="padding:7px 4px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.05);">
-              <span class="emarg-chip" style="background:var(--m3);" onclick="toggleTip(this)">Passable
-                <div class="tooltip">👤 Michel D.</div>
-              </span>
-            </td>
-          </tr>
-          <tr>
-            <td style="padding:7px 4px;border-bottom:1px solid rgba(255,255,255,0.05);">Esther H.</td>
-            <td style="padding:7px 4px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.05);">
-              <span class="emarg-chip" style="background:var(--m6);color:#111;" onclick="toggleTip(this)">Très bien
-                <div class="tooltip">👤 Esther H.<br>👤 Jean-P. K.<br>👤 Aïcha B.</div>
-              </span>
-            </td>
-            <td style="padding:7px 4px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.05);">
-              <span class="emarg-chip" style="background:var(--m5);color:#111;" onclick="toggleTip(this)">Bien
-                <div class="tooltip">👤 Esther H.</div>
-              </span>
-            </td>
-          </tr>
-          <tr>
-            <td style="padding:7px 4px;border-bottom:1px solid rgba(255,255,255,0.05);">Sarah M.</td>
-            <td style="padding:7px 4px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.05);">
-              <span class="emarg-chip" style="background:var(--m7);" onclick="toggleTip(this)">Excellent
-                <div class="tooltip">👤 Michel D.<br>👤 Sarah M.</div>
-              </span>
-            </td>
-            <td style="padding:7px 4px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.05);">
-              <span class="emarg-chip" style="background:var(--m4);color:#111;" onclick="toggleTip(this)">Assez bien
-                <div class="tooltip">👤 Sarah M.<br>👤 Jean-P. K.</div>
-              </span>
-            </td>
-          </tr>
-          <tr>
-            <td style="padding:7px 4px;border-bottom:1px solid rgba(255,255,255,0.05);">Jean-P. K.</td>
-            <td style="padding:7px 4px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.05);">
-              <span class="emarg-chip" style="background:var(--m6);color:#111;" onclick="toggleTip(this)">Très bien
-                <div class="tooltip">👤 Esther H.<br>👤 Jean-P. K.<br>👤 Aïcha B.</div>
-              </span>
-            </td>
-            <td style="padding:7px 4px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.05);">
-              <span class="emarg-chip" style="background:var(--m4);color:#111;" onclick="toggleTip(this)">Assez bien
-                <div class="tooltip">👤 Sarah M.<br>👤 Jean-P. K.</div>
-              </span>
-            </td>
-          </tr>
-          <tr>
-            <td style="padding:7px 4px;">Aïcha B.</td>
-            <td style="padding:7px 4px;text-align:center;">
-              <span class="emarg-chip" style="background:var(--m6);color:#111;" onclick="toggleTip(this)">Très bien
-                <div class="tooltip">👤 Esther H.<br>👤 Jean-P. K.<br>👤 Aïcha B.</div>
-              </span>
-            </td>
-            <td style="padding:7px 4px;text-align:center;">
-              <span class="emarg-chip" style="background:var(--m1);" onclick="toggleTip(this)">À rejeter
-                <div class="tooltip">👤 Aïcha B.</div>
-              </span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <div class="stitle" style="margin-top:16px;">Émargement — qui a voté</div>
+    <div class="emarg-row"><div style="font-size:13px;">👤</div><div style="flex:1;font-size:12px;font-weight:500;">Michel Dupont</div><div style="font-size:11px;opacity:0.5;">A participé</div></div>
+    <div class="emarg-row"><div style="font-size:13px;">👤</div><div style="flex:1;font-size:12px;font-weight:500;">Esther Howard</div><div style="font-size:11px;opacity:0.5;">A participé</div></div>
+    <div class="emarg-row"><div style="font-size:13px;">👤</div><div style="flex:1;font-size:12px;font-weight:500;">Sarah Martin</div><div style="font-size:11px;opacity:0.5;">A participé</div></div>
+    <div class="emarg-row"><div style="font-size:13px;">👤</div><div style="flex:1;font-size:12px;font-weight:500;">Jean-Pierre K.</div><div style="font-size:11px;opacity:0.5;">A participé</div></div>
+    <div class="emarg-row"><div style="font-size:13px;">👤</div><div style="flex:1;font-size:12px;font-weight:500;">Aïcha Benali</div><div style="font-size:11px;opacity:0.5;">A participé</div></div>
     <div class="spacer-sm"></div>
-    <button class="btn-ghost" style="font-size:11px;padding:9px;">🔐 Vérifier mon vote</button>
+    <button class="btn-ghost" style="font-size:11px;padding:9px;">📋 Exporter l'émargement PDF</button>
   </div>
 </div>
 
 <!-- ══ D10 — INVITATIONS ══ -->
 <div id="d10" class="direction">
-  <div class="direction-label">10 — Liste d'invitations · Mobile</div>
+  <div class="direction-label">10 — Configuration des invitations · Mobile (tabs email / QR / lien)</div>
   <div class="phone phone-dark">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-      <h2 style="margin-bottom:0;font-size:15px;">Invitations · 3/5</h2>
-      <button class="btn-sm">+ Relancer (2)</button>
+    <h2 style="margin-bottom:16px;">Invitations</h2>
+
+    <div style="background:rgba(255,255,255,0.05);border-radius:10px;overflow:hidden;">
+      <!-- Tabs invitations -->
+      <div style="display:flex;border-bottom:1px solid rgba(255,255,255,0.08);">
+        <button class="d10-inv-tab d10-inv-active" onclick="d10SwitchTab('email',this)" style="flex:1;padding:10px 6px;background:none;border:none;color:white;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;border-bottom:2px solid white;">✉️ Email</button>
+        <button class="d10-inv-tab" onclick="d10SwitchTab('qr',this)" style="flex:1;padding:10px 6px;background:none;border:none;color:white;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;opacity:0.45;border-bottom:2px solid transparent;">⬛ QR Code</button>
+        <button class="d10-inv-tab" onclick="d10SwitchTab('lien',this)" style="flex:1;padding:10px 6px;background:none;border:none;color:white;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;opacity:0.45;border-bottom:2px solid transparent;">🔗 Lien</button>
+      </div>
+
+      <!-- Panneau Email -->
+      <div id="d10-tab-email" style="padding:14px;">
+        <div style="font-size:12px;opacity:0.55;margin-bottom:10px;">Ajoutez les adresses email des participants. Chacun recevra un lien personnel unique.</div>
+        <div style="display:flex;gap:7px;margin-bottom:8px;">
+          <input class="field" type="email" placeholder="prenom.nom@email.fr" style="margin-bottom:0;flex:1;font-size:12px;">
+          <button class="btn-sm" style="white-space:nowrap;padding:0 12px;">+ Ajouter</button>
+        </div>
+        <div class="inv-row" style="padding:8px 0;">
+          <span class="type-badge badge-email">✉ Email</span>
+          <div class="inv-info"><div class="inv-dest">michel.dupont@asso.fr</div><div class="inv-sub">Envoyé le 12 mai</div></div>
+          <span style="font-size:10px;font-weight:700;color:var(--m7);flex-shrink:0;">✓ Voté</span>
+          <span style="color:var(--coral);font-size:13px;cursor:pointer;flex-shrink:0;">✕</span>
+        </div>
+        <div class="inv-row" style="padding:8px 0;">
+          <span class="type-badge badge-email">✉ Email</span>
+          <div class="inv-info"><div class="inv-dest">esther.howard@gmail.com</div><div class="inv-sub">Ouvert le 13 mai</div></div>
+          <span style="font-size:10px;font-weight:700;color:var(--m5);flex-shrink:0;">● Ouvert</span>
+          <span style="color:var(--coral);font-size:13px;cursor:pointer;flex-shrink:0;">✕</span>
+        </div>
+        <div class="inv-row" style="padding:8px 0;">
+          <span class="type-badge badge-email">✉ Email</span>
+          <div class="inv-info"><div class="inv-dest">jean-pierre.k@mairie.fr</div><div class="inv-sub">Envoyé le 13 mai</div></div>
+          <span style="font-size:10px;font-weight:700;color:#7CB8FF;flex-shrink:0;">↓ Reçu</span>
+          <span style="color:var(--coral);font-size:13px;cursor:pointer;flex-shrink:0;">✕</span>
+        </div>
+        <div class="inv-row" style="padding:8px 0;">
+          <span class="type-badge badge-email">✉ Email</span>
+          <div class="inv-info"><div class="inv-dest">aicha.benali@gmail.com</div><div class="inv-sub">Prévu le 15 mai</div></div>
+          <span style="font-size:10px;font-weight:700;color:var(--grey-mid);flex-shrink:0;">- En attente</span>
+          <span style="color:var(--coral);font-size:13px;cursor:pointer;flex-shrink:0;">✕</span>
+        </div>
+        <div style="font-size:11px;opacity:0.35;margin-top:6px;margin-bottom:10px;">5 invités · 1 a voté</div>
+        <button class="btn-sm" style="width:100%;padding:8px;font-size:11px;">+ Relancer les non-votants (3)</button>
+      </div>
+
+      <!-- Panneau QR Code (caché) -->
+      <div id="d10-tab-qr" style="padding:14px;display:none;">
+        <div style="font-size:12px;opacity:0.55;margin-bottom:12px;">Chaque PDF contient un QR code unique à afficher sur place. Chaque scan = une invitation.</div>
+
+        <!-- Formulaire de génération -->
+        <div style="background:rgba(255,255,255,0.06);border-radius:8px;padding:12px;margin-bottom:14px;">
+          <div style="font-size:11px;font-weight:700;margin-bottom:8px;">Générer un nouveau lot</div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="flex:1;">
+              <div style="font-size:10px;opacity:0.45;margin-bottom:4px;">Nombre d'invitations</div>
+              <input class="field" type="number" value="10" min="1" style="margin-bottom:0;font-size:13px;padding:9px 12px;">
+            </div>
+            <button class="btn-primary" style="flex-shrink:0;width:auto;padding:9px 14px;font-size:12px;margin-top:18px;">⬇️ Générer PDF</button>
+          </div>
+        </div>
+
+        <!-- Listing des lots générés -->
+        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;opacity:0.4;margin-bottom:8px;">Lots générés</div>
+
+        <!-- Lot 1 -->
+        <div style="background:rgba(255,255,255,0.05);border-radius:8px;padding:10px 12px;margin-bottom:6px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+            <div>
+              <div style="font-size:12px;font-weight:700;">Lot #1 — 20 invitations</div>
+              <div style="font-size:10px;opacity:0.35;margin-top:1px;">Généré le 12 mai 2025</div>
+            </div>
+            <button class="btn-sm">📥 Re-télécharger</button>
+          </div>
+          <div style="display:flex;gap:6px;">
+            <div style="flex:1;background:rgba(58,153,24,0.12);border-radius:5px;padding:6px 8px;text-align:center;">
+              <div style="font-size:16px;font-weight:700;color:var(--m7);">8</div>
+              <div style="font-size:9px;opacity:0.5;margin-top:1px;">Votées</div>
+            </div>
+            <div style="flex:1;background:rgba(194,177,19,0.1);border-radius:5px;padding:6px 8px;text-align:center;">
+              <div style="font-size:16px;font-weight:700;color:var(--m5);">8</div>
+              <div style="font-size:9px;opacity:0.5;margin-top:1px;">Ouvertes</div>
+            </div>
+            <div style="flex:1;background:rgba(255,255,255,0.05);border-radius:5px;padding:6px 8px;text-align:center;">
+              <div style="font-size:16px;font-weight:700;opacity:0.6;">20</div>
+              <div style="font-size:9px;opacity:0.5;margin-top:1px;">Total</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lot 2 -->
+        <div style="background:rgba(255,255,255,0.05);border-radius:8px;padding:10px 12px;margin-bottom:6px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+            <div>
+              <div style="font-size:12px;font-weight:700;">Lot #2 — 5 invitations</div>
+              <div style="font-size:10px;opacity:0.35;margin-top:1px;">Généré le 14 mai 2025</div>
+            </div>
+            <button class="btn-sm">📥 Re-télécharger</button>
+          </div>
+          <div style="display:flex;gap:6px;">
+            <div style="flex:1;background:rgba(58,153,24,0.12);border-radius:5px;padding:6px 8px;text-align:center;">
+              <div style="font-size:16px;font-weight:700;color:var(--m7);">1</div>
+              <div style="font-size:9px;opacity:0.5;margin-top:1px;">Votées</div>
+            </div>
+            <div style="flex:1;background:rgba(194,177,19,0.1);border-radius:5px;padding:6px 8px;text-align:center;">
+              <div style="font-size:16px;font-weight:700;color:var(--m5);">2</div>
+              <div style="font-size:9px;opacity:0.5;margin-top:1px;">Ouvertes</div>
+            </div>
+            <div style="flex:1;background:rgba(255,255,255,0.05);border-radius:5px;padding:6px 8px;text-align:center;">
+              <div style="font-size:16px;font-weight:700;opacity:0.6;">5</div>
+              <div style="font-size:9px;opacity:0.5;margin-top:1px;">Total</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panneau Lien (caché) -->
+      <div id="d10-tab-lien" style="padding:14px;display:none;">
+        <div style="font-size:12px;opacity:0.55;margin-bottom:12px;">Chaque lien est à usage unique. Distribuez-les individuellement pour éviter le vote multiple.</div>
+
+        <!-- Formulaire de génération -->
+        <div style="background:rgba(255,255,255,0.06);border-radius:8px;padding:12px;margin-bottom:14px;">
+          <div style="font-size:11px;font-weight:700;margin-bottom:8px;">Générer des liens</div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="flex:1;">
+              <div style="font-size:10px;opacity:0.45;margin-bottom:4px;">Nombre de liens</div>
+              <input class="field" type="number" value="5" min="1" style="margin-bottom:0;font-size:13px;padding:9px 12px;">
+            </div>
+            <button class="btn-primary" style="flex-shrink:0;width:auto;padding:9px 14px;font-size:12px;margin-top:18px;">+ Créer</button>
+          </div>
+        </div>
+
+        <!-- Listing des liens -->
+        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;opacity:0.4;margin-bottom:8px;">8 liens · 3 votés · 2 ouverts</div>
+
+        <!-- Lien voté -->
+        <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(255,255,255,0.04);border-radius:7px;margin-bottom:5px;">
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:11px;font-family:monospace;color:var(--m6);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">mv.fr/v/x4Kp2…</div>
+            <div style="font-size:10px;opacity:0.35;margin-top:2px;">Créé 12 mai</div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:var(--m7);flex-shrink:0;">✓ Voté</span>
+          <button class="btn-sm" style="flex-shrink:0;">📋</button>
+        </div>
+
+        <!-- Lien voté -->
+        <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(255,255,255,0.04);border-radius:7px;margin-bottom:5px;">
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:11px;font-family:monospace;color:var(--m6);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">mv.fr/v/r8Wm1…</div>
+            <div style="font-size:10px;opacity:0.35;margin-top:2px;">Créé 12 mai</div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:var(--m7);flex-shrink:0;">✓ Voté</span>
+          <button class="btn-sm" style="flex-shrink:0;">📋</button>
+        </div>
+
+        <!-- Lien ouvert -->
+        <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(255,255,255,0.04);border-radius:7px;margin-bottom:5px;">
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:11px;font-family:monospace;color:rgba(255,255,255,0.5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">mv.fr/v/hJ3nQ…</div>
+            <div style="font-size:10px;opacity:0.35;margin-top:2px;">Créé 14 mai</div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:var(--m5);flex-shrink:0;">● Ouvert</span>
+          <button class="btn-sm" style="flex-shrink:0;">📋</button>
+        </div>
+
+        <!-- Lien non utilisé -->
+        <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(255,255,255,0.04);border-radius:7px;margin-bottom:5px;">
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:11px;font-family:monospace;color:rgba(255,255,255,0.5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">mv.fr/v/zT6bL…</div>
+            <div style="font-size:10px;opacity:0.35;margin-top:2px;">Créé 14 mai</div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:var(--grey-mid);flex-shrink:0;">– En attente</span>
+          <button class="btn-sm" style="flex-shrink:0;">📋</button>
+        </div>
+
+        <!-- Lien non utilisé (grisé) -->
+        <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(255,255,255,0.04);border-radius:7px;margin-bottom:5px;opacity:0.5;">
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:11px;font-family:monospace;color:rgba(255,255,255,0.5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">mv.fr/v/pN9cR…</div>
+            <div style="font-size:10px;opacity:0.35;margin-top:2px;">Créé 14 mai</div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:var(--grey-mid);flex-shrink:0;">– En attente</span>
+          <button class="btn-sm" style="flex-shrink:0;">📋</button>
+        </div>
+
+        <div style="font-size:10px;opacity:0.3;text-align:center;margin-top:6px;">+ 3 autres liens en attente</div>
+      </div>
     </div>
-    <div style="height:3px;background:rgba(255,255,255,0.1);border-radius:2px;margin-bottom:4px;overflow:hidden;">
-      <div style="width:60%;height:100%;background:var(--m7);border-radius:2px;"></div>
-    </div>
-    <div style="font-size:10px;opacity:0.35;margin-bottom:14px;">3 votes sur 5 invités</div>
-    <div class="tabs">
-      <div class="tab tab-active">Tous (5)</div>
-      <div class="tab">Voté (3)</div>
-      <div class="tab">En attente (2)</div>
-    </div>
-    <div class="inv-row">
-      <span class="type-badge badge-email">✉ Email</span>
-      <div class="inv-info"><div class="inv-dest">michel.dupont@asso.fr</div><div class="inv-sub">Envoyé le 12 mai</div></div>
-      <span class="inv-status s-voted">✓ Voté</span>
-    </div>
-    <div class="inv-row">
-      <span class="type-badge badge-email">✉ Email</span>
-      <div class="inv-info"><div class="inv-dest">esther.howard@gmail.com</div><div class="inv-sub">Ouvert le 13 mai</div></div>
-      <span class="inv-status s-opened">● Ouvert</span>
-    </div>
-    <div class="inv-row">
-      <span class="type-badge badge-email">✉ Email</span>
-      <div class="inv-info"><div class="inv-dest">sarah.martin@corp.com</div><div class="inv-sub">Envoyé le 12 mai</div></div>
-      <span class="inv-status s-sent">– Envoyé</span>
-    </div>
-    <div class="inv-row">
-      <span class="type-badge badge-qr">⬛ QR</span>
-      <div class="inv-info"><div class="inv-dest">Vote en salle</div><div class="inv-sub">Utilisé 2 fois</div></div>
-      <span class="inv-status s-voted">✓ 2 votes</span>
-    </div>
-    <div class="inv-row">
-      <span class="type-badge badge-link">🔗 Lien</span>
-      <div class="inv-info"><div class="inv-dest">Lien public partagé</div><div class="inv-sub">Partagé le 12 mai</div></div>
-      <span class="inv-status s-sent">– En attente</span>
-    </div>
+
     <div class="cta-bar">
-      <button class="btn-ghost" style="font-size:12px;padding:10px;">📋 Exporter l'émargement</button>
+      <button class="btn-primary">Valider →</button>
     </div>
+    <div class="spacer-sm"></div>
+    <button class="btn-ghost" style="font-size:11px;padding:9px;">📋 Exporter l'émargement</button>
   </div>
 </div>
 
@@ -1295,6 +1447,453 @@
   </div>
 </div>
 
+<!-- ══ D13 — VOTE RAPIDE (variante simplifiée) ══ -->
+<div id="d13" class="direction">
+  <div class="direction-label">13 — Vote Rapide · Mobile (variante : options minimales + lien "Plus d'options")</div>
+  <div class="phone phone-dark">
+    <div class="stepper">
+      <div class="step step-done">✓</div><div class="step-line step-line-done"></div>
+      <div class="step step-done">✓</div><div class="step-line step-line-done"></div>
+      <div class="step step-active">3</div>
+    </div>
+
+    <!-- Titre + bouton (?) -->
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+      <h2 style="margin-bottom:0;flex:1;">Vote Rapide</h2>
+      <button class="info-btn" onclick="document.getElementById('infoModal13').classList.add('open')">?</button>
+    </div>
+
+    <!-- Niveau de transparence -->
+    <div class="param-setting">
+      <div class="param-setting-left">
+        <div class="param-setting-name">Niveau de transparence</div>
+        <div class="param-setting-desc" id="d13-desc-transp">On voit qui a voté, mais pas comment</div>
+      </div>
+      <button class="param-setting-btn" onclick="openPicker('d13-picker-transp')">
+        <span id="d13-val-transp">Émargement</span><span class="chevron">▼</span>
+      </button>
+    </div>
+
+    <!-- Ordre aléatoire des candidats -->
+    <div class="param-setting" style="cursor:default;">
+      <div class="param-setting-left">
+        <div class="param-setting-name">Ordre aléatoire des candidats</div>
+        <div class="param-setting-desc">Les candidats apparaissent dans un ordre différent pour chaque votant</div>
+      </div>
+      <div class="toggle toggle-on" onclick="this.classList.toggle('toggle-on')"></div>
+    </div>
+
+    <!-- Personnaliser les mentions -->
+    <div class="param-setting" style="cursor:default;">
+      <div class="param-setting-left">
+        <div class="param-setting-name">Personnaliser les mentions</div>
+        <div class="param-setting-desc">Modifier les libellés des mentions (Excellent, Très bien…)</div>
+      </div>
+      <div class="toggle" onclick="this.classList.toggle('toggle-on')"></div>
+    </div>
+
+    <div class="cta-bar">
+      <button class="btn-primary">Valider →</button>
+    </div>
+
+    <!-- Lien "Plus d'options" -->
+    <a class="more-options-link">Plus d'options ? (invitation, accessibilité du vote, accès au résultat, persistence, …)</a>
+  </div>
+
+  <!-- ── PICKER : Niveau de transparence (D13) ── -->
+  <div id="d13-picker-transp" class="picker-sheet" onclick="closePicker(event,'d13-picker-transp')">
+    <div class="picker-inner">
+      <div class="picker-pill"></div>
+      <div class="picker-title">Niveau de transparence</div>
+      <div class="picker-option"
+           onclick="pickOption('d13-picker-transp','d13-val-transp','d13-desc-transp','Anonyme','Personne ne voit les votes individuels',false,event)">
+        <div class="picker-radio"></div>
+        <div class="picker-option-text">
+          <div class="picker-option-name">Anonyme</div>
+          <div class="picker-option-sub">Personne ne voit les votes individuels</div>
+        </div>
+      </div>
+      <div class="picker-option picker-selected"
+           onclick="pickOption('d13-picker-transp','d13-val-transp','d13-desc-transp','Émargement','On voit qui a voté, mais pas comment',false,event)">
+        <div class="picker-radio"></div>
+        <div class="picker-option-text">
+          <div class="picker-option-name">Liste d'émargement</div>
+          <div class="picker-option-sub">On voit qui a voté, mais pas comment</div>
+        </div>
+      </div>
+      <div class="picker-option"
+           onclick="pickOption('d13-picker-transp','d13-val-transp','d13-desc-transp','Transparent','Tout le monde voit les votes de tous',false,event)">
+        <div class="picker-radio"></div>
+        <div class="picker-option-text">
+          <div class="picker-option-name">Totalement transparent</div>
+          <div class="picker-option-sub">Tout le monde voit les votes de tous</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MODALE INFO (?) ── -->
+  <div id="infoModal13" class="info-modal" onclick="if(event.target===this)this.classList.remove('open')">
+    <div class="info-modal-sheet">
+      <div class="info-modal-pill"></div>
+      <div class="info-modal-title">ℹ️ À propos du Vote Rapide</div>
+
+      <div class="info-item">
+        <div class="info-item-name">🔓 Accessibilité</div>
+        <div class="info-item-desc">Tout le monde peut voter via le lien public. Aucune invitation nominative requise.</div>
+      </div>
+      <div class="info-item">
+        <div class="info-item-name">⏱️ Clôture</div>
+        <div class="info-item-desc">Le vote reste ouvert indéfiniment jusqu'à ce que vous le clôturiez manuellement.</div>
+      </div>
+      <div class="info-item">
+        <div class="info-item-name">📊 Arrivée des résultats</div>
+        <div class="info-item-desc">Les résultats sont visibles en direct dès le premier vote enregistré.</div>
+      </div>
+      <div class="info-item">
+        <div class="info-item-name">👁️ Accès aux résultats</div>
+        <div class="info-item-desc">Les résultats sont publics et consultables par n'importe qui ayant le lien.</div>
+      </div>
+      <div class="info-item">
+        <div class="info-item-name">🗑️ Suppression automatique</div>
+        <div class="info-item-desc">Sans compte, cette élection sera <strong>supprimée après 30 jours</strong>. Créez un compte pour désactiver cette limite.</div>
+      </div>
+
+      <div style="margin-top:16px;">
+        <button class="btn-ghost" onclick="document.getElementById('infoModal13').classList.remove('open')">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ D14 — SONDAGE MAIL VÉRIFIÉ ══ -->
+<div id="d14" class="direction">
+  <div class="direction-label">14 — Sondage mail vérifié · Mobile (vote par lien, email requis pour valider)</div>
+  <div class="phone phone-dark">
+    <div class="stepper">
+      <div class="step step-done">✓</div><div class="step-line step-line-done"></div>
+      <div class="step step-done">✓</div><div class="step-line step-line-done"></div>
+      <div class="step step-active">3</div>
+    </div>
+
+    <!-- Titre + bouton (?) -->
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+      <h2 style="margin-bottom:0;flex:1;">Sondage mail vérifié</h2>
+      <button class="info-btn" onclick="document.getElementById('infoModal14').classList.add('open')">?</button>
+    </div>
+
+    <!-- Niveau de transparence -->
+    <div class="param-setting">
+      <div class="param-setting-left">
+        <div class="param-setting-name">Niveau de transparence</div>
+        <div class="param-setting-desc" id="d14-desc-transp">On voit qui a voté, mais pas comment</div>
+      </div>
+      <button class="param-setting-btn" onclick="openPicker('d14-picker-transp')">
+        <span id="d14-val-transp">Émargement</span><span class="chevron">▼</span>
+      </button>
+    </div>
+
+    <!-- Ordre aléatoire des candidats -->
+    <div class="param-setting" style="cursor:default;">
+      <div class="param-setting-left">
+        <div class="param-setting-name">Ordre aléatoire des candidats</div>
+        <div class="param-setting-desc">Les candidats apparaissent dans un ordre différent pour chaque votant</div>
+      </div>
+      <div class="toggle toggle-on" onclick="this.classList.toggle('toggle-on')"></div>
+    </div>
+
+    <!-- Personnaliser les mentions -->
+    <div class="param-setting" style="cursor:default;">
+      <div class="param-setting-left">
+        <div class="param-setting-name">Personnaliser les mentions</div>
+        <div class="param-setting-desc">Modifier les libellés des mentions (Excellent, Très bien…)</div>
+      </div>
+      <div class="toggle" onclick="this.classList.toggle('toggle-on')"></div>
+    </div>
+
+    <div class="cta-bar">
+      <button class="btn-primary">Valider →</button>
+    </div>
+
+    <!-- Lien "Vote libre" -->
+    <a class="more-options-link">Transformer en vote libre pour plus d'options (accessibilité du vote, accès au résultat, …)</a>
+  </div>
+
+  <!-- ── PICKER : Niveau de transparence (D14) — sans "Totalement transparent" ── -->
+  <div id="d14-picker-transp" class="picker-sheet" onclick="closePicker(event,'d14-picker-transp')">
+    <div class="picker-inner">
+      <div class="picker-pill"></div>
+      <div class="picker-title">Niveau de transparence</div>
+      <div class="picker-option"
+           onclick="pickOption('d14-picker-transp','d14-val-transp','d14-desc-transp','Anonyme','Personne ne voit les votes individuels',false,event)">
+        <div class="picker-radio"></div>
+        <div class="picker-option-text">
+          <div class="picker-option-name">Anonyme</div>
+          <div class="picker-option-sub">Personne ne voit les votes individuels</div>
+        </div>
+      </div>
+      <div class="picker-option picker-selected"
+           onclick="pickOption('d14-picker-transp','d14-val-transp','d14-desc-transp','Émargement','On voit qui a voté, mais pas comment',false,event)">
+        <div class="picker-radio"></div>
+        <div class="picker-option-text">
+          <div class="picker-option-name">Liste d'émargement</div>
+          <div class="picker-option-sub">On voit qui a voté, mais pas comment</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MODALE INFO (?) D14 ── -->
+  <div id="infoModal14" class="info-modal" onclick="if(event.target===this)this.classList.remove('open')">
+    <div class="info-modal-sheet">
+      <div class="info-modal-pill"></div>
+      <div class="info-modal-title">ℹ️ À propos du Sondage mail vérifié</div>
+
+      <div class="info-item">
+        <div class="info-item-name">🔓 Accessibilité</div>
+        <div class="info-item-desc">Tout le monde peut voter via le lien public. Aucune invitation nominative requise. Validation du vote par email pour éviter le vote multiple.</div>
+      </div>
+      <div class="info-item">
+        <div class="info-item-name">⏱️ Clôture</div>
+        <div class="info-item-desc">Le vote reste ouvert indéfiniment jusqu'à ce que vous le clôturiez manuellement.</div>
+      </div>
+      <div class="info-item">
+        <div class="info-item-name">📊 Arrivée des résultats</div>
+        <div class="info-item-desc">Les résultats sont visibles en direct dès le premier vote enregistré.</div>
+      </div>
+      <div class="info-item">
+        <div class="info-item-name">👁️ Accès aux résultats</div>
+        <div class="info-item-desc">Les résultats sont publics et consultables par n'importe qui ayant le lien.</div>
+      </div>
+      <div class="info-item">
+        <div class="info-item-name">🗑️ Suppression automatique</div>
+        <div class="info-item-desc">Sans compte, cette élection sera <strong>supprimée après 30 jours</strong>. Créez un compte pour désactiver cette limite.</div>
+      </div>
+
+      <div style="margin-top:16px;">
+        <button class="btn-ghost" onclick="document.getElementById('infoModal14').classList.remove('open')">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ D15 — SCRUTIN ══ -->
+<div id="d15" class="direction">
+  <div class="direction-label">15 — Scrutin · Mobile (clôture obligatoire, résultats différés, invitations)</div>
+  <div class="phone phone-dark">
+    <div class="stepper">
+      <div class="step step-done">✓</div><div class="step-line step-line-done"></div>
+      <div class="step step-done">✓</div><div class="step-line step-line-done"></div>
+      <div class="step step-active">3</div>
+    </div>
+    <!-- Titre + bouton (?) -->
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+      <h2 style="margin-bottom:0;flex:1;">Scrutin</h2>
+      <button class="info-btn" onclick="document.getElementById('infoModal15').classList.add('open')">?</button>
+    </div>
+
+    <!-- 1. Clôture du vote -->
+    <div class="param-setting">
+      <div class="param-setting-left">
+        <div class="param-setting-name">Clôture du vote</div>
+        <div class="param-setting-desc" id="d15-desc-cloture">Je clôture le vote moi-même depuis mon espace</div>
+      </div>
+      <button class="param-setting-btn" onclick="openPicker('d15-picker-cloture')">
+        <span id="d15-val-cloture">Manuel</span><span class="chevron">▼</span>
+      </button>
+    </div>
+
+    <!-- 2. Arrivée des résultats -->
+    <div class="param-setting">
+      <div class="param-setting-left">
+        <div class="param-setting-name">Arrivée des résultats</div>
+        <div class="param-setting-desc" id="d15-desc-resultats">Résultats publiés à la fermeture du vote</div>
+      </div>
+      <button class="param-setting-btn" onclick="openPicker('d15-picker-resultats')">
+        <span id="d15-val-resultats">Sur clôture</span><span class="chevron">▼</span>
+      </button>
+    </div>
+
+    <!-- 3. Accès aux résultats -->
+    <div class="param-setting">
+      <div class="param-setting-left">
+        <div class="param-setting-name">Accès aux résultats</div>
+        <div class="param-setting-desc" id="d15-desc-acces-res">Tout le monde peut consulter les résultats</div>
+      </div>
+      <button class="param-setting-btn" onclick="openPicker('d15-picker-acces-res')">
+        <span id="d15-val-acces-res">Public</span><span class="chevron">▼</span>
+      </button>
+    </div>
+
+    <!-- 4. Niveau de transparence -->
+    <div class="param-setting">
+      <div class="param-setting-left">
+        <div class="param-setting-name">Niveau de transparence</div>
+        <div class="param-setting-desc" id="d15-desc-transp">On voit qui a voté, mais pas comment</div>
+      </div>
+      <button class="param-setting-btn" onclick="openPicker('d15-picker-transp')">
+        <span id="d15-val-transp">Émargement</span><span class="chevron">▼</span>
+      </button>
+    </div>
+
+    <!-- 5. Toggles -->
+    <div class="param-setting" style="cursor:default;">
+      <div class="param-setting-left">
+        <div class="param-setting-name">Ordre aléatoire des candidats</div>
+        <div class="param-setting-desc">Les candidats apparaissent dans un ordre différent pour chaque votant</div>
+      </div>
+      <div class="toggle toggle-on" onclick="this.classList.toggle('toggle-on')"></div>
+    </div>
+    <div class="param-setting" style="cursor:default;">
+      <div class="param-setting-left">
+        <div class="param-setting-name">Personnaliser les mentions</div>
+        <div class="param-setting-desc">Modifier les libellés des mentions (Excellent, Très bien…)</div>
+      </div>
+      <div class="toggle" onclick="this.classList.toggle('toggle-on')"></div>
+    </div>
+
+    <div class="cta-bar">
+      <button class="btn-primary">Valider les paramètres →</button>
+    </div>
+    <div style="margin-top:12px;background:rgba(255,255,255,0.05);border-radius:7px;padding:11px 13px;font-size:12px;opacity:0.5;text-align:center;font-style:italic;">
+      Configuration des invitations lors de la prochaine page
+    </div>
+  </div>
+
+  <!-- ── PICKER : Clôture du vote (D15) — Période ou Manuel uniquement ── -->
+  <div id="d15-picker-cloture" class="picker-sheet" onclick="closePicker(event,'d15-picker-cloture')">
+    <div class="picker-inner">
+      <div class="picker-pill"></div>
+      <div class="picker-title">Clôture du vote</div>
+      <div class="picker-option"
+           onclick="pickOption('d15-picker-cloture','d15-val-cloture','d15-desc-cloture','Période','Fermeture automatique à une date choisie',false,event)">
+        <div class="picker-radio"></div>
+        <div class="picker-option-text">
+          <div class="picker-option-name">Période</div>
+          <div class="picker-option-sub">Fermeture automatique à une date choisie</div>
+        </div>
+      </div>
+      <div class="picker-option picker-selected"
+           onclick="pickOption('d15-picker-cloture','d15-val-cloture','d15-desc-cloture','Manuel','Je clôture le vote moi-même depuis mon espace',false,event)">
+        <div class="picker-radio"></div>
+        <div class="picker-option-text">
+          <div class="picker-option-name">Manuel</div>
+          <div class="picker-option-sub">Je clôture le vote moi-même depuis mon espace</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PICKER : Arrivée des résultats (D15) — Sur clôture ou Manuel ── -->
+  <div id="d15-picker-resultats" class="picker-sheet" onclick="closePicker(event,'d15-picker-resultats')">
+    <div class="picker-inner">
+      <div class="picker-pill"></div>
+      <div class="picker-title">Arrivée des résultats</div>
+      <div class="picker-option picker-selected"
+           onclick="pickOption('d15-picker-resultats','d15-val-resultats','d15-desc-resultats','Sur clôture','Résultats publiés à la fermeture du vote',false,event)">
+        <div class="picker-radio"></div>
+        <div class="picker-option-text">
+          <div class="picker-option-name">Sur clôture</div>
+          <div class="picker-option-sub">Résultats publiés à la fermeture du vote</div>
+        </div>
+      </div>
+      <div class="picker-option"
+           onclick="pickOption('d15-picker-resultats','d15-val-resultats','d15-desc-resultats','Manuel','Je publie les résultats moi-même',false,event)">
+        <div class="picker-radio"></div>
+        <div class="picker-option-text">
+          <div class="picker-option-name">Manuel</div>
+          <div class="picker-option-sub">Je publie les résultats moi-même</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PICKER : Accès aux résultats (D15) ── -->
+  <div id="d15-picker-acces-res" class="picker-sheet" onclick="closePicker(event,'d15-picker-acces-res')">
+    <div class="picker-inner">
+      <div class="picker-pill"></div>
+      <div class="picker-title">Accès aux résultats</div>
+      <div class="picker-option picker-selected"
+           onclick="pickOption('d15-picker-acces-res','d15-val-acces-res','d15-desc-acces-res','Public','Tout le monde peut consulter les résultats',false,event)">
+        <div class="picker-radio"></div>
+        <div class="picker-option-text">
+          <div class="picker-option-name">Public</div>
+          <div class="picker-option-sub">Tout le monde peut consulter les résultats</div>
+        </div>
+      </div>
+      <div class="picker-option"
+           onclick="pickOption('d15-picker-acces-res','d15-val-acces-res','d15-desc-acces-res','Privé','Résultats visibles pour les participants seulement',false,event)">
+        <div class="picker-radio"></div>
+        <div class="picker-option-text">
+          <div class="picker-option-name">Privé</div>
+          <div class="picker-option-sub">Résultats visibles pour les participants seulement</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PICKER : Niveau de transparence (D15) ── -->
+  <div id="d15-picker-transp" class="picker-sheet" onclick="closePicker(event,'d15-picker-transp')">
+    <div class="picker-inner">
+      <div class="picker-pill"></div>
+      <div class="picker-title">Niveau de transparence</div>
+      <div class="picker-option"
+           onclick="pickOption('d15-picker-transp','d15-val-transp','d15-desc-transp','Anonyme','Personne ne voit les votes individuels',false,event)">
+        <div class="picker-radio"></div>
+        <div class="picker-option-text">
+          <div class="picker-option-name">Anonyme</div>
+          <div class="picker-option-sub">Personne ne voit les votes individuels</div>
+        </div>
+      </div>
+      <div class="picker-option picker-selected"
+           onclick="pickOption('d15-picker-transp','d15-val-transp','d15-desc-transp','Émargement','On voit qui a voté, mais pas comment',false,event)">
+        <div class="picker-radio"></div>
+        <div class="picker-option-text">
+          <div class="picker-option-name">Liste d'émargement</div>
+          <div class="picker-option-sub">On voit qui a voté, mais pas comment</div>
+        </div>
+      </div>
+      <div class="picker-option"
+           onclick="pickOption('d15-picker-transp','d15-val-transp','d15-desc-transp','Transparent','Tout le monde voit les votes de tous',false,event)">
+        <div class="picker-radio"></div>
+        <div class="picker-option-text">
+          <div class="picker-option-name">Totalement transparent</div>
+          <div class="picker-option-sub">Tout le monde voit les votes de tous</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MODALE INFO (?) D15 ── -->
+  <div id="infoModal15" class="info-modal" onclick="if(event.target===this)this.classList.remove('open')">
+    <div class="info-modal-sheet">
+      <div class="info-modal-pill"></div>
+      <div class="info-modal-title">ℹ️ À propos du Scrutin</div>
+
+      <div class="info-item">
+        <div class="info-item-name">🔒 Accessibilité</div>
+        <div class="info-item-desc">Seuls les participants invités nominativement peuvent voter. Chaque invitation est personnelle et non transférable.</div>
+      </div>
+      <div class="info-item">
+        <div class="info-item-name">⏱️ Clôture obligatoire</div>
+        <div class="info-item-desc">Un scrutin doit avoir une clôture — par période ou manuellement. Les résultats ne sont pas accessibles tant que le vote est ouvert.</div>
+      </div>
+      <div class="info-item">
+        <div class="info-item-name">📊 Arrivée des résultats</div>
+        <div class="info-item-desc">Les résultats sont publiés à la clôture ou manuellement par l'organisateur.</div>
+      </div>
+      <div class="info-item">
+        <div class="info-item-name">👁️ Accès aux résultats</div>
+        <div class="info-item-desc">Les résultats peuvent être publics ou réservés aux participants selon votre choix.</div>
+      </div>
+
+      <div style="margin-top:16px;">
+        <button class="btn-ghost" onclick="document.getElementById('infoModal15').classList.remove('open')">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 function show(id) {
   document.querySelectorAll('.direction').forEach(d => d.classList.remove('visible'));
@@ -1355,16 +1954,35 @@ document.addEventListener('click', function(e) {
 
 function toggleTip(el) {
   const wasActive = el.classList.contains('active');
-  // Ferme tous les tooltips ouverts
-  document.querySelectorAll('.emarg-chip.active').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.emarg-chip.active, .merit-seg.active').forEach(c => c.classList.remove('active'));
   if (!wasActive) el.classList.add('active');
 }
 // Ferme au clic ailleurs
 document.addEventListener('click', function(e) {
-  if (!e.target.classList.contains('emarg-chip')) {
-    document.querySelectorAll('.emarg-chip.active').forEach(c => c.classList.remove('active'));
+  if (!e.target.classList.contains('emarg-chip') && !e.target.classList.contains('merit-seg')) {
+    document.querySelectorAll('.emarg-chip.active, .merit-seg.active').forEach(c => c.classList.remove('active'));
   }
 });
+
+// Tabs invitations D10
+function d10SwitchTab(tab, btn) {
+  ['email','qr','lien'].forEach(t => {
+    const el = document.getElementById('d10-tab-' + t);
+    if (el) el.style.display = 'none';
+  });
+  const panel = document.getElementById('d10-tab-' + tab);
+  if (panel) panel.style.display = 'block';
+  document.querySelectorAll('.d10-inv-tab').forEach(b => {
+    b.style.opacity = '0.45';
+    b.style.fontWeight = '500';
+    b.style.borderBottom = '2px solid transparent';
+  });
+  btn.style.opacity = '1';
+  btn.style.fontWeight = '700';
+  btn.style.borderBottom = '2px solid white';
+}
+
+
 </script>
 </body>
 </html>
