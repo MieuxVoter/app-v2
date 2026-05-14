@@ -1,0 +1,2421 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MieuxVoter v2 — Directions Design</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --primary: #2400FD; --darker: #18048F; --darkest: #0A004C;
+    --coral: #FF3E37; --white: #FFFFFF; --grey-mid: #AAAACC;
+    --m1: #661800; --m2: #C23D13; --m3: #C27C13; --m4: #C2B113;
+    --m5: #D3D715; --m6: #A0CF1C; --m7: #3A9918;
+  }
+  body { font-family: 'DM Sans', sans-serif; background: #0D0D1A; color: white; min-height: 100vh; }
+
+  /* NAV */
+  .nav {
+    position: sticky; top: 0; z-index: 100; background: #0D0D1A;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding: 12px 20px; display: flex; align-items: center; gap: 8px; overflow-x: auto;
+  }
+  .nav-title { font-weight: 700; font-size: 13px; color: var(--grey-mid); white-space: nowrap; margin-right: 4px; }
+  .nav-btn {
+    background: none; border: 1px solid rgba(255,255,255,0.2); color: white;
+    padding: 5px 12px; border-radius: 20px; font-family: 'DM Sans', sans-serif;
+    font-size: 12px; cursor: pointer; white-space: nowrap; transition: all 0.2s;
+  }
+  .nav-btn:hover { background: rgba(255,255,255,0.1); }
+  .nav-btn.active { background: var(--primary); border-color: var(--primary); }
+
+  /* LAYOUT */
+  .direction { display: none; padding: 28px 20px; max-width: 420px; margin: 0 auto; }
+  .direction.visible { display: block; }
+  .direction-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--grey-mid); margin-bottom: 20px;
+  }
+
+  /* PHONE */
+  .phone {
+    background: var(--primary); border-radius: 28px; padding: 22px 18px 28px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6); position: relative;
+  }
+  .phone-dark { background: var(--darker); }
+  .phone-darkest { background: var(--darkest); }
+
+  h2 { font-size: 17px; font-weight: 700; margin-bottom: 10px; }
+  p  { font-size: 14px; line-height: 1.5; opacity: 0.8; }
+
+  /* FORMS */
+  .field {
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.22);
+    border-radius: 6px; padding: 12px 14px; font-size: 14px; color: white;
+    width: 100%; font-family: 'DM Sans', sans-serif; margin-bottom: 10px;
+  }
+  .field::placeholder { opacity: 0.45; }
+
+  /* SELECT DROPDOWN */
+  .param-select {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 6px; padding: 10px 12px; font-size: 13px; color: white;
+    font-family: 'DM Sans', sans-serif; width: 100%; cursor: pointer;
+    appearance: none; -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='white' opacity='0.4' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 12px center;
+  }
+  .param-select option { background: #18048F; color: white; }
+  .param-select:disabled { opacity: 0.3; cursor: default; }
+
+  /* BUTTONS */
+  .btn-primary {
+    background: white; color: var(--primary); border: none; border-radius: 6px;
+    padding: 13px 20px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 700;
+    width: 100%; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  .btn-outline {
+    background: transparent; color: white; border: 1.5px solid rgba(255,255,255,0.5);
+    border-radius: 6px; padding: 11px 20px; font-family: 'DM Sans', sans-serif;
+    font-size: 14px; width: 100%; cursor: pointer;
+  }
+  .btn-ghost {
+    background: rgba(255,255,255,0.08); color: white; border: none; border-radius: 6px;
+    padding: 11px 20px; font-family: 'DM Sans', sans-serif; font-size: 13px;
+    width: 100%; cursor: pointer;
+  }
+  .btn-sm {
+    background: rgba(255,255,255,0.1); border: none; border-radius: 4px;
+    padding: 5px 10px; color: white; font-size: 11px; font-family: 'DM Sans', sans-serif; cursor: pointer;
+  }
+
+  /* STEPPER */
+  .stepper { display: flex; align-items: center; gap: 6px; margin-bottom: 24px; }
+  .step {
+    width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700;
+  }
+  .step-active   { background: white; color: var(--primary); }
+  .step-done     { background: var(--m7); color: white; }
+  .step-inactive { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.35); }
+  .step-line     { flex: 1; height: 1px; background: rgba(255,255,255,0.15); }
+  .step-line-done { background: var(--m7); }
+
+  /* SECTION TITLE */
+  .stitle {
+    font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+    opacity: 0.4; margin-bottom: 8px; margin-top: 18px;
+  }
+  .stitle:first-child { margin-top: 0; }
+
+  /* PARAM ROWS */
+  .param-row {
+    padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  .param-row:last-child { border-bottom: none; }
+  .param-label { font-size: 13px; font-weight: 600; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+  .param-desc  { font-size: 11px; opacity: 0.4; line-height: 1.4; margin-bottom: 6px; }
+  .lock-tag {
+    display: inline-block; background: rgba(255,255,255,0.1); border-radius: 3px;
+    padding: 1px 5px; font-size: 10px; opacity: 0.7;
+  }
+  .account-link {
+    font-size: 11px; color: #9B8FFF; text-decoration: underline; cursor: pointer; margin-top: 5px; display: inline-block;
+  }
+
+  /* INFO BUBBLE */
+  .info-bubble {
+    background: rgba(255,213,100,0.1); border: 1px solid rgba(255,213,100,0.22);
+    border-radius: 6px; padding: 9px 12px; font-size: 11px; color: #FFD166;
+    display: flex; gap: 8px; align-items: flex-start; margin-top: 12px;
+  }
+
+  /* PARAM ROW — iOS Settings style */
+  .param-setting {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 13px 0; border-bottom: 1px solid rgba(255,255,255,0.07); cursor: default;
+  }
+  .param-setting:last-of-type { border-bottom: none; }
+  .param-setting-left { flex: 1; min-width: 0; }
+  .param-setting-name { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+  .param-setting-desc { font-size: 11px; opacity: 0.45; line-height: 1.4; }
+  .param-setting-btn {
+    flex-shrink: 0; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 6px; padding: 5px 10px; color: white; font-family: 'DM Sans', sans-serif;
+    font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap;
+    display: flex; align-items: center; gap: 4px; transition: background 0.15s;
+  }
+  .param-setting-btn:hover { background: rgba(255,255,255,0.18); }
+  .param-setting-btn .chevron { font-size: 9px; opacity: 0.5; }
+
+  /* TOGGLE */
+  .toggle {
+    flex-shrink: 0; width: 42px; height: 24px; border-radius: 12px;
+    background: rgba(255,255,255,0.15); position: relative; cursor: pointer;
+    transition: background 0.2s;
+  }
+  .toggle::after {
+    content: ''; position: absolute; top: 3px; left: 3px;
+    width: 18px; height: 18px; border-radius: 50%; background: white;
+    transition: transform 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  }
+  .toggle.toggle-on { background: var(--m7); }
+  .toggle.toggle-on::after { transform: translateX(18px); }
+
+  /* BOTTOM SHEET picker */
+  .picker-sheet {
+    display: none; position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.55); backdrop-filter: blur(4px);
+    align-items: flex-end; justify-content: center;
+  }
+  .picker-sheet.open { display: flex; }
+  .picker-inner {
+    background: #1A0870; border-radius: 18px 18px 0 0;
+    padding: 20px 16px 36px; width: 100%; max-width: 420px;
+  }
+  .picker-pill {
+    width: 36px; height: 4px; background: rgba(255,255,255,0.2);
+    border-radius: 2px; margin: 0 auto 18px;
+  }
+  .picker-title { font-size: 14px; font-weight: 700; margin-bottom: 14px; opacity: 0.6; text-transform: uppercase; letter-spacing: 1px; font-size: 11px; }
+  .picker-option {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 14px; border-radius: 10px; cursor: pointer; transition: background 0.15s;
+    margin-bottom: 4px;
+  }
+  .picker-option:hover:not(.picker-option-locked) { background: rgba(255,255,255,0.08); }
+  .picker-option.picker-selected { background: rgba(36,0,253,0.3); }
+  .picker-option-locked { opacity: 0.45; cursor: pointer; }
+  .picker-option-locked:hover { opacity: 0.65; }
+  .picker-radio {
+    width: 18px; height: 18px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.3);
+    flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+  }
+  .picker-option.picker-selected .picker-radio { border-color: white; background: white; }
+  .picker-option.picker-selected .picker-radio::after { content:''; width: 7px; height: 7px; border-radius: 50%; background: var(--primary); display: block; }
+  .picker-option-text { flex: 1; }
+  .picker-option-name { font-size: 14px; font-weight: 500; }
+  .picker-option-sub { font-size: 11px; opacity: 0.45; margin-top: 2px; }
+
+  /* MODALE COMPTE */
+  .account-modal {
+    display: none; position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+    align-items: flex-end; justify-content: center;
+  }
+  .account-modal.open { display: flex; }
+  .account-modal-sheet {
+    background: var(--darker); border-radius: 18px 18px 0 0;
+    padding: 24px 20px 36px; width: 100%; max-width: 420px;
+  }
+  .account-modal-pill {
+    width: 36px; height: 4px; background: rgba(255,255,255,0.2);
+    border-radius: 2px; margin: 0 auto 20px;
+  }
+  .account-modal-title { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+  .account-modal-desc { font-size: 13px; opacity: 0.6; line-height: 1.5; margin-bottom: 20px; }
+  .account-modal-actions { display: flex; flex-direction: column; gap: 10px; }
+
+  /* CANDIDATS */
+  .cand-row {
+    background: rgba(255,255,255,0.08); border-radius: 7px; padding: 11px 12px;
+    margin-bottom: 7px; display: flex; align-items: center; gap: 10px;
+  }
+  .cand-avatar {
+    width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700;
+  }
+  .drag-handle { opacity: 0.25; font-size: 15px; cursor: grab; }
+  .delete-btn  { color: var(--coral); opacity: 0.6; font-size: 15px; cursor: pointer; padding: 3px; }
+  .delete-btn:hover { opacity: 1; }
+  .add-row {
+    background: rgba(255,255,255,0.04); border: 1.5px dashed rgba(255,255,255,0.18);
+    border-radius: 7px; padding: 11px 12px; display: flex; align-items: center;
+    gap: 10px; cursor: pointer; margin-bottom: 7px;
+  }
+
+  /* BALLOT */
+  .ballot-scroll { overflow: hidden; }
+  .ballot-row { display: flex; gap: 10px; padding-right: 28px; }
+  .ballot-card {
+    background: white; color: #111; border-radius: 10px; padding: 14px;
+    flex-shrink: 0; width: calc(100% - 28px);
+  }
+  .ballot-peek {
+    background: white; color: #111; border-radius: 10px; padding: 14px;
+    flex-shrink: 0; width: calc(100% - 28px); opacity: 0.4; transform: scale(0.96);
+  }
+  .ballot-header { display: flex; align-items: center; gap: 9px; margin-bottom: 12px; }
+  .ballot-avatar {
+    width: 34px; height: 34px; border-radius: 50%; background: rgba(36,0,253,0.1);
+    display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0;
+  }
+  /* Mentions du plus positif au plus négatif */
+  .mention-btn {
+    display: block; width: 100%; border: none; border-radius: 4px; padding: 9px 12px;
+    font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500;
+    text-align: left; cursor: pointer; margin-bottom: 4px;
+    background: rgba(0,0,0,0.07); color: #888;
+  }
+  .mention-selected { font-weight: 700; }
+  .m7s { background: var(--m7) !important; color: white !important; }
+  .m6s { background: var(--m6) !important; color: #111 !important; }
+  .m5s { background: var(--m5) !important; color: #111 !important; }
+  .m4s { background: var(--m4) !important; color: #111 !important; }
+  .m3s { background: var(--m3) !important; color: white !important; }
+  .m2s { background: var(--m2) !important; color: white !important; }
+  .m1s { background: var(--m1) !important; color: white !important; }
+
+  /* PAGINATION */
+  .pagination { display: flex; justify-content: center; gap: 5px; margin-top: 12px; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.25); }
+  .dot-active { background: white; width: 18px; border-radius: 4px; }
+
+  /* INVITATIONS */
+  .inv-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .inv-row:last-child { border-bottom: none; }
+  .type-badge {
+    font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 3px;
+    flex-shrink: 0; text-transform: uppercase; letter-spacing: 0.4px;
+  }
+  .badge-email { background: rgba(36,0,253,0.25); color: #9B8FFF; }
+  .badge-qr    { background: rgba(160,207,28,0.18); color: var(--m6); }
+  .badge-link  { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.55); }
+  .inv-info { flex: 1; min-width: 0; }
+  .inv-dest { font-size: 12px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .inv-sub  { font-size: 10px; opacity: 0.4; margin-top: 1px; }
+  .inv-status { font-size: 11px; font-weight: 700; flex-shrink: 0; }
+  .s-voted  { color: var(--m7); }
+  .s-opened { color: var(--m5); }
+  .s-sent   { color: var(--grey-mid); }
+
+  /* PROFIL DE MÉRITE */
+  .merit-row { margin-bottom: 18px; }
+  .merit-label { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; margin-bottom: 5px; }
+  .merit-mention { font-size: 12px; font-weight: 700; }
+  .merit-bar-wrap { position: relative; }
+  .merit-bar {
+    height: 14px; border-radius: 4px; display: flex; gap: 1px;
+  }
+  .merit-seg { height: 100%; }
+  .merit-seg:first-child { border-radius: 4px 0 0 4px; }
+  .merit-seg:last-child  { border-radius: 0 4px 4px 0; }
+  /* Marqueur médiane */
+  .merit-median {
+    position: absolute; top: -3px; width: 2px; height: 20px;
+    background: white; border-radius: 1px;
+    box-shadow: 0 0 4px rgba(0,0,0,0.5);
+  }
+  .merit-median-label {
+    position: absolute; top: -18px; font-size: 9px; font-weight: 700;
+    color: white; transform: translateX(-50%); white-space: nowrap;
+    background: rgba(0,0,0,0.4); padding: 1px 4px; border-radius: 2px;
+  }
+  .merit-winner-badge {
+    background: rgba(58,153,24,0.15); border: 1px solid rgba(58,153,24,0.3);
+    border-radius: 7px; padding: 10px 12px; margin-bottom: 12px;
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  /* TABS */
+  .tabs { display: flex; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 14px; }
+  .tab { padding: 8px 14px; font-size: 12px; font-weight: 500; cursor: pointer; border-bottom: 2px solid transparent; opacity: 0.45; white-space: nowrap; }
+  .tab-active { border-bottom-color: white; opacity: 1; font-weight: 700; }
+
+  /* LISTING */
+  .el-card { background: rgba(255,255,255,0.07); border-radius: 8px; padding: 12px 14px; margin-bottom: 8px; }
+  .el-active      { border-left: 3px solid var(--m7); }
+  .el-closed      { border-left: 3px solid rgba(255,255,255,0.12); opacity: 0.65; }
+  .el-participated{ border-left: 3px solid var(--primary); }
+  .el-title { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+  .el-meta  { font-size: 11px; opacity: 0.45; }
+  .tag {
+    display: inline-block; border-radius: 3px; padding: 2px 7px;
+    font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px;
+  }
+  .tag-active  { background: rgba(58,153,24,0.2); color: var(--m7); }
+  .tag-closed  { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.45); }
+  .tag-voted   { background: rgba(36,0,253,0.3); color: #9B8FFF; }
+  .prog-bar { height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; margin: 8px 0 3px; overflow: hidden; }
+  .prog-fill { height: 100%; background: var(--m7); border-radius: 2px; }
+
+  /* EMARGEMENT */
+  .emarg-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 12px;
+  }
+  .emarg-row:last-child { border-bottom: none; }
+  .emarg-chip {
+    font-size: 10px; padding: 2px 6px; border-radius: 3px; font-weight: 700; color: white;
+    cursor: pointer; position: relative;
+  }
+
+  /* TOOLTIP */
+  .tooltip {
+    display: none; position: absolute; bottom: calc(100% + 6px); left: 50%;
+    transform: translateX(-50%); background: #0A004C; border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 6px; padding: 8px 10px; font-size: 11px; white-space: nowrap;
+    z-index: 50; box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+  }
+  .tooltip::after {
+    content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+    border: 5px solid transparent; border-top-color: rgba(255,255,255,0.2);
+  }
+  .emarg-chip.active .tooltip { display: block; }
+  .merit-seg.active .tooltip { display: block; }
+  .merit-seg { position: relative; overflow: visible; }
+  .tooltip-name { display: flex; align-items: center; gap: 5px; padding: 2px 0; }
+
+  /* VERIFICATION */
+  .verify-box {
+    background: rgba(58,153,24,0.1); border: 1px solid rgba(58,153,24,0.3);
+    border-radius: 8px; padding: 14px;
+  }
+  .verify-fail {
+    background: rgba(255,62,55,0.1); border: 1px solid rgba(255,62,55,0.3);
+    border-radius: 8px; padding: 14px;
+  }
+  .proof-code {
+    font-family: monospace; font-size: 11px; background: rgba(0,0,0,0.25);
+    padding: 7px 10px; border-radius: 4px; color: var(--m6); word-break: break-all; margin-top: 6px;
+  }
+
+  /* CONFIRMATION */
+  .confirm-screen {
+    background: var(--primary); border-radius: 28px; padding: 28px 18px;
+    text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  }
+  .confirm-cards { display: flex; gap: 8px; margin: 16px 0; }
+  .confirm-card { flex: 1; background: var(--darker); border-radius: 7px; padding: 10px; text-align: left; }
+  .cc-title { font-size: 10px; opacity: 0.45; margin-bottom: 3px; }
+  .cc-val   { font-size: 12px; font-weight: 700; }
+  .proof-box {
+    background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 7px; padding: 12px; text-align: left;
+  }
+
+  /* LEGEND */
+  .legend { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 8px; }
+  .legend-item { display: flex; align-items: center; gap: 3px; font-size: 9px; opacity: 0.55; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+
+  .spacer    { height: 14px; }
+  .spacer-sm { height: 7px; }
+  .cta-bar   { padding-top: 12px; margin-top: 6px; }
+
+  /* BOUTON INFO (?) */
+  .info-btn {
+    width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.35);
+    background: transparent; color: white; font-size: 12px; font-weight: 700;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Sans', sans-serif; flex-shrink: 0;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .info-btn:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.6); }
+
+  /* MODALE INFO */
+  .info-modal {
+    display: none; position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+    align-items: flex-end; justify-content: center;
+  }
+  .info-modal.open { display: flex; }
+  .info-modal-sheet {
+    background: var(--darker); border-radius: 18px 18px 0 0;
+    padding: 24px 20px 36px; width: 100%; max-width: 420px;
+  }
+  .info-modal-pill {
+    width: 36px; height: 4px; background: rgba(255,255,255,0.2);
+    border-radius: 2px; margin: 0 auto 20px;
+  }
+  .info-modal-title { font-size: 15px; font-weight: 700; margin-bottom: 14px; }
+  .info-item { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.07); }
+  .info-item:last-child { border-bottom: none; }
+  .info-item-name { font-size: 13px; font-weight: 600; margin-bottom: 3px; display: flex; align-items: center; gap: 6px; }
+  .info-item-desc { font-size: 12px; opacity: 0.55; line-height: 1.45; }
+
+  /* LIEN PLUS D'OPTIONS */
+  .more-options-link {
+    display: block; text-align: center; font-size: 12px; color: #9B8FFF;
+    text-decoration: underline; cursor: pointer; margin-top: 14px; padding-bottom: 2px;
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <span class="nav-title">MieuxVoter v2</span>
+  <button class="nav-btn active" onclick="show('d1')">1 · Accueil</button>
+  <button class="nav-btn" onclick="show('d2')">2 · Paramètres</button>
+  <button class="nav-btn" onclick="show('d3')">3 · Candidats</button>
+  <button class="nav-btn" onclick="show('d4')">4 · Bulletin</button>
+  <button class="nav-btn" onclick="show('d4c')">4c · Bulletin — Sans avis</button>
+  <button class="nav-btn" onclick="show('d5')">5 · Confirmation</button>
+  <button class="nav-btn" onclick="show('d6')">6 · Vérification</button>
+  <button class="nav-btn" onclick="show('d7')">7 · Résultats</button>
+  <button class="nav-btn" onclick="show('d8')">8 · Résultats — Émargement</button>
+  <button class="nav-btn" onclick="show('d9')">9 · Résultats — Transparent</button>
+  <button class="nav-btn" onclick="show('d10')">10 · Invitations</button>
+  <button class="nav-btn" onclick="show('d11')">11 · Mes élections</button>
+  <button class="nav-btn" onclick="show('d12')">12 · Magic-link</button>
+  <button class="nav-btn" onclick="show('d13')">13 · Vote Rapide (variante)</button>
+  <button class="nav-btn" onclick="show('d14')">14 · Sondage mail vérifié</button>
+  <button class="nav-btn" onclick="show('d15')">15 · Scrutin</button>
+</nav>
+
+<!-- ══ D1 — ACCUEIL ══ -->
+<div id="d1" class="direction visible">
+  <div class="direction-label">1 — Page d'accueil · Mobile</div>
+  <div class="phone">
+    <div style="font-weight:700;font-size:17px;margin-bottom:28px;">🗳️ Mieux<strong>Voter</strong></div>
+    <p style="font-size:11px;opacity:0.5;margin-bottom:6px;">Simple et gratuit</p>
+    <h1 style="font-size:24px;font-weight:700;line-height:1.2;margin-bottom:14px;">Organisez un vote avec le Jugement Majoritaire</h1>
+    <div class="spacer"></div>
+    <input class="field" type="text" placeholder="Posez la question de votre vote ici">
+    <button class="btn-primary">C'est parti →</button>
+    <div class="spacer"></div>
+    <p style="font-size:11px;opacity:0.35;text-align:center;">Pas de publicité, ni données personnelles.</p>
+    <div class="spacer"></div>
+    <div style="display:flex;gap:8px;">
+      <div style="flex:1;background:rgba(255,255,255,0.08);border-radius:7px;padding:10px;text-align:center;">
+        <div style="font-size:20px;margin-bottom:5px;">⚡</div>
+        <div style="font-size:11px;font-weight:700;">Simple</div>
+        <div style="font-size:10px;opacity:0.4;margin-top:2px;">En moins d'une minute</div>
+      </div>
+      <div style="flex:1;background:rgba(255,255,255,0.08);border-radius:7px;padding:10px;text-align:center;">
+        <div style="font-size:20px;margin-bottom:5px;">🎁</div>
+        <div style="font-size:11px;font-weight:700;">Gratuit</div>
+        <div style="font-size:10px;opacity:0.4;margin-top:2px;">Toujours</div>
+      </div>
+      <div style="flex:1;background:rgba(255,255,255,0.08);border-radius:7px;padding:10px;text-align:center;">
+        <div style="font-size:20px;margin-bottom:5px;">✅</div>
+        <div style="font-size:11px;font-weight:700;">Fiable</div>
+        <div style="font-size:10px;opacity:0.4;margin-top:2px;">Preuve de vote</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ D2 — PARAMÈTRES ══ -->
+<div id="d2" class="direction">
+  <div class="direction-label">2 — Paramètres du vote · Mobile (iOS settings + bottom sheet)</div>
+  <div class="phone phone-dark">
+    <div class="stepper">
+      <div class="step step-done">✓</div><div class="step-line step-line-done"></div>
+      <div class="step step-done">✓</div><div class="step-line step-line-done"></div>
+      <div class="step step-active">3</div>
+    </div>
+    <h2>Paramètres du vote</h2>
+    <div class="spacer-sm"></div>
+
+    <!-- 1. Accessibilité du vote -->
+    <div class="param-setting">
+      <div class="param-setting-left">
+        <div class="param-setting-name">Accessibilité du vote</div>
+        <div class="param-setting-desc" id="desc-access">Tout le monde peut voter via le lien</div>
+      </div>
+      <button class="param-setting-btn" onclick="openPicker('picker-access')">
+        <span id="val-access">Public</span><span class="chevron">▼</span>
+      </button>
+    </div>
+
+    <!-- 2. Clôture du vote -->
+    <div class="param-setting">
+      <div class="param-setting-left">
+        <div class="param-setting-name">Clôture du vote</div>
+        <div class="param-setting-desc" id="desc-cloture">Le vote reste ouvert indéfiniment</div>
+      </div>
+      <button class="param-setting-btn" onclick="openPicker('picker-cloture')">
+        <span id="val-cloture">Jamais</span><span class="chevron">▼</span>
+      </button>
+    </div>
+
+    <!-- 3. Arrivée des résultats -->
+    <div class="param-setting">
+      <div class="param-setting-left">
+        <div class="param-setting-name">Arrivée des résultats</div>
+        <div class="param-setting-desc" id="desc-resultats">Résultats visibles dès le premier vote</div>
+      </div>
+      <button class="param-setting-btn" onclick="openPicker('picker-resultats')">
+        <span id="val-resultats">Direct</span><span class="chevron">▼</span>
+      </button>
+    </div>
+
+    <!-- 4. Accès aux résultats -->
+    <div class="param-setting">
+      <div class="param-setting-left">
+        <div class="param-setting-name">Accès aux résultats</div>
+        <div class="param-setting-desc" id="desc-acces-res">Tout le monde peut consulter les résultats</div>
+      </div>
+      <button class="param-setting-btn" onclick="openPicker('picker-acces-res')">
+        <span id="val-acces-res">Public</span><span class="chevron">▼</span>
+      </button>
+    </div>
+
+    <!-- 5. Niveau de transparence -->
+    <div class="param-setting">
+      <div class="param-setting-left">
+        <div class="param-setting-name">Niveau de transparence</div>
+        <div class="param-setting-desc" id="desc-transp">Personne ne voit les votes individuels</div>
+      </div>
+      <button class="param-setting-btn" onclick="openPicker('picker-transp')">
+        <span id="val-transp">Anonyme</span><span class="chevron">▼</span>
+      </button>
+    </div>
+
+    <!-- Toggles -->
+    <div class="param-setting" style="cursor:default;">
+      <div class="param-setting-left">
+        <div class="param-setting-name">Ordre aléatoire des candidats</div>
+        <div class="param-setting-desc">Les candidats apparaissent dans un ordre différent pour chaque votant</div>
+      </div>
+      <div class="toggle toggle-on" onclick="this.classList.toggle('toggle-on')"></div>
+    </div>
+    <div class="param-setting" style="cursor:default;">
+      <div class="param-setting-left">
+        <div class="param-setting-name">Personnaliser les mentions</div>
+        <div class="param-setting-desc">Modifier les libellés des mentions (Excellent, Très bien…)</div>
+      </div>
+      <div class="toggle" onclick="this.classList.toggle('toggle-on')"></div>
+    </div>
+
+    <!-- Bulle info suppression auto -->
+    <div class="info-bubble">
+      <span style="flex-shrink:0;">⚠️</span>
+      <span>Sans compte, cette élection sera <strong>supprimée après 30 jours</strong>. <span class="account-link" style="color:#FFD166;">Utiliser un compte</span> pour désactiver cette limite.</span>
+    </div>
+
+    <div class="cta-bar">
+      <button class="btn-primary">Valider les paramètres →</button>
+    </div>
+  </div>
+
+  <!-- ── PICKER : Accessibilité du vote ── -->
+  <div id="picker-access" class="picker-sheet" onclick="closePicker(event,'picker-access')">
+    <div class="picker-inner">
+      <div class="picker-pill"></div>
+      <div class="picker-title">Accessibilité du vote</div>
+      <div class="picker-option picker-selected"
+           onclick="pickOption('picker-access','val-access','desc-access','Public','Tout le monde peut voter via le lien',false,event)">
+        <div class="picker-radio"></div>
+        <div class="picker-option-text">
+          <div class="picker-option-name">Public</div>
+          <div class="picker-option-sub">Tout le monde peut voter via le lien</div>
+        </div>
+      </div>
+      <div class="picker-option picker-option-locked"
+           onclick="pickLocked('Vérification par email','Les participants devront confirmer leur email avant de voter.',event)">
+        <div class="picker-radio"></div>
+        <div class="picker-option-text">
+          <div class="picker-option-name">Vérification par email 🔒</div>
+          <div class="picker-option-sub">Chaque votant confirme son adresse email</div>
+        </div>
+      </div>
+      <div class="picker-option picker-option-locked"
+           onclick="pickLocked('Par invitation nominative','Vous gérez la liste des votants et envoyez les invitations.',event)">
+        <div class="picker-radio"></div>
+        <div class="picker-option-text">
+          <div class="picker-option-name">Par invitation nominative 🔒</div>
+          <div class="picker-option-sub">Seuls les invités peuvent voter</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PICKER : Clôture du vote ── -->
+  <div id="picker-cloture" class="picker-sheet" onclick="closePicker(event,'picker-cloture')">
+    <div class="picker-inner">
+      <div class="picker-pill"></div>
+      <div class="picker-title">Clôture du vote</div>
+      <div class="picker-option picker-selected"
+           onclick="pickOption('picker-cloture','val-cloture','desc-cloture','Jamais','Le vote reste ouvert indéfiniment',false,event)">
+        <div class="picker-radio"></div>
+        <div class="picker-option-text">
+          <div class="picker-option-name">Jamais</div>
+          <div class="picker-option-sub">Le vote reste ouvert indéfiniment</div>
+        </div>
+      </div>
+      <div class="picker-option picker-option-locked"
+           onclick="pickLocked('Clôture par période','Définissez une date de début et de fin pour votre vote.',event)">
+        <div class="picker-radio"></div>
+        <div class="picker-option-text">
+          <div class="picker-option-name">Période 🔒</div>
+          <div class="picker-option-sub">Fermeture automatique à une date choisie</div>
+        </div>
+      </div>
+      <div class="picker-option picker-option-locked"
+           onclick="pickLocked('Clôture manuelle','Vous clôturez le vote vous-même depuis votre espace.',event)">
+        <div class="picker-radio"></div>
+        <div class="picker-option-text">
+          <div class="picker-option-name">Manuel 🔒</div>
+          <div class="picker-option-sub">Je clôture le vote moi-même</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PICKER : Arrivée des résultats ── -->
+  <div id="picker-resultats" class="picker-sheet" onclick="closePicker(event,'picker-resultats')">
+    <div class="picker-inner">
+      <div class="picker-pill"></div>
+      <div class="picker-title">Arrivée des résultats</div>
+      <div class="picker-option picker-selected"
+           onclick="pickOption('picker-resultats','val-resultats','desc-resultats','Direct','Résultats visibles dès le premier vote',false,event)">
+        <div class="picker-radio"></div>
+        <div class="picker-option-text">
+          <div class="picker-option-name">Direct</div>
+          <div class="picker-option-sub">Résultats visibles dès le premier vote</div>
+        </div>
+      </div>
+      <div class="picker-option picker-option-locked"
+           onclick="pickLocked('Résultats à la clôture','Les résultats seront révélés automatiquement à la fermeture du vote.',event)">
+        <div class="picker-radio"></div>
+        <div class="picker-option-text">
+          <div class="picker-option-name">Sur clôture 🔒</div>
+          <div class="picker-option-sub">Résultats publiés à la fermeture du vote</div>
+        </div>
+      </div>
+      <div class="picker-option picker-option-locked"
+           onclick="pickLocked('Publication manuelle','Vous choisissez quand publier les résultats.',event)">
+        <div class="picker-radio"></div>
+        <div class="picker-option-text">
+          <div class="picker-option-name">Manuel 🔒</div>
+          <div class="picker-option-sub">Je publie les résultats moi-même</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PICKER : Accès aux résultats ── -->
+  <div id="picker-acces-res" class="picker-sheet" onclick="closePicker(event,'picker-acces-res')">
+    <div class="picker-inner">
+      <div class="picker-pill"></div>
+      <div class="picker-title">Accès aux résultats</div>
+      <div class="picker-option picker-selected"
+           onclick="pickOption('picker-acces-res','val-acces-res','desc-acces-res','Public','Tout le monde peut consulter les résultats',false,event)">
+        <div class="picker-radio"></div>
+        <div class="picker-option-text">
+          <div class="picker-option-name">Public</div>
+          <div class="picker-option-sub">Tout le monde peut consulter les résultats</div>
+        </div>
+      </div>
+      <div class="picker-option picker-option-locked"
+           onclick="pickLocked('Accès privé aux résultats','Seuls les participants pourront voir les résultats.',event)">
+        <div class="picker-radio"></div>
+        <div class="picker-option-text">
+          <div class="picker-option-name">Privé 🔒</div>
+          <div class="picker-option-sub">Résultats visibles pour les participants seulement</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PICKER : Niveau de transparence ── -->
+  <div id="picker-transp" class="picker-sheet" onclick="closePicker(event,'picker-transp')">
+    <div class="picker-inner">
+      <div class="picker-pill"></div>
+      <div class="picker-title">Niveau de transparence</div>
+      <div class="picker-option picker-selected"
+           onclick="pickOption('picker-transp','val-transp','desc-transp','Anonyme','Personne ne voit les votes individuels',false,event)">
+        <div class="picker-radio"></div>
+        <div class="picker-option-text">
+          <div class="picker-option-name">Anonyme</div>
+          <div class="picker-option-sub">Personne ne voit les votes individuels</div>
+        </div>
+      </div>
+      <div class="picker-option"
+           onclick="pickOption('picker-transp','val-transp','desc-transp','Émargement','On voit qui a voté, mais pas comment',false,event)">
+        <div class="picker-radio"></div>
+        <div class="picker-option-text">
+          <div class="picker-option-name">Liste d'émargement</div>
+          <div class="picker-option-sub">On voit qui a voté, mais pas comment</div>
+        </div>
+      </div>
+      <div class="picker-option"
+           onclick="pickOption('picker-transp','val-transp','desc-transp','Transparent','Tout le monde voit les votes de tous',false,event)">
+        <div class="picker-radio"></div>
+        <div class="picker-option-text">
+          <div class="picker-option-name">Totalement transparent</div>
+          <div class="picker-option-sub">Tout le monde voit les votes de tous</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MODALE COMPTE ── -->
+  <div id="accountModal" class="account-modal">
+    <div class="account-modal-sheet">
+      <div class="account-modal-pill"></div>
+      <div class="account-modal-title" id="accountModalTitle">Fonctionnalité avec compte</div>
+      <div class="account-modal-desc" id="accountModalDesc">Cette option nécessite un compte MieuxVoter.</div>
+      <div class="account-modal-actions">
+        <button class="btn-primary" onclick="closeAccountModal()">Se connecter / Créer un compte →</button>
+        <button class="btn-ghost" onclick="closeAccountModal()">Continuer sans compte</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ D3 — CANDIDATS ══ -->
+<div id="d3" class="direction">
+  <div class="direction-label">3 — Candidats · Mobile (corbeille rouge)</div>
+  <div class="phone phone-dark">
+    <div class="stepper">
+      <div class="step step-done">✓</div><div class="step-line step-line-done"></div>
+      <div class="step step-active">2</div><div class="step-line"></div>
+      <div class="step step-inactive">3</div>
+    </div>
+    <h2>Saisissez vos candidats.</h2>
+    <div class="spacer-sm"></div>
+    <div class="cand-row">
+      <div class="drag-handle">⠿</div>
+      <div class="cand-avatar" style="background:rgba(160,207,28,0.18);color:var(--m6);">C</div>
+      <div style="flex:1;font-size:13px;font-weight:500;">Cameron Williamson</div>
+      <div class="delete-btn">🗑</div>
+    </div>
+    <div class="cand-row">
+      <div class="drag-handle">⠿</div>
+      <div class="cand-avatar" style="background:rgba(36,0,253,0.2);color:#9B8FFF;">E</div>
+      <div style="flex:1;font-size:13px;font-weight:500;">Esther Howard</div>
+      <div class="delete-btn">🗑</div>
+    </div>
+    <div class="add-row">
+      <div style="width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-size:16px;">+</div>
+      <div style="font-size:13px;opacity:0.45;">Ajouter un candidat</div>
+    </div>
+    <p style="font-size:11px;opacity:0.25;text-align:center;margin:8px 0 12px;">Glissez ⠿ pour réordonner</p>
+    <div class="cta-bar">
+      <button class="btn-primary">Valider les candidats →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ D4 — BULLETIN DE VOTE ══ -->
+<div id="d4" class="direction">
+  <div class="direction-label">4 — Bulletin · Mobile (badge transparence en-tête + rappel popup)</div>
+
+  <!-- Variante: Anonyme -->
+  <div class="stitle" style="margin-bottom:8px;">Variante A — Anonyme</div>
+  <div class="phone phone-darkest" style="margin-bottom:28px;">
+    <div style="font-size:11px;opacity:0.4;text-align:center;margin-bottom:14px;">Vote ouvert jusqu'au 30 sept. 2025</div>
+    <div style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.07);border-radius:8px;padding:7px 11px;margin-bottom:14px;font-size:12px;">
+      <span style="font-size:14px;">🔒</span>
+      <div><span style="font-weight:600;">Vote anonyme</span><span style="opacity:0.45;margin-left:4px;">— rien ne vous identifie</span></div>
+    </div>
+    <div style="font-size:15px;font-weight:700;margin-bottom:12px;">Quel est le meilleur candidat pour le syndicat ?</div>
+    <div class="ballot-scroll">
+      <div class="ballot-row">
+        <div class="ballot-card">
+          <div class="ballot-header">
+            <div class="ballot-avatar">👤</div>
+            <div>
+              <div style="font-size:14px;font-weight:700;">Cameron Williamson</div>
+              <div style="font-size:11px;color:#888;">En savoir plus →</div>
+            </div>
+          </div>
+          <button class="mention-btn">Excellent</button>
+          <button class="mention-btn m6s mention-selected">✓ Très bien</button>
+          <button class="mention-btn">Bien</button>
+          <button class="mention-btn">Assez bien</button>
+          <button class="mention-btn">Passable</button>
+          <button class="mention-btn">Insuffisant</button>
+          <button class="mention-btn">À rejeter</button>
+        </div>
+        <div class="ballot-peek">
+          <div class="ballot-header">
+            <div class="ballot-avatar">👤</div>
+            <div><div style="font-size:14px;font-weight:700;">Esther Howard</div></div>
+          </div>
+          <button class="mention-btn">Excellent</button>
+          <button class="mention-btn">Très bien</button>
+          <button class="mention-btn">Bien</button>
+        </div>
+      </div>
+    </div>
+    <div class="pagination"><div class="dot dot-active"></div><div class="dot"></div></div>
+    <div class="cta-bar">
+      <button class="btn-primary" style="font-size:13px;" onclick="document.getElementById('d4-modal-anon').classList.add('open')">Envoyer mon vote →</button>
+    </div>
+  </div>
+  <div id="d4-modal-anon" class="info-modal" onclick="if(event.target===this)this.classList.remove('open')">
+    <div class="info-modal-sheet">
+      <div class="info-modal-pill"></div>
+      <div class="info-modal-title">🗳️ Confirmer votre vote</div>
+      <div style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.06);border-radius:10px;padding:11px 13px;margin-bottom:16px;">
+        <span style="font-size:22px;">🔒</span>
+        <div>
+          <div style="font-size:13px;font-weight:600;">Vote anonyme</div>
+          <div style="font-size:12px;opacity:0.5;margin-top:2px;">Rien ne vous identifie.</div>
+        </div>
+      </div>
+      <div style="font-size:12px;font-weight:600;margin-bottom:8px;">Vérifiez vos choix avant d'envoyer</div>
+      <div style="background:rgba(255,255,255,0.05);border-radius:8px;overflow:hidden;margin-bottom:16px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 12px;border-bottom:1px solid rgba(255,255,255,0.07);">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:11px;">👤</div>
+            <span style="font-size:13px;">Cameron Williamson</span>
+          </div>
+          <span style="font-size:12px;font-weight:600;color:var(--m6);">Très bien</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 12px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:11px;">👤</div>
+            <span style="font-size:13px;">Esther Howard</span>
+          </div>
+          <span style="font-size:12px;font-weight:600;color:var(--m5);">Passable</span>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="document.getElementById('d4-modal-anon').classList.remove('open')">Confirmer et envoyer →</button>
+      <button class="btn-ghost" style="margin-top:8px;" onclick="document.getElementById('d4-modal-anon').classList.remove('open')">Revoir mes choix</button>
+    </div>
+  </div>
+
+  <!-- Variante: Émargement -->
+  <div class="stitle" style="margin-bottom:8px;">Variante B — Liste d'émargement</div>
+  <div class="phone phone-darkest" style="margin-bottom:28px;">
+    <div style="font-size:11px;opacity:0.4;text-align:center;margin-bottom:14px;">Vote ouvert jusqu'au 30 sept. 2025</div>
+    <div style="display:flex;align-items:center;gap:6px;background:rgba(160,207,28,0.1);border:1px solid rgba(160,207,28,0.25);border-radius:8px;padding:7px 11px;margin-bottom:14px;font-size:12px;">
+      <span style="font-size:14px;">📋</span>
+      <div><span style="font-weight:600;">Liste d'émargement</span><span style="opacity:0.55;margin-left:4px;">— on saura que vous avez participé</span></div>
+    </div>
+    <div style="font-size:15px;font-weight:700;margin-bottom:12px;">Quel est le meilleur candidat pour le syndicat ?</div>
+    <div class="ballot-scroll">
+      <div class="ballot-row">
+        <div class="ballot-card">
+          <div class="ballot-header">
+            <div class="ballot-avatar">👤</div>
+            <div>
+              <div style="font-size:14px;font-weight:700;">Cameron Williamson</div>
+              <div style="font-size:11px;color:#888;">En savoir plus →</div>
+            </div>
+          </div>
+          <button class="mention-btn">Excellent</button>
+          <button class="mention-btn m6s mention-selected">✓ Très bien</button>
+          <button class="mention-btn">Bien</button>
+          <button class="mention-btn">Assez bien</button>
+          <button class="mention-btn">Passable</button>
+          <button class="mention-btn">Insuffisant</button>
+          <button class="mention-btn">À rejeter</button>
+        </div>
+        <div class="ballot-peek">
+          <div class="ballot-header">
+            <div class="ballot-avatar">👤</div>
+            <div><div style="font-size:14px;font-weight:700;">Esther Howard</div></div>
+          </div>
+          <button class="mention-btn">Excellent</button>
+          <button class="mention-btn">Très bien</button>
+          <button class="mention-btn">Bien</button>
+        </div>
+      </div>
+    </div>
+    <div class="pagination"><div class="dot dot-active"></div><div class="dot"></div></div>
+    <div class="cta-bar">
+      <button class="btn-primary" style="font-size:13px;" onclick="document.getElementById('d4-modal-emarg').classList.add('open')">Envoyer mon vote →</button>
+    </div>
+  </div>
+  <div id="d4-modal-emarg" class="info-modal" onclick="if(event.target===this)this.classList.remove('open')">
+    <div class="info-modal-sheet">
+      <div class="info-modal-pill"></div>
+      <div class="info-modal-title">🗳️ Confirmer votre vote</div>
+      <div style="display:flex;align-items:center;gap:10px;background:rgba(160,207,28,0.08);border:1px solid rgba(160,207,28,0.2);border-radius:10px;padding:11px 13px;margin-bottom:16px;">
+        <span style="font-size:22px;">📋</span>
+        <div>
+          <div style="font-size:13px;font-weight:600;">Liste d'émargement</div>
+          <div style="font-size:12px;opacity:0.55;margin-top:2px;">On saura que vous avez participé.</div>
+        </div>
+      </div>
+      <div style="font-size:12px;font-weight:600;margin-bottom:8px;">Vérifiez vos choix avant d'envoyer</div>
+      <div style="background:rgba(255,255,255,0.05);border-radius:8px;overflow:hidden;margin-bottom:16px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 12px;border-bottom:1px solid rgba(255,255,255,0.07);">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:11px;">👤</div>
+            <span style="font-size:13px;">Cameron Williamson</span>
+          </div>
+          <span style="font-size:12px;font-weight:600;color:var(--m6);">Très bien</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 12px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:11px;">👤</div>
+            <span style="font-size:13px;">Esther Howard</span>
+          </div>
+          <span style="font-size:12px;font-weight:600;color:var(--m5);">Passable</span>
+        </div>
+      </div>
+      <div style="margin-bottom:16px;">
+        <label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px;">Votre pseudonyme <span style="color:var(--coral);">*</span></label>
+        <input class="field" style="margin-bottom:4px;" type="text" placeholder="Ex : Marie D., Participant 42…">
+        <div style="font-size:11px;opacity:0.4;">Visible dans la liste d'émargement. Pas vos choix.</div>
+      </div>
+      <button class="btn-primary" onclick="document.getElementById('d4-modal-emarg').classList.remove('open')">Confirmer et envoyer →</button>
+      <button class="btn-ghost" style="margin-top:8px;" onclick="document.getElementById('d4-modal-emarg').classList.remove('open')">Revoir mes choix</button>
+    </div>
+  </div>
+
+  <!-- Variante: Totalement transparent -->
+  <div class="stitle" style="margin-bottom:8px;">Variante C — Totalement transparent</div>
+  <div class="phone phone-darkest">
+    <div style="font-size:11px;opacity:0.4;text-align:center;margin-bottom:14px;">Vote ouvert jusqu'au 30 sept. 2025</div>
+    <div style="display:flex;align-items:center;gap:6px;background:rgba(255,180,0,0.1);border:1px solid rgba(255,180,0,0.3);border-radius:8px;padding:7px 11px;margin-bottom:14px;font-size:12px;">
+      <span style="font-size:14px;">👁</span>
+      <div><span style="font-weight:600;color:#FFD060;">Totalement transparent</span><span style="opacity:0.65;margin-left:4px;">— vos choix seront publics avec votre nom</span></div>
+    </div>
+    <div style="font-size:15px;font-weight:700;margin-bottom:12px;">Quel est le meilleur candidat pour le syndicat ?</div>
+    <div class="ballot-scroll">
+      <div class="ballot-row">
+        <div class="ballot-card">
+          <div class="ballot-header">
+            <div class="ballot-avatar">👤</div>
+            <div>
+              <div style="font-size:14px;font-weight:700;">Cameron Williamson</div>
+              <div style="font-size:11px;color:#888;">En savoir plus →</div>
+            </div>
+          </div>
+          <button class="mention-btn">Excellent</button>
+          <button class="mention-btn m6s mention-selected">✓ Très bien</button>
+          <button class="mention-btn">Bien</button>
+          <button class="mention-btn">Assez bien</button>
+          <button class="mention-btn">Passable</button>
+          <button class="mention-btn">Insuffisant</button>
+          <button class="mention-btn">À rejeter</button>
+        </div>
+        <div class="ballot-peek">
+          <div class="ballot-header">
+            <div class="ballot-avatar">👤</div>
+            <div><div style="font-size:14px;font-weight:700;">Esther Howard</div></div>
+          </div>
+          <button class="mention-btn">Excellent</button>
+          <button class="mention-btn">Très bien</button>
+          <button class="mention-btn">Bien</button>
+        </div>
+      </div>
+    </div>
+    <div class="pagination"><div class="dot dot-active"></div><div class="dot"></div></div>
+    <div class="cta-bar">
+      <button class="btn-primary" style="font-size:13px;" onclick="document.getElementById('d4-modal-transp').classList.add('open')">Envoyer mon vote →</button>
+    </div>
+  </div>
+  <div id="d4-modal-transp" class="info-modal" onclick="if(event.target===this)this.classList.remove('open')">
+    <div class="info-modal-sheet">
+      <div class="info-modal-pill"></div>
+      <div class="info-modal-title">🗳️ Confirmer votre vote</div>
+      <div style="display:flex;align-items:center;gap:10px;background:rgba(255,180,0,0.1);border:1px solid rgba(255,180,0,0.3);border-radius:10px;padding:11px 13px;margin-bottom:16px;">
+        <span style="font-size:22px;">👁</span>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:#FFD060;">Totalement transparent</div>
+          <div style="font-size:12px;opacity:0.65;margin-top:2px;">Votre vote sera <strong>public</strong> : votre pseudonyme et vos mentions seront visibles par tous.</div>
+        </div>
+      </div>
+      <div style="font-size:12px;font-weight:600;margin-bottom:8px;">Vérifiez vos choix avant d'envoyer</div>
+      <div style="background:rgba(255,255,255,0.05);border-radius:8px;overflow:hidden;margin-bottom:16px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 12px;border-bottom:1px solid rgba(255,255,255,0.07);">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:11px;">👤</div>
+            <span style="font-size:13px;">Cameron Williamson</span>
+          </div>
+          <span style="font-size:12px;font-weight:600;color:var(--m6);">Très bien</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 12px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:11px;">👤</div>
+            <span style="font-size:13px;">Esther Howard</span>
+          </div>
+          <span style="font-size:12px;font-weight:600;color:var(--m5);">Passable</span>
+        </div>
+      </div>
+      <div style="margin-bottom:16px;">
+        <label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px;">Votre pseudonyme <span style="color:var(--coral);">*</span></label>
+        <input class="field" style="margin-bottom:4px;" type="text" placeholder="Ex : Marie D., Participant 42…">
+        <div style="font-size:11px;opacity:0.4;">Associé publiquement à vos mentions dans les résultats.</div>
+      </div>
+      <button class="btn-primary" onclick="document.getElementById('d4-modal-transp').classList.remove('open')">Je comprends, confirmer →</button>
+      <button class="btn-ghost" style="margin-top:8px;" onclick="document.getElementById('d4-modal-transp').classList.remove('open')">Revoir mes choix</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ D4c — BULLETIN Sans avis ══ -->
+<div id="d4c" class="direction">
+  <div class="direction-label">4c — Bulletin · Variante "Sans avis"</div>
+
+  <!-- État 1 : aucun avis sélectionné -->
+  <div class="stitle" style="margin-bottom:8px;">État 1 — Bouton "Sans avis" visible, non activé</div>
+  <div class="phone phone-darkest" style="margin-bottom:28px;">
+    <div style="font-size:11px;opacity:0.4;text-align:center;margin-bottom:14px;">Vote ouvert jusqu'au 30 sept. 2025</div>
+    <div style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.07);border-radius:8px;padding:7px 11px;margin-bottom:14px;font-size:12px;">
+      <span style="font-size:14px;">🔒</span>
+      <div><span style="font-weight:600;">Vote anonyme</span><span style="opacity:0.45;margin-left:4px;">— vos choix restent confidentiels</span></div>
+    </div>
+    <div style="font-size:15px;font-weight:700;margin-bottom:12px;">Quel est le meilleur candidat pour le syndicat ?</div>
+    <div class="ballot-scroll">
+      <div class="ballot-row">
+        <div class="ballot-card">
+          <div class="ballot-header">
+            <div class="ballot-avatar">👤</div>
+            <div>
+              <div style="font-size:14px;font-weight:700;">Cameron Williamson</div>
+              <div style="font-size:11px;color:#888;">En savoir plus →</div>
+            </div>
+          </div>
+          <button class="mention-btn">Excellent</button>
+          <button class="mention-btn">Très bien</button>
+          <button class="mention-btn">Bien</button>
+          <button class="mention-btn">Assez bien</button>
+          <button class="mention-btn">Passable</button>
+          <button class="mention-btn">Insuffisant</button>
+          <button class="mention-btn">À rejeter</button>
+          <div style="border-top:1px solid rgba(0,0,0,0.12);margin:6px 0;"></div>
+          <button class="mention-btn">Sans avis</button>
+        </div>
+        <div class="ballot-peek">
+          <div class="ballot-header">
+            <div class="ballot-avatar">👤</div>
+            <div><div style="font-size:14px;font-weight:700;">Esther Howard</div></div>
+          </div>
+          <button class="mention-btn">Excellent</button>
+          <button class="mention-btn">Très bien</button>
+          <button class="mention-btn">Bien</button>
+        </div>
+      </div>
+    </div>
+    <div class="pagination"><div class="dot dot-active"></div><div class="dot"></div></div>
+    <div class="cta-bar">
+      <button class="btn-outline" style="opacity:0.35;font-size:13px;" disabled>Envoyer mon vote (0/2 évalués)</button>
+    </div>
+  </div>
+
+  <!-- État 2 : panneau "Sans avis" ouvert -->
+  <div class="stitle" style="margin-bottom:8px;">État 2 — Panneau "Sans avis" ouvert</div>
+  <div class="phone phone-darkest" style="margin-bottom:28px;position:relative;overflow:hidden;">
+    <div style="font-size:11px;opacity:0.4;text-align:center;margin-bottom:14px;">Vote ouvert jusqu'au 30 sept. 2025</div>
+    <div style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.07);border-radius:8px;padding:7px 11px;margin-bottom:14px;font-size:12px;">
+      <span style="font-size:14px;">🔒</span>
+      <div><span style="font-weight:600;">Vote anonyme</span><span style="opacity:0.45;margin-left:4px;">— vos choix restent confidentiels</span></div>
+    </div>
+    <div style="font-size:15px;font-weight:700;margin-bottom:12px;">Quel est le meilleur candidat pour le syndicat ?</div>
+    <div class="ballot-scroll" style="opacity:0.35;pointer-events:none;">
+      <div class="ballot-row">
+        <div class="ballot-card">
+          <div class="ballot-header">
+            <div class="ballot-avatar">👤</div>
+            <div><div style="font-size:14px;font-weight:700;">Cameron Williamson</div></div>
+          </div>
+          <button class="mention-btn">Excellent</button>
+          <button class="mention-btn">Très bien</button>
+          <button class="mention-btn">Bien</button>
+          <button class="mention-btn">Assez bien</button>
+          <button class="mention-btn">Passable</button>
+          <button class="mention-btn">Insuffisant</button>
+          <button class="mention-btn">À rejeter</button>
+          <div style="border-top:1px solid rgba(0,0,0,0.12);margin:6px 0;"></div>
+          <button class="mention-btn">Sans avis</button>
+        </div>
+      </div>
+    </div>
+    <!-- Panneau bottom-sheet -->
+    <div style="position:absolute;bottom:0;left:0;right:0;background:var(--darker);border-radius:16px 16px 0 0;padding:20px 18px 24px;">
+      <div style="width:36px;height:4px;background:rgba(255,255,255,0.2);border-radius:2px;margin:0 auto 18px;"></div>
+      <div style="font-size:14px;font-weight:700;margin-bottom:4px;">Sans avis sur Cameron Williamson</div>
+      <div style="font-size:12px;opacity:0.5;margin-bottom:18px;line-height:1.5;">Choisissez comment votre abstention est prise en compte.</div>
+      <!-- Option Normaliser -->
+      <div style="background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.15);border-radius:10px;padding:13px 14px;margin-bottom:10px;cursor:pointer;">
+        <div style="font-size:13px;font-weight:700;margin-bottom:4px;">Sans impact</div>
+        <div style="font-size:12px;opacity:0.55;line-height:1.45;">Mon abstention ne pénalise pas cette option mais cette option pourrait être désignée gagnante par les autres votes.</div>
+      </div>
+      <!-- Option À rejeter -->
+      <div style="background:rgba(194,61,19,0.1);border:1.5px solid rgba(194,61,19,0.35);border-radius:10px;padding:13px 14px;margin-bottom:16px;cursor:pointer;">
+        <div style="font-size:13px;font-weight:700;margin-bottom:4px;color:#FF7A5C;">À rejeter</div>
+        <div style="font-size:12px;opacity:0.55;line-height:1.45;">Je m'assure de limiter les chances que cette option soit désignée gagnante. Mon abstention compte comme un rejet.</div>
+      </div>
+      <button style="width:100%;background:none;border:none;color:rgba(255,255,255,0.35);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;padding:4px;">Annuler</button>
+    </div>
+  </div>
+
+  <!-- État 3 : "Sans avis — Normalisé" sélectionné -->
+  <div class="stitle" style="margin-bottom:8px;">État 3 — "Normalisé" sélectionné</div>
+  <div class="phone phone-darkest" style="margin-bottom:28px;">
+    <div style="font-size:11px;opacity:0.4;text-align:center;margin-bottom:14px;">Vote ouvert jusqu'au 30 sept. 2025</div>
+    <div style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.07);border-radius:8px;padding:7px 11px;margin-bottom:14px;font-size:12px;">
+      <span style="font-size:14px;">🔒</span>
+      <div><span style="font-weight:600;">Vote anonyme</span><span style="opacity:0.45;margin-left:4px;">— vos choix restent confidentiels</span></div>
+    </div>
+    <div style="font-size:15px;font-weight:700;margin-bottom:12px;">Quel est le meilleur candidat pour le syndicat ?</div>
+    <div class="ballot-scroll">
+      <div class="ballot-row">
+        <div class="ballot-card">
+          <div class="ballot-header">
+            <div class="ballot-avatar">👤</div>
+            <div>
+              <div style="font-size:14px;font-weight:700;">Cameron Williamson</div>
+              <div style="font-size:11px;color:#888;">En savoir plus →</div>
+            </div>
+          </div>
+          <button class="mention-btn">Excellent</button>
+          <button class="mention-btn">Très bien</button>
+          <button class="mention-btn">Bien</button>
+          <button class="mention-btn">Assez bien</button>
+          <button class="mention-btn">Passable</button>
+          <button class="mention-btn">Insuffisant</button>
+          <button class="mention-btn">À rejeter</button>
+          <div style="border-top:1px solid rgba(0,0,0,0.12);margin:6px 0;"></div>
+          <button class="mention-btn" style="background:transparent;border:1.5px solid rgba(0,0,0,0.3);color:#333;font-weight:600;display:flex;align-items:center;justify-content:space-between;">
+            <span>✓ Sans avis</span><span style="font-size:10px;font-weight:400;color:#666;background:rgba(0,0,0,0.07);border-radius:4px;padding:2px 6px;">Sans impact</span>
+          </button>
+        </div>
+        <div class="ballot-peek">
+          <div class="ballot-header">
+            <div class="ballot-avatar">👤</div>
+            <div><div style="font-size:14px;font-weight:700;">Esther Howard</div></div>
+          </div>
+          <button class="mention-btn">Excellent</button>
+          <button class="mention-btn">Très bien</button>
+          <button class="mention-btn">Bien</button>
+        </div>
+      </div>
+    </div>
+    <div class="pagination"><div class="dot dot-active"></div><div class="dot"></div></div>
+    <div class="cta-bar">
+      <button class="btn-outline" style="opacity:0.35;font-size:13px;" disabled>Envoyer mon vote (1/2 évalués)</button>
+    </div>
+  </div>
+
+  <!-- État 4 : "Sans avis — À rejeter" sélectionné -->
+  <div class="stitle" style="margin-bottom:8px;">État 4 — "À rejeter" sélectionné</div>
+  <div class="phone phone-darkest">
+    <div style="font-size:11px;opacity:0.4;text-align:center;margin-bottom:14px;">Vote ouvert jusqu'au 30 sept. 2025</div>
+    <div style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.07);border-radius:8px;padding:7px 11px;margin-bottom:14px;font-size:12px;">
+      <span style="font-size:14px;">🔒</span>
+      <div><span style="font-weight:600;">Vote anonyme</span><span style="opacity:0.45;margin-left:4px;">— vos choix restent confidentiels</span></div>
+    </div>
+    <div style="font-size:15px;font-weight:700;margin-bottom:12px;">Quel est le meilleur candidat pour le syndicat ?</div>
+    <div class="ballot-scroll">
+      <div class="ballot-row">
+        <div class="ballot-card">
+          <div class="ballot-header">
+            <div class="ballot-avatar">👤</div>
+            <div>
+              <div style="font-size:14px;font-weight:700;">Cameron Williamson</div>
+              <div style="font-size:11px;color:#888;">En savoir plus →</div>
+            </div>
+          </div>
+          <button class="mention-btn">Excellent</button>
+          <button class="mention-btn">Très bien</button>
+          <button class="mention-btn">Bien</button>
+          <button class="mention-btn">Assez bien</button>
+          <button class="mention-btn">Passable</button>
+          <button class="mention-btn">Insuffisant</button>
+          <button class="mention-btn">À rejeter</button>
+          <div style="border-top:1px solid rgba(0,0,0,0.12);margin:6px 0;"></div>
+          <button class="mention-btn" style="background:rgba(194,61,19,0.15);border:1.5px solid rgba(194,61,19,0.5);color:#FF7A5C;font-weight:600;display:flex;align-items:center;justify-content:space-between;">
+            <span>✓ Sans avis</span><span style="font-size:10px;font-weight:400;background:rgba(194,61,19,0.2);border-radius:4px;padding:2px 6px;">À rejeter</span>
+          </button>
+        </div>
+        <div class="ballot-peek">
+          <div class="ballot-header">
+            <div class="ballot-avatar">👤</div>
+            <div><div style="font-size:14px;font-weight:700;">Esther Howard</div></div>
+          </div>
+          <button class="mention-btn">Excellent</button>
+          <button class="mention-btn">Très bien</button>
+          <button class="mention-btn">Bien</button>
+        </div>
+      </div>
+    </div>
+    <div class="pagination"><div class="dot dot-active"></div><div class="dot"></div></div>
+    <div class="cta-bar">
+      <button class="btn-outline" style="opacity:0.35;font-size:13px;" disabled>Envoyer mon vote (1/2 évalués)</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ D5 — CONFIRMATION ══ -->
+<div id="d5" class="direction">
+  <div class="direction-label">5 — Confirmation · Mobile</div>
+  <div class="confirm-screen">
+    <div style="font-size:52px;margin-bottom:16px;">🗳️</div>
+    <h2 style="font-size:20px;margin-bottom:8px;">Votre voix a été<br>enregistrée !</h2>
+    <p style="font-size:13px;margin-bottom:0;">Merci pour votre participation.</p>
+    <div class="confirm-cards">
+      <div class="confirm-card"><div class="cc-title">Preuve</div><div class="cc-val" style="color:var(--m6);">✓ Générée</div></div>
+      <div class="confirm-card"><div class="cc-title">Comptabilisé</div><div class="cc-val" style="color:var(--m6);">✓ Oui</div></div>
+      <div class="confirm-card"><div class="cc-title">Vérifiable</div><div class="cc-val" style="color:var(--m6);">✓ À vie</div></div>
+    </div>
+    <div class="proof-box">
+      <div style="font-size:12px;font-weight:700;margin-bottom:4px;">🔐 Votre preuve de vote</div>
+      <div style="font-size:11px;opacity:0.55;margin-bottom:7px;">Conservez ce code pour vérifier que votre vote est dans l'urne.</div>
+      <div class="proof-code">MV-2025-A3F9B2C1-7E4D</div>
+      <div style="margin-top:9px;display:flex;gap:7px;">
+        <button class="btn-sm" style="flex:1;">📋 Copier</button>
+        <button class="btn-sm" style="flex:1;">✉️ M'envoyer</button>
+        <button class="btn-sm" style="flex:1;background:rgba(58,153,24,0.2);color:var(--m6);">✓ Vérifier</button>
+      </div>
+    </div>
+    <div class="spacer"></div>
+    <button class="btn-outline">Voir les résultats →</button>
+    <div class="spacer-sm"></div>
+    <div style="display:flex;gap:8px;margin-top:6px;">
+      <div style="flex:1;background:var(--darker);border-radius:7px;padding:11px;text-align:left;">
+        <div style="font-size:11px;font-weight:700;margin-bottom:3px;">Le JM</div>
+        <div style="font-size:10px;opacity:0.5;margin-bottom:5px;">La méthode qui change tout</div>
+        <div style="font-size:11px;opacity:0.5;">En savoir plus →</div>
+      </div>
+      <div style="flex:1;background:white;color:var(--primary);border-radius:7px;padding:11px;text-align:left;">
+        <div style="font-size:11px;font-weight:700;margin-bottom:3px;">Soutenez-nous</div>
+        <div style="font-size:10px;color:#666;margin-bottom:5px;">Association française</div>
+        <div style="font-size:11px;color:var(--primary);">Faire un don →</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ D6 — VÉRIFICATION ══ -->
+<div id="d6" class="direction">
+  <div class="direction-label">6 — Vérification du vote · Mobile</div>
+  <div class="phone phone-dark">
+    <h2 style="margin-bottom:4px;">Vérifier mon vote</h2>
+    <p style="font-size:12px;opacity:0.45;margin-bottom:20px;">Entrez votre code de preuve pour confirmer que votre vote est dans l'urne.</p>
+    <input class="field" type="text" placeholder="MV-2025-XXXX-XXXX" style="font-family:monospace;letter-spacing:1px;">
+    <button class="btn-primary" style="margin-bottom:20px;">Vérifier →</button>
+    <div class="verify-box">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <div style="font-size:22px;">✅</div>
+        <div>
+          <div style="font-size:13px;font-weight:700;color:var(--m6);">Vote confirmé dans l'urne</div>
+          <div style="font-size:10px;opacity:0.5;margin-top:2px;">MV-2025-A3F9B2C1-7E4D</div>
+        </div>
+      </div>
+      <div style="font-size:12px;opacity:0.6;line-height:1.5;">Votre vote a bien été enregistré dans <strong>« Syndicat 2025 »</strong>. Il est comptabilisé et ne peut pas être modifié.</div>
+      <div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.1);font-size:10px;opacity:0.35;">
+        Enregistré le 13 mai 2025 à 14h32 · Bulletin confidentiel.
+      </div>
+    </div>
+    <div class="spacer"></div>
+    <div class="stitle">État : code invalide (référence)</div>
+    <div class="verify-fail">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+        <div style="font-size:20px;">❌</div>
+        <div style="font-size:13px;font-weight:700;color:#FF6B65;">Code introuvable</div>
+      </div>
+      <div style="font-size:12px;opacity:0.6;line-height:1.5;">Vérifiez que le code est bien copié depuis votre email de confirmation.</div>
+    </div>
+    <div class="spacer"></div>
+    <button class="btn-ghost">← Retour aux résultats</button>
+  </div>
+</div>
+
+<!-- ══ D7 — RÉSULTATS ANONYMES + PROFILS DE MÉRITE ══ -->
+<div id="d7" class="direction">
+  <div class="direction-label">7 — Résultats · Mobile (profils de mérite, ordre + → −, médiane marquée)</div>
+  <div class="phone phone-dark">
+    <div style="margin-bottom:16px;">
+      <div style="font-size:11px;opacity:0.4;margin-bottom:4px;">Syndicat de copropriété 2025</div>
+      <div style="font-size:15px;font-weight:700;line-height:1.3;">Quel est le meilleur candidat ?</div>
+      <div style="font-size:11px;opacity:0.4;margin-top:4px;">5 participants · Clôturé</div>
+    </div>
+
+    <div class="merit-winner-badge">
+      <div style="font-size:24px;">🏆</div>
+      <div>
+        <div style="font-size:11px;opacity:0.5;margin-bottom:2px;">Élu par jugement majoritaire</div>
+        <div style="font-size:15px;font-weight:700;">Cameron Williamson</div>
+        <div style="font-size:12px;margin-top:1px;">Mention majoritaire : <span style="color:var(--m6);">Très bien</span></div>
+      </div>
+    </div>
+
+    <div class="stitle">Profils de mérite</div>
+
+    <!-- Candidat 1 -->
+    <div class="merit-row">
+      <div class="merit-label"><span>1. Cameron Williamson</span></div>
+      <div class="merit-bar-wrap">
+        <div class="merit-bar">
+          <div class="merit-seg" style="width:30%;background:var(--m7);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip"><strong style="color:var(--m7);">Excellent</strong><br>2 votes · 40%</div>
+          </div>
+          <div class="merit-seg" style="width:40%;background:var(--m6);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip"><strong style="color:var(--m6);">Très bien</strong><br>3 votes · 60%</div>
+          </div>
+          <div class="merit-seg" style="width:10%;background:var(--m5);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip"><strong style="color:var(--m5);">Bien</strong><br>1 vote · 20%</div>
+          </div>
+          <div class="merit-seg" style="width:10%;background:var(--m4);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip"><strong style="color:var(--m4);">Assez bien</strong><br>1 vote · 20%</div>
+          </div>
+          <div class="merit-seg" style="width:10%;background:var(--m3);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip"><strong style="color:var(--m3);">Passable</strong><br>1 vote · 20%</div>
+          </div>
+        </div>
+        <div class="merit-median" style="left:50%;"><div class="merit-median-label" style="color:var(--m6);">Très bien</div></div>
+      </div>
+    </div>
+
+    <!-- Candidat 2 -->
+    <div class="merit-row">
+      <div class="merit-label"><span>2. Esther Howard</span></div>
+      <div class="merit-bar-wrap">
+        <div class="merit-bar">
+          <div class="merit-seg" style="width:10%;background:var(--m6);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip"><strong style="color:var(--m6);">Très bien</strong><br>1 vote · 20%</div>
+          </div>
+          <div class="merit-seg" style="width:20%;background:var(--m5);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip"><strong style="color:var(--m5);">Bien</strong><br>1 vote · 20%</div>
+          </div>
+          <div class="merit-seg" style="width:30%;background:var(--m4);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip"><strong style="color:var(--m4);">Assez bien</strong><br>2 votes · 40%</div>
+          </div>
+          <div class="merit-seg" style="width:20%;background:var(--m3);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip"><strong style="color:var(--m3);">Passable</strong><br>1 vote · 20%</div>
+          </div>
+          <div class="merit-seg" style="width:10%;background:var(--m2);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip"><strong style="color:var(--m2);">Insuffisant</strong><br>1 vote · 20%</div>
+          </div>
+          <div class="merit-seg" style="width:10%;background:var(--m1);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip"><strong style="color:var(--m1);">À rejeter</strong><br>1 vote · 20%</div>
+          </div>
+        </div>
+        <div class="merit-median" style="left:50%;"><div class="merit-median-label" style="color:var(--m4);">Assez bien</div></div>
+      </div>
+    </div>
+
+    <!-- Légende -->
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--m7);"></div>Excellent</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--m6);"></div>Très bien</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--m5);"></div>Bien</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--m4);"></div>Assez bien</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--m3);"></div>Passable</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--m2);"></div>Insuffisant</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--m1);"></div>À rejeter</div>
+    </div>
+
+    <div class="spacer"></div>
+    <div style="background:rgba(255,255,255,0.05);border-radius:7px;padding:12px;">
+      <div style="font-size:11px;font-weight:700;margin-bottom:5px;">🎓 Pourquoi ce résultat ?</div>
+      <div style="font-size:11px;opacity:0.55;line-height:1.5;">La ligne médiane coupe la barre de Cameron dans le segment "Très bien" — c'est la mention que plus de la moitié des électeurs lui accordent au moins.</div>
+      <div style="font-size:11px;color:#9B8FFF;margin-top:6px;cursor:pointer;">En savoir plus →</div>
+    </div>
+    <div class="spacer-sm"></div>
+    <button class="btn-ghost" style="font-size:12px;padding:10px;">🔐 Vérifier mon vote</button>
+    <div class="spacer-sm"></div>
+    <button class="btn-ghost" style="font-size:12px;padding:10px;">📋 Exporter les résultats</button>
+  </div>
+</div>
+
+<!-- ══ D8 — RÉSULTATS + ÉMARGEMENT ══ -->
+<div id="d8" class="direction">
+  <div class="direction-label">8 — Résultats · Mobile (émargement — clic segment → tooltip votants)</div>
+  <div class="phone phone-dark">
+    <div style="margin-bottom:16px;">
+      <div style="font-size:11px;opacity:0.4;margin-bottom:4px;">Syndicat de copropriété 2025 · Michel Dupont</div>
+      <div style="font-size:15px;font-weight:700;line-height:1.3;">Quel est le meilleur candidat ?</div>
+      <div style="font-size:11px;opacity:0.4;margin-top:4px;">5 participants · Clôturé</div>
+    </div>
+
+    <div class="merit-winner-badge" style="margin-bottom:10px;">
+      <div style="font-size:24px;">🏆</div>
+      <div>
+        <div style="font-size:11px;opacity:0.5;margin-bottom:2px;">Élu par jugement majoritaire</div>
+        <div style="font-size:15px;font-weight:700;">Cameron Williamson</div>
+        <div style="font-size:12px;margin-top:1px;">Mention majoritaire : <span style="color:var(--m6);">Très bien</span></div>
+      </div>
+    </div>
+
+    <div class="stitle">Profils de mérite</div>
+    <div class="merit-row">
+      <div class="merit-label"><span style="font-size:12px;">1. Cameron W.</span></div>
+      <div class="merit-bar-wrap">
+        <div class="merit-bar">
+          <div class="merit-seg" style="width:30%;background:var(--m7);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip"><strong style="color:var(--m7);">Excellent</strong><br>2 votes · 40%</div>
+          </div>
+          <div class="merit-seg" style="width:40%;background:var(--m6);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip"><strong style="color:var(--m6);">Très bien</strong><br>3 votes · 60%</div>
+          </div>
+          <div class="merit-seg" style="width:10%;background:var(--m5);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip"><strong style="color:var(--m5);">Bien</strong><br>1 vote · 20%</div>
+          </div>
+          <div class="merit-seg" style="width:10%;background:var(--m4);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip"><strong style="color:var(--m4);">Assez bien</strong><br>1 vote · 20%</div>
+          </div>
+          <div class="merit-seg" style="width:10%;background:var(--m3);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip"><strong style="color:var(--m3);">Passable</strong><br>1 vote · 20%</div>
+          </div>
+        </div>
+        <div class="merit-median" style="left:50%;"><div class="merit-median-label" style="color:var(--m6);">Très bien</div></div>
+      </div>
+    </div>
+    <div class="merit-row">
+      <div class="merit-label"><span style="font-size:12px;">2. Esther H.</span></div>
+      <div class="merit-bar-wrap">
+        <div class="merit-bar">
+          <div class="merit-seg" style="width:10%;background:var(--m6);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip"><strong style="color:var(--m6);">Très bien</strong><br>1 vote · 20%</div>
+          </div>
+          <div class="merit-seg" style="width:20%;background:var(--m5);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip"><strong style="color:var(--m5);">Bien</strong><br>1 vote · 20%</div>
+          </div>
+          <div class="merit-seg" style="width:30%;background:var(--m4);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip"><strong style="color:var(--m4);">Assez bien</strong><br>2 votes · 40%</div>
+          </div>
+          <div class="merit-seg" style="width:20%;background:var(--m3);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip"><strong style="color:var(--m3);">Passable</strong><br>1 vote · 20%</div>
+          </div>
+          <div class="merit-seg" style="width:10%;background:var(--m2);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip"><strong style="color:var(--m2);">Insuffisant</strong><br>1 vote · 20%</div>
+          </div>
+          <div class="merit-seg" style="width:10%;background:var(--m1);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip"><strong style="color:var(--m1);">À rejeter</strong><br>1 vote · 20%</div>
+          </div>
+        </div>
+        <div class="merit-median" style="left:50%;"><div class="merit-median-label" style="color:var(--m4);">Assez bien</div></div>
+      </div>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--m7);"></div>Excellent</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--m6);"></div>Très bien</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--m5);"></div>Bien</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--m4);"></div>Assez bien</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--m3);"></div>Passable</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--m2);"></div>Insuffisant</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--m1);"></div>À rejeter</div>
+    </div>
+
+    <div class="stitle" style="margin-top:16px;">Émargement — qui a voté</div>
+    <div class="emarg-row"><div style="font-size:13px;">👤</div><div style="flex:1;font-size:12px;font-weight:500;">Michel Dupont</div><div style="font-size:11px;opacity:0.5;">A participé</div></div>
+    <div class="emarg-row"><div style="font-size:13px;">👤</div><div style="flex:1;font-size:12px;font-weight:500;">Esther Howard</div><div style="font-size:11px;opacity:0.5;">A participé</div></div>
+    <div class="emarg-row"><div style="font-size:13px;">👤</div><div style="flex:1;font-size:12px;font-weight:500;">Sarah Martin</div><div style="font-size:11px;opacity:0.5;">A participé</div></div>
+    <div class="emarg-row"><div style="font-size:13px;">👤</div><div style="flex:1;font-size:12px;font-weight:500;">Jean-Pierre K.</div><div style="font-size:11px;opacity:0.5;">A participé</div></div>
+    <div class="emarg-row"><div style="font-size:13px;">👤</div><div style="flex:1;font-size:12px;font-weight:500;">Aïcha Benali</div><div style="font-size:11px;opacity:0.5;">A participé</div></div>
+    <div class="spacer-sm"></div>
+    <button class="btn-ghost" style="font-size:12px;padding:10px;">🔐 Vérifier mon vote</button>
+    <div class="spacer-sm"></div>
+    <button class="btn-ghost" style="font-size:11px;padding:9px;">📋 Exporter l'émargement PDF</button>
+  </div>
+</div>
+
+<!-- ══ D9 — RÉSULTATS TRANSPARENTS ══ -->
+<div id="d9" class="direction">
+  <div class="direction-label">9 — Résultats · Mobile (transparent — clic segment → tooltip votants + émargement)</div>
+  <div class="phone phone-dark">
+    <div style="margin-bottom:16px;">
+      <div style="font-size:11px;opacity:0.4;margin-bottom:4px;">Syndicat de copropriété 2025 · Michel Dupont</div>
+      <div style="font-size:15px;font-weight:700;line-height:1.3;">Quel est le meilleur candidat ?</div>
+      <div style="font-size:11px;opacity:0.4;margin-top:4px;">5 participants · Clôturé · Mode transparent</div>
+    </div>
+
+    <div class="merit-winner-badge" style="margin-bottom:10px;">
+      <div style="font-size:24px;">🏆</div>
+      <div>
+        <div style="font-size:11px;opacity:0.5;margin-bottom:2px;">Élu par jugement majoritaire</div>
+        <div style="font-size:15px;font-weight:700;">Cameron Williamson</div>
+        <div style="font-size:12px;margin-top:1px;">Mention majoritaire : <span style="color:var(--m6);">Très bien</span></div>
+      </div>
+    </div>
+
+    <div class="stitle">Profils de mérite</div>
+    <div class="merit-row">
+      <div class="merit-label"><span style="font-size:12px;">1. Cameron W.</span></div>
+      <div class="merit-bar-wrap">
+        <div class="merit-bar">
+          <div class="merit-seg" style="width:30%;background:var(--m7);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip"><strong style="color:var(--m7);">Excellent</strong><br>2 votes · 40%<br>👤 Michel D.<br>👤 Sarah M.</div>
+          </div>
+          <div class="merit-seg" style="width:40%;background:var(--m6);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip"><strong style="color:var(--m6);">Très bien</strong><br>3 votes · 60%<br>👤 Esther H.<br>👤 Jean-P. K.<br>👤 Aïcha B.</div>
+          </div>
+          <div class="merit-seg" style="width:10%;background:var(--m5);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip"><strong style="color:var(--m5);">Bien</strong><br>1 vote · 20%<br>👤 Sarah M.</div>
+          </div>
+          <div class="merit-seg" style="width:10%;background:var(--m4);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip"><strong style="color:var(--m4);">Assez bien</strong><br>1 vote · 20%<br>👤 Michel D.</div>
+          </div>
+          <div class="merit-seg" style="width:10%;background:var(--m3);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip"><strong style="color:var(--m3);">Passable</strong><br>1 vote · 20%<br>👤 Aïcha B.</div>
+          </div>
+        </div>
+        <div class="merit-median" style="left:50%;"><div class="merit-median-label" style="color:var(--m6);">Très bien</div></div>
+      </div>
+    </div>
+    <div class="merit-row">
+      <div class="merit-label"><span style="font-size:12px;">2. Esther H.</span></div>
+      <div class="merit-bar-wrap">
+        <div class="merit-bar">
+          <div class="merit-seg" style="width:10%;background:var(--m6);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip"><strong style="color:var(--m6);">Très bien</strong><br>1 vote · 20%<br>👤 Esther H.</div>
+          </div>
+          <div class="merit-seg" style="width:20%;background:var(--m5);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip"><strong style="color:var(--m5);">Bien</strong><br>1 vote · 20%<br>👤 Michel D.</div>
+          </div>
+          <div class="merit-seg" style="width:30%;background:var(--m4);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip"><strong style="color:var(--m4);">Assez bien</strong><br>2 votes · 40%<br>👤 Sarah M.<br>👤 Jean-P. K.</div>
+          </div>
+          <div class="merit-seg" style="width:20%;background:var(--m3);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip"><strong style="color:var(--m3);">Passable</strong><br>1 vote · 20%<br>👤 Aïcha B.</div>
+          </div>
+          <div class="merit-seg" style="width:10%;background:var(--m2);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip"><strong style="color:var(--m2);">Insuffisant</strong><br>1 vote · 20%<br>👤 Sarah M.</div>
+          </div>
+          <div class="merit-seg" style="width:10%;background:var(--m1);cursor:pointer;" onclick="toggleTip(this)">
+            <div class="tooltip"><strong style="color:var(--m1);">À rejeter</strong><br>1 vote · 20%<br>👤 Michel D.</div>
+          </div>
+        </div>
+        <div class="merit-median" style="left:50%;"><div class="merit-median-label" style="color:var(--m4);">Assez bien</div></div>
+      </div>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--m7);"></div>Excellent</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--m6);"></div>Très bien</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--m5);"></div>Bien</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--m4);"></div>Assez bien</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--m3);"></div>Passable</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--m2);"></div>Insuffisant</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--m1);"></div>À rejeter</div>
+    </div>
+
+    <div class="stitle" style="margin-top:16px;">Émargement — qui a voté</div>
+    <div class="emarg-row"><div style="font-size:13px;">👤</div><div style="flex:1;font-size:12px;font-weight:500;">Michel Dupont</div><div style="font-size:11px;opacity:0.5;">A participé</div></div>
+    <div class="emarg-row"><div style="font-size:13px;">👤</div><div style="flex:1;font-size:12px;font-weight:500;">Esther Howard</div><div style="font-size:11px;opacity:0.5;">A participé</div></div>
+    <div class="emarg-row"><div style="font-size:13px;">👤</div><div style="flex:1;font-size:12px;font-weight:500;">Sarah Martin</div><div style="font-size:11px;opacity:0.5;">A participé</div></div>
+    <div class="emarg-row"><div style="font-size:13px;">👤</div><div style="flex:1;font-size:12px;font-weight:500;">Jean-Pierre K.</div><div style="font-size:11px;opacity:0.5;">A participé</div></div>
+    <div class="emarg-row"><div style="font-size:13px;">👤</div><div style="flex:1;font-size:12px;font-weight:500;">Aïcha Benali</div><div style="font-size:11px;opacity:0.5;">A participé</div></div>
+    <div class="spacer-sm"></div>
+    <button class="btn-ghost" style="font-size:12px;padding:10px;">🔐 Vérifier mon vote</button>
+    <div class="spacer-sm"></div>
+    <button class="btn-ghost" style="font-size:11px;padding:9px;">📋 Exporter l'émargement PDF</button>
+  </div>
+</div>
+
+<!-- ══ D10 — INVITATIONS ══ -->
+<div id="d10" class="direction">
+  <div class="direction-label">10 — Configuration des invitations · Mobile (tabs email / QR / lien)</div>
+  <div class="phone phone-dark">
+    <h2 style="margin-bottom:16px;">Invitations</h2>
+
+    <div style="background:rgba(255,255,255,0.05);border-radius:10px;overflow:hidden;">
+      <!-- Tabs invitations -->
+      <div style="display:flex;border-bottom:1px solid rgba(255,255,255,0.08);">
+        <button class="d10-inv-tab d10-inv-active" onclick="d10SwitchTab('email',this)" style="flex:1;padding:10px 6px;background:none;border:none;color:white;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;border-bottom:2px solid white;">✉️ Email</button>
+        <button class="d10-inv-tab" onclick="d10SwitchTab('qr',this)" style="flex:1;padding:10px 6px;background:none;border:none;color:white;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;opacity:0.45;border-bottom:2px solid transparent;">⬛ QR Code</button>
+        <button class="d10-inv-tab" onclick="d10SwitchTab('lien',this)" style="flex:1;padding:10px 6px;background:none;border:none;color:white;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;opacity:0.45;border-bottom:2px solid transparent;">🔗 Lien</button>
+      </div>
+
+      <!-- Panneau Email -->
+      <div id="d10-tab-email" style="padding:14px;">
+        <div style="font-size:12px;opacity:0.55;margin-bottom:10px;">Ajoutez les adresses email des participants. Chacun recevra un lien personnel unique.</div>
+        <div style="display:flex;gap:7px;margin-bottom:8px;">
+          <input class="field" type="email" placeholder="prenom.nom@email.fr" style="margin-bottom:0;flex:1;font-size:12px;">
+          <button class="btn-sm" style="white-space:nowrap;padding:0 12px;">+ Ajouter</button>
+        </div>
+        <div class="inv-row" style="padding:8px 0;">
+          <span class="type-badge badge-email">✉ Email</span>
+          <div class="inv-info"><div class="inv-dest">michel.dupont@asso.fr</div><div class="inv-sub">Envoyé le 12 mai</div></div>
+          <span style="font-size:10px;font-weight:700;color:var(--m7);flex-shrink:0;">✓ Voté</span>
+          <span style="color:var(--coral);font-size:13px;cursor:pointer;flex-shrink:0;">✕</span>
+        </div>
+        <div class="inv-row" style="padding:8px 0;">
+          <span class="type-badge badge-email">✉ Email</span>
+          <div class="inv-info"><div class="inv-dest">esther.howard@gmail.com</div><div class="inv-sub">Ouvert le 13 mai</div></div>
+          <span style="font-size:10px;font-weight:700;color:var(--m5);flex-shrink:0;">● Ouvert</span>
+          <span style="color:var(--coral);font-size:13px;cursor:pointer;flex-shrink:0;">✕</span>
+        </div>
+        <div class="inv-row" style="padding:8px 0;">
+          <span class="type-badge badge-email">✉ Email</span>
+          <div class="inv-info"><div class="inv-dest">jean-pierre.k@mairie.fr</div><div class="inv-sub">Envoyé le 13 mai</div></div>
+          <span style="font-size:10px;font-weight:700;color:#7CB8FF;flex-shrink:0;">↓ Reçu</span>
+          <span style="color:var(--coral);font-size:13px;cursor:pointer;flex-shrink:0;">✕</span>
+        </div>
+        <div class="inv-row" style="padding:8px 0;">
+          <span class="type-badge badge-email">✉ Email</span>
+          <div class="inv-info"><div class="inv-dest">aicha.benali@gmail.com</div><div class="inv-sub">Prévu le 15 mai</div></div>
+          <span style="font-size:10px;font-weight:700;color:var(--grey-mid);flex-shrink:0;">- En attente</span>
+          <span style="color:var(--coral);font-size:13px;cursor:pointer;flex-shrink:0;">✕</span>
+        </div>
+        <div style="font-size:11px;opacity:0.35;margin-top:6px;margin-bottom:10px;">5 invités · 1 a voté</div>
+        <button class="btn-sm" style="width:100%;padding:8px;font-size:11px;">+ Relancer les non-votants (3)</button>
+      </div>
+
+      <!-- Panneau QR Code (caché) -->
+      <div id="d10-tab-qr" style="padding:14px;display:none;">
+        <div style="font-size:12px;opacity:0.55;margin-bottom:12px;">Chaque PDF contient un QR code unique à afficher sur place. Chaque scan = une invitation.</div>
+
+        <!-- Formulaire de génération -->
+        <div style="background:rgba(255,255,255,0.06);border-radius:8px;padding:12px;margin-bottom:14px;">
+          <div style="font-size:11px;font-weight:700;margin-bottom:8px;">Générer un nouveau lot</div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="flex:1;">
+              <div style="font-size:10px;opacity:0.45;margin-bottom:4px;">Nombre d'invitations</div>
+              <input class="field" type="number" value="10" min="1" style="margin-bottom:0;font-size:13px;padding:9px 12px;">
+            </div>
+            <button class="btn-primary" style="flex-shrink:0;width:auto;padding:9px 14px;font-size:12px;margin-top:18px;">⬇️ Générer PDF</button>
+          </div>
+        </div>
+
+        <!-- Listing des lots générés -->
+        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;opacity:0.4;margin-bottom:8px;">Lots générés</div>
+
+        <!-- Lot 1 -->
+        <div style="background:rgba(255,255,255,0.05);border-radius:8px;padding:10px 12px;margin-bottom:6px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+            <div>
+              <div style="font-size:12px;font-weight:700;">Lot #1 — 20 invitations</div>
+              <div style="font-size:10px;opacity:0.35;margin-top:1px;">Généré le 12 mai 2025</div>
+            </div>
+            <button class="btn-sm">📥 Re-télécharger</button>
+          </div>
+          <div style="display:flex;gap:6px;">
+            <div style="flex:1;background:rgba(58,153,24,0.12);border-radius:5px;padding:6px 8px;text-align:center;">
+              <div style="font-size:16px;font-weight:700;color:var(--m7);">8</div>
+              <div style="font-size:9px;opacity:0.5;margin-top:1px;">Votées</div>
+            </div>
+            <div style="flex:1;background:rgba(194,177,19,0.1);border-radius:5px;padding:6px 8px;text-align:center;">
+              <div style="font-size:16px;font-weight:700;color:var(--m5);">8</div>
+              <div style="font-size:9px;opacity:0.5;margin-top:1px;">Ouvertes</div>
+            </div>
+            <div style="flex:1;background:rgba(255,255,255,0.05);border-radius:5px;padding:6px 8px;text-align:center;">
+              <div style="font-size:16px;font-weight:700;opacity:0.6;">20</div>
+              <div style="font-size:9px;opacity:0.5;margin-top:1px;">Total</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lot 2 -->
+        <div style="background:rgba(255,255,255,0.05);border-radius:8px;padding:10px 12px;margin-bottom:6px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+            <div>
+              <div style="font-size:12px;font-weight:700;">Lot #2 — 5 invitations</div>
+              <div style="font-size:10px;opacity:0.35;margin-top:1px;">Généré le 14 mai 2025</div>
+            </div>
+            <button class="btn-sm">📥 Re-télécharger</button>
+          </div>
+          <div style="display:flex;gap:6px;">
+            <div style="flex:1;background:rgba(58,153,24,0.12);border-radius:5px;padding:6px 8px;text-align:center;">
+              <div style="font-size:16px;font-weight:700;color:var(--m7);">1</div>
+              <div style="font-size:9px;opacity:0.5;margin-top:1px;">Votées</div>
+            </div>
+            <div style="flex:1;background:rgba(194,177,19,0.1);border-radius:5px;padding:6px 8px;text-align:center;">
+              <div style="font-size:16px;font-weight:700;color:var(--m5);">2</div>
+              <div style="font-size:9px;opacity:0.5;margin-top:1px;">Ouvertes</div>
+            </div>
+            <div style="flex:1;background:rgba(255,255,255,0.05);border-radius:5px;padding:6px 8px;text-align:center;">
+              <div style="font-size:16px;font-weight:700;opacity:0.6;">5</div>
+              <div style="font-size:9px;opacity:0.5;margin-top:1px;">Total</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panneau Lien (caché) -->
+      <div id="d10-tab-lien" style="padding:14px;display:none;">
+        <div style="font-size:12px;opacity:0.55;margin-bottom:12px;">Chaque lien est à usage unique. Distribuez-les individuellement pour éviter le vote multiple.</div>
+
+        <!-- Formulaire de génération -->
+        <div style="background:rgba(255,255,255,0.06);border-radius:8px;padding:12px;margin-bottom:14px;">
+          <div style="font-size:11px;font-weight:700;margin-bottom:8px;">Générer des liens</div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="flex:1;">
+              <div style="font-size:10px;opacity:0.45;margin-bottom:4px;">Nombre de liens</div>
+              <input class="field" type="number" value="5" min="1" style="margin-bottom:0;font-size:13px;padding:9px 12px;">
+            </div>
+            <button class="btn-primary" style="flex-shrink:0;width:auto;padding:9px 14px;font-size:12px;margin-top:18px;">+ Créer</button>
+          </div>
+        </div>
+
+        <!-- Listing des liens -->
+        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;opacity:0.4;margin-bottom:8px;">8 liens · 3 votés · 2 ouverts</div>
+
+        <!-- Lien voté -->
+        <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(255,255,255,0.04);border-radius:7px;margin-bottom:5px;">
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:11px;font-family:monospace;color:var(--m6);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">mv.fr/v/x4Kp2…</div>
+            <div style="font-size:10px;opacity:0.35;margin-top:2px;">Créé 12 mai</div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:var(--m7);flex-shrink:0;">✓ Voté</span>
+          <button class="btn-sm" style="flex-shrink:0;">📋</button>
+        </div>
+
+        <!-- Lien voté -->
+        <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(255,255,255,0.04);border-radius:7px;margin-bottom:5px;">
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:11px;font-family:monospace;color:var(--m6);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">mv.fr/v/r8Wm1…</div>
+            <div style="font-size:10px;opacity:0.35;margin-top:2px;">Créé 12 mai</div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:var(--m7);flex-shrink:0;">✓ Voté</span>
+          <button class="btn-sm" style="flex-shrink:0;">📋</button>
+        </div>
+
+        <!-- Lien ouvert -->
+        <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(255,255,255,0.04);border-radius:7px;margin-bottom:5px;">
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:11px;font-family:monospace;color:rgba(255,255,255,0.5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">mv.fr/v/hJ3nQ…</div>
+            <div style="font-size:10px;opacity:0.35;margin-top:2px;">Créé 14 mai</div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:var(--m5);flex-shrink:0;">● Ouvert</span>
+          <button class="btn-sm" style="flex-shrink:0;">📋</button>
+        </div>
+
+        <!-- Lien non utilisé -->
+        <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(255,255,255,0.04);border-radius:7px;margin-bottom:5px;">
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:11px;font-family:monospace;color:rgba(255,255,255,0.5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">mv.fr/v/zT6bL…</div>
+            <div style="font-size:10px;opacity:0.35;margin-top:2px;">Créé 14 mai</div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:var(--grey-mid);flex-shrink:0;">– En attente</span>
+          <button class="btn-sm" style="flex-shrink:0;">📋</button>
+        </div>
+
+        <!-- Lien non utilisé (grisé) -->
+        <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(255,255,255,0.04);border-radius:7px;margin-bottom:5px;opacity:0.5;">
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:11px;font-family:monospace;color:rgba(255,255,255,0.5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">mv.fr/v/pN9cR…</div>
+            <div style="font-size:10px;opacity:0.35;margin-top:2px;">Créé 14 mai</div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:var(--grey-mid);flex-shrink:0;">– En attente</span>
+          <button class="btn-sm" style="flex-shrink:0;">📋</button>
+        </div>
+
+        <div style="font-size:10px;opacity:0.3;text-align:center;margin-top:6px;">+ 3 autres liens en attente</div>
+      </div>
+    </div>
+
+    <div class="cta-bar">
+      <button class="btn-primary">Valider →</button>
+    </div>
+    <div class="spacer-sm"></div>
+    <button class="btn-ghost" style="font-size:11px;padding:9px;">📋 Exporter l'émargement</button>
+  </div>
+</div>
+
+<!-- ══ D11 — MES ÉLECTIONS ══ -->
+<div id="d11" class="direction">
+  <div class="direction-label">11 — Mes élections · Mobile</div>
+  <div class="phone phone-dark">
+    <h2 style="margin-bottom:14px;">Mes élections</h2>
+    <div class="tabs">
+      <div class="tab tab-active">Organisées (3)</div>
+      <div class="tab">Participé (4)</div>
+    </div>
+    <div class="el-card el-active">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;">
+        <div class="el-title">Candidat syndicat 2025</div>
+        <span class="tag tag-active">Active</span>
+      </div>
+      <div class="el-meta">Scrutin · 12 mai 2025</div>
+      <div class="prog-bar"><div class="prog-fill" style="width:60%;"></div></div>
+      <div style="font-size:10px;opacity:0.35;margin-bottom:8px;">3/5 ont voté</div>
+      <div style="display:flex;gap:5px;">
+        <button class="btn-sm">Gérer →</button>
+        <button class="btn-sm">Relancer (2)</button>
+        <button class="btn-sm">Résultats</button>
+      </div>
+    </div>
+    <div class="el-card el-closed">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;">
+        <div class="el-title">Choix du restaurant</div>
+        <span class="tag tag-closed">Clôturée</span>
+      </div>
+      <div class="el-meta">Vote rapide · 3 mai 2025</div>
+      <div style="font-size:11px;margin-top:6px;">🏆 Sushi House · <span style="color:var(--m6);">Très bien</span></div>
+    </div>
+    <div class="el-card el-closed">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;">
+        <div class="el-title">Destination vacances</div>
+        <span class="tag tag-closed">Clôturée</span>
+      </div>
+      <div class="el-meta">Vote rapide · 28 avr. 2025</div>
+      <div style="font-size:11px;margin-top:6px;">🏆 Barcelone · <span style="color:var(--m5);">Bien</span></div>
+    </div>
+    <button class="btn-primary" style="margin-top:6px;">+ Créer une élection</button>
+    <div style="margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.07);">
+      <div class="stitle" style="margin-top:0;">Onglet "Participé" (aperçu)</div>
+      <div class="el-card el-participated">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;">
+          <div class="el-title">AG annuelle — Bureau asso</div>
+          <span class="tag tag-voted">✓ Voté</span>
+        </div>
+        <div class="el-meta">Scrutin · Michel Dupont · 10 mai</div>
+        <div style="font-size:11px;margin-top:6px;color:#9B8FFF;cursor:pointer;">Voir les résultats →</div>
+      </div>
+      <div class="el-card el-participated" style="opacity:0.6;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;">
+          <div class="el-title">Thème soirée d'équipe</div>
+          <span class="tag tag-voted">✓ Voté</span>
+        </div>
+        <div class="el-meta">Vote rapide · 5 avr. 2025</div>
+        <div style="font-size:11px;margin-top:6px;">🏆 Années 80</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ D12 — MAGIC LINK ══ -->
+<div id="d12" class="direction">
+  <div class="direction-label">12 — Popup Magic-Link · Mobile</div>
+  <div class="phone phone-dark" style="min-height:520px;position:relative;">
+    <div style="opacity:0.2;pointer-events:none;">
+      <h2>Paramètres du vote</h2>
+      <div style="height:10px;"></div>
+      <div class="param-row">
+        <div class="param-label">Accessibilité du vote</div>
+        <select class="param-select" disabled><option>Public — tout le monde peut voter</option></select>
+      </div>
+    </div>
+    <div style="position:absolute;bottom:0;left:0;right:0;background:var(--darkest);border-radius:18px 18px 28px 28px;padding:18px 18px 26px;border-top:1px solid rgba(255,255,255,0.1);">
+      <div style="width:32px;height:3px;background:rgba(255,255,255,0.15);border-radius:2px;margin:0 auto 16px;"></div>
+      <div style="font-size:20px;text-align:center;margin-bottom:8px;">🔒</div>
+      <h2 style="text-align:center;font-size:16px;margin-bottom:6px;">Utiliser un compte</h2>
+      <p style="text-align:center;font-size:12px;margin-bottom:16px;">pour activer l'<strong>accès par invitation</strong> et les options avancées.</p>
+      <input class="field" type="email" placeholder="votre@email.fr" style="margin-bottom:8px;">
+      <button class="btn-primary" style="margin-bottom:7px;">Envoyer le lien magique ✨</button>
+      <div style="text-align:center;font-size:12px;opacity:0.5;margin-bottom:7px;">ou</div>
+      <button class="btn-outline" style="font-size:12px;padding:10px;margin-bottom:7px;">Se connecter →</button>
+      <button class="btn-ghost" style="font-size:12px;padding:10px;opacity:0.45;">Continuer sans compte</button>
+      <p style="font-size:10px;opacity:0.3;text-align:center;margin-top:12px;">Pas de mot de passe. Lien valable 10 minutes.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ D13 — VOTE RAPIDE (variante simplifiée) ══ -->
+<div id="d13" class="direction">
+  <div class="direction-label">13 — Vote Rapide · Mobile (variante : options minimales + lien "Plus d'options")</div>
+  <div class="phone phone-dark">
+    <div class="stepper">
+      <div class="step step-done">✓</div><div class="step-line step-line-done"></div>
+      <div class="step step-done">✓</div><div class="step-line step-line-done"></div>
+      <div class="step step-active">3</div>
+    </div>
+
+    <!-- Titre + bouton (?) -->
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+      <h2 style="margin-bottom:0;flex:1;">Vote Rapide</h2>
+      <button class="info-btn" onclick="document.getElementById('infoModal13').classList.add('open')">?</button>
+    </div>
+
+    <!-- Niveau de transparence -->
+    <div class="param-setting">
+      <div class="param-setting-left">
+        <div class="param-setting-name">Niveau de transparence</div>
+        <div class="param-setting-desc" id="d13-desc-transp">On voit qui a voté, mais pas comment</div>
+      </div>
+      <button class="param-setting-btn" onclick="openPicker('d13-picker-transp')">
+        <span id="d13-val-transp">Émargement</span><span class="chevron">▼</span>
+      </button>
+    </div>
+
+    <!-- Ordre aléatoire des candidats -->
+    <div class="param-setting" style="cursor:default;">
+      <div class="param-setting-left">
+        <div class="param-setting-name">Ordre aléatoire des candidats</div>
+        <div class="param-setting-desc">Les candidats apparaissent dans un ordre différent pour chaque votant</div>
+      </div>
+      <div class="toggle toggle-on" onclick="this.classList.toggle('toggle-on')"></div>
+    </div>
+
+    <!-- Personnaliser les mentions -->
+    <div class="param-setting" style="cursor:default;">
+      <div class="param-setting-left">
+        <div class="param-setting-name">Personnaliser les mentions</div>
+        <div class="param-setting-desc">Modifier les libellés des mentions (Excellent, Très bien…)</div>
+      </div>
+      <div class="toggle" onclick="this.classList.toggle('toggle-on')"></div>
+    </div>
+
+    <div class="cta-bar">
+      <button class="btn-primary">Valider →</button>
+    </div>
+
+    <!-- Lien "Plus d'options" -->
+    <a class="more-options-link">Plus d'options ? (invitation, accessibilité du vote, accès au résultat, persistence, …)</a>
+  </div>
+
+  <!-- ── PICKER : Niveau de transparence (D13) ── -->
+  <div id="d13-picker-transp" class="picker-sheet" onclick="closePicker(event,'d13-picker-transp')">
+    <div class="picker-inner">
+      <div class="picker-pill"></div>
+      <div class="picker-title">Niveau de transparence</div>
+      <div class="picker-option"
+           onclick="pickOption('d13-picker-transp','d13-val-transp','d13-desc-transp','Anonyme','Personne ne voit les votes individuels',false,event)">
+        <div class="picker-radio"></div>
+        <div class="picker-option-text">
+          <div class="picker-option-name">Anonyme</div>
+          <div class="picker-option-sub">Personne ne voit les votes individuels</div>
+        </div>
+      </div>
+      <div class="picker-option picker-selected"
+           onclick="pickOption('d13-picker-transp','d13-val-transp','d13-desc-transp','Émargement','On voit qui a voté, mais pas comment',false,event)">
+        <div class="picker-radio"></div>
+        <div class="picker-option-text">
+          <div class="picker-option-name">Liste d'émargement</div>
+          <div class="picker-option-sub">On voit qui a voté, mais pas comment</div>
+        </div>
+      </div>
+      <div class="picker-option"
+           onclick="pickOption('d13-picker-transp','d13-val-transp','d13-desc-transp','Transparent','Tout le monde voit les votes de tous',false,event)">
+        <div class="picker-radio"></div>
+        <div class="picker-option-text">
+          <div class="picker-option-name">Totalement transparent</div>
+          <div class="picker-option-sub">Tout le monde voit les votes de tous</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MODALE INFO (?) ── -->
+  <div id="infoModal13" class="info-modal" onclick="if(event.target===this)this.classList.remove('open')">
+    <div class="info-modal-sheet">
+      <div class="info-modal-pill"></div>
+      <div class="info-modal-title">ℹ️ À propos du Vote Rapide</div>
+
+      <div class="info-item">
+        <div class="info-item-name">🔓 Accessibilité</div>
+        <div class="info-item-desc">Tout le monde peut voter via le lien public. Aucune invitation nominative requise.</div>
+      </div>
+      <div class="info-item">
+        <div class="info-item-name">⏱️ Clôture</div>
+        <div class="info-item-desc">Le vote reste ouvert indéfiniment jusqu'à ce que vous le clôturiez manuellement.</div>
+      </div>
+      <div class="info-item">
+        <div class="info-item-name">📊 Arrivée des résultats</div>
+        <div class="info-item-desc">Les résultats sont visibles en direct dès le premier vote enregistré.</div>
+      </div>
+      <div class="info-item">
+        <div class="info-item-name">👁️ Accès aux résultats</div>
+        <div class="info-item-desc">Les résultats sont publics et consultables par n'importe qui ayant le lien.</div>
+      </div>
+      <div class="info-item">
+        <div class="info-item-name">🗑️ Suppression automatique</div>
+        <div class="info-item-desc">Sans compte, cette élection sera <strong>supprimée après 30 jours</strong>. Créez un compte pour désactiver cette limite.</div>
+      </div>
+
+      <div style="margin-top:16px;">
+        <button class="btn-ghost" onclick="document.getElementById('infoModal13').classList.remove('open')">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ D14 — SONDAGE MAIL VÉRIFIÉ ══ -->
+<div id="d14" class="direction">
+  <div class="direction-label">14 — Sondage mail vérifié · Mobile (vote par lien, email requis pour valider)</div>
+  <div class="phone phone-dark">
+    <div class="stepper">
+      <div class="step step-done">✓</div><div class="step-line step-line-done"></div>
+      <div class="step step-done">✓</div><div class="step-line step-line-done"></div>
+      <div class="step step-active">3</div>
+    </div>
+
+    <!-- Titre + bouton (?) -->
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+      <h2 style="margin-bottom:0;flex:1;">Sondage mail vérifié</h2>
+      <button class="info-btn" onclick="document.getElementById('infoModal14').classList.add('open')">?</button>
+    </div>
+
+    <!-- Niveau de transparence -->
+    <div class="param-setting">
+      <div class="param-setting-left">
+        <div class="param-setting-name">Niveau de transparence</div>
+        <div class="param-setting-desc" id="d14-desc-transp">On voit qui a voté, mais pas comment</div>
+      </div>
+      <button class="param-setting-btn" onclick="openPicker('d14-picker-transp')">
+        <span id="d14-val-transp">Émargement</span><span class="chevron">▼</span>
+      </button>
+    </div>
+
+    <!-- Ordre aléatoire des candidats -->
+    <div class="param-setting" style="cursor:default;">
+      <div class="param-setting-left">
+        <div class="param-setting-name">Ordre aléatoire des candidats</div>
+        <div class="param-setting-desc">Les candidats apparaissent dans un ordre différent pour chaque votant</div>
+      </div>
+      <div class="toggle toggle-on" onclick="this.classList.toggle('toggle-on')"></div>
+    </div>
+
+    <!-- Personnaliser les mentions -->
+    <div class="param-setting" style="cursor:default;">
+      <div class="param-setting-left">
+        <div class="param-setting-name">Personnaliser les mentions</div>
+        <div class="param-setting-desc">Modifier les libellés des mentions (Excellent, Très bien…)</div>
+      </div>
+      <div class="toggle" onclick="this.classList.toggle('toggle-on')"></div>
+    </div>
+
+    <div class="cta-bar">
+      <button class="btn-primary">Valider →</button>
+    </div>
+
+    <!-- Lien "Vote libre" -->
+    <a class="more-options-link">Transformer en vote libre pour plus d'options (accessibilité du vote, accès au résultat, …)</a>
+  </div>
+
+  <!-- ── PICKER : Niveau de transparence (D14) — sans "Totalement transparent" ── -->
+  <div id="d14-picker-transp" class="picker-sheet" onclick="closePicker(event,'d14-picker-transp')">
+    <div class="picker-inner">
+      <div class="picker-pill"></div>
+      <div class="picker-title">Niveau de transparence</div>
+      <div class="picker-option"
+           onclick="pickOption('d14-picker-transp','d14-val-transp','d14-desc-transp','Anonyme','Personne ne voit les votes individuels',false,event)">
+        <div class="picker-radio"></div>
+        <div class="picker-option-text">
+          <div class="picker-option-name">Anonyme</div>
+          <div class="picker-option-sub">Personne ne voit les votes individuels</div>
+        </div>
+      </div>
+      <div class="picker-option picker-selected"
+           onclick="pickOption('d14-picker-transp','d14-val-transp','d14-desc-transp','Émargement','On voit qui a voté, mais pas comment',false,event)">
+        <div class="picker-radio"></div>
+        <div class="picker-option-text">
+          <div class="picker-option-name">Liste d'émargement</div>
+          <div class="picker-option-sub">On voit qui a voté, mais pas comment</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MODALE INFO (?) D14 ── -->
+  <div id="infoModal14" class="info-modal" onclick="if(event.target===this)this.classList.remove('open')">
+    <div class="info-modal-sheet">
+      <div class="info-modal-pill"></div>
+      <div class="info-modal-title">ℹ️ À propos du Sondage mail vérifié</div>
+
+      <div class="info-item">
+        <div class="info-item-name">🔓 Accessibilité</div>
+        <div class="info-item-desc">Tout le monde peut voter via le lien public. Aucune invitation nominative requise. Validation du vote par email pour éviter le vote multiple.</div>
+      </div>
+      <div class="info-item">
+        <div class="info-item-name">⏱️ Clôture</div>
+        <div class="info-item-desc">Le vote reste ouvert indéfiniment jusqu'à ce que vous le clôturiez manuellement.</div>
+      </div>
+      <div class="info-item">
+        <div class="info-item-name">📊 Arrivée des résultats</div>
+        <div class="info-item-desc">Les résultats sont visibles en direct dès le premier vote enregistré.</div>
+      </div>
+      <div class="info-item">
+        <div class="info-item-name">👁️ Accès aux résultats</div>
+        <div class="info-item-desc">Les résultats sont publics et consultables par n'importe qui ayant le lien.</div>
+      </div>
+      <div class="info-item">
+        <div class="info-item-name">🗑️ Suppression automatique</div>
+        <div class="info-item-desc">Sans compte, cette élection sera <strong>supprimée après 30 jours</strong>. Créez un compte pour désactiver cette limite.</div>
+      </div>
+
+      <div style="margin-top:16px;">
+        <button class="btn-ghost" onclick="document.getElementById('infoModal14').classList.remove('open')">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ D15 — SCRUTIN ══ -->
+<div id="d15" class="direction">
+  <div class="direction-label">15 — Scrutin · Mobile (clôture obligatoire, résultats différés, invitations)</div>
+  <div class="phone phone-dark">
+    <div class="stepper">
+      <div class="step step-done">✓</div><div class="step-line step-line-done"></div>
+      <div class="step step-done">✓</div><div class="step-line step-line-done"></div>
+      <div class="step step-active">3</div>
+    </div>
+    <!-- Titre + bouton (?) -->
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+      <h2 style="margin-bottom:0;flex:1;">Scrutin</h2>
+      <button class="info-btn" onclick="document.getElementById('infoModal15').classList.add('open')">?</button>
+    </div>
+
+    <!-- 1. Clôture du vote -->
+    <div class="param-setting">
+      <div class="param-setting-left">
+        <div class="param-setting-name">Clôture du vote</div>
+        <div class="param-setting-desc" id="d15-desc-cloture">Je clôture le vote moi-même depuis mon espace</div>
+      </div>
+      <button class="param-setting-btn" onclick="openPicker('d15-picker-cloture')">
+        <span id="d15-val-cloture">Manuel</span><span class="chevron">▼</span>
+      </button>
+    </div>
+
+    <!-- 2. Arrivée des résultats -->
+    <div class="param-setting">
+      <div class="param-setting-left">
+        <div class="param-setting-name">Arrivée des résultats</div>
+        <div class="param-setting-desc" id="d15-desc-resultats">Résultats publiés à la fermeture du vote</div>
+      </div>
+      <button class="param-setting-btn" onclick="openPicker('d15-picker-resultats')">
+        <span id="d15-val-resultats">Sur clôture</span><span class="chevron">▼</span>
+      </button>
+    </div>
+
+    <!-- 3. Accès aux résultats -->
+    <div class="param-setting">
+      <div class="param-setting-left">
+        <div class="param-setting-name">Accès aux résultats</div>
+        <div class="param-setting-desc" id="d15-desc-acces-res">Tout le monde peut consulter les résultats</div>
+      </div>
+      <button class="param-setting-btn" onclick="openPicker('d15-picker-acces-res')">
+        <span id="d15-val-acces-res">Public</span><span class="chevron">▼</span>
+      </button>
+    </div>
+
+    <!-- 4. Niveau de transparence -->
+    <div class="param-setting">
+      <div class="param-setting-left">
+        <div class="param-setting-name">Niveau de transparence</div>
+        <div class="param-setting-desc" id="d15-desc-transp">On voit qui a voté, mais pas comment</div>
+      </div>
+      <button class="param-setting-btn" onclick="openPicker('d15-picker-transp')">
+        <span id="d15-val-transp">Émargement</span><span class="chevron">▼</span>
+      </button>
+    </div>
+
+    <!-- 5. Toggles -->
+    <div class="param-setting" style="cursor:default;">
+      <div class="param-setting-left">
+        <div class="param-setting-name">Ordre aléatoire des candidats</div>
+        <div class="param-setting-desc">Les candidats apparaissent dans un ordre différent pour chaque votant</div>
+      </div>
+      <div class="toggle toggle-on" onclick="this.classList.toggle('toggle-on')"></div>
+    </div>
+    <div class="param-setting" style="cursor:default;">
+      <div class="param-setting-left">
+        <div class="param-setting-name">Personnaliser les mentions</div>
+        <div class="param-setting-desc">Modifier les libellés des mentions (Excellent, Très bien…)</div>
+      </div>
+      <div class="toggle" onclick="this.classList.toggle('toggle-on')"></div>
+    </div>
+
+    <div class="cta-bar">
+      <button class="btn-primary">Valider les paramètres →</button>
+    </div>
+    <div style="margin-top:12px;background:rgba(255,255,255,0.05);border-radius:7px;padding:11px 13px;font-size:12px;opacity:0.5;text-align:center;font-style:italic;">
+      Configuration des invitations lors de la prochaine page
+    </div>
+  </div>
+
+  <!-- ── PICKER : Clôture du vote (D15) — Période ou Manuel uniquement ── -->
+  <div id="d15-picker-cloture" class="picker-sheet" onclick="closePicker(event,'d15-picker-cloture')">
+    <div class="picker-inner">
+      <div class="picker-pill"></div>
+      <div class="picker-title">Clôture du vote</div>
+      <div class="picker-option"
+           onclick="pickOption('d15-picker-cloture','d15-val-cloture','d15-desc-cloture','Période','Fermeture automatique à une date choisie',false,event)">
+        <div class="picker-radio"></div>
+        <div class="picker-option-text">
+          <div class="picker-option-name">Période</div>
+          <div class="picker-option-sub">Fermeture automatique à une date choisie</div>
+        </div>
+      </div>
+      <div class="picker-option picker-selected"
+           onclick="pickOption('d15-picker-cloture','d15-val-cloture','d15-desc-cloture','Manuel','Je clôture le vote moi-même depuis mon espace',false,event)">
+        <div class="picker-radio"></div>
+        <div class="picker-option-text">
+          <div class="picker-option-name">Manuel</div>
+          <div class="picker-option-sub">Je clôture le vote moi-même depuis mon espace</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PICKER : Arrivée des résultats (D15) — Sur clôture ou Manuel ── -->
+  <div id="d15-picker-resultats" class="picker-sheet" onclick="closePicker(event,'d15-picker-resultats')">
+    <div class="picker-inner">
+      <div class="picker-pill"></div>
+      <div class="picker-title">Arrivée des résultats</div>
+      <div class="picker-option picker-selected"
+           onclick="pickOption('d15-picker-resultats','d15-val-resultats','d15-desc-resultats','Sur clôture','Résultats publiés à la fermeture du vote',false,event)">
+        <div class="picker-radio"></div>
+        <div class="picker-option-text">
+          <div class="picker-option-name">Sur clôture</div>
+          <div class="picker-option-sub">Résultats publiés à la fermeture du vote</div>
+        </div>
+      </div>
+      <div class="picker-option"
+           onclick="pickOption('d15-picker-resultats','d15-val-resultats','d15-desc-resultats','Manuel','Je publie les résultats moi-même',false,event)">
+        <div class="picker-radio"></div>
+        <div class="picker-option-text">
+          <div class="picker-option-name">Manuel</div>
+          <div class="picker-option-sub">Je publie les résultats moi-même</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PICKER : Accès aux résultats (D15) ── -->
+  <div id="d15-picker-acces-res" class="picker-sheet" onclick="closePicker(event,'d15-picker-acces-res')">
+    <div class="picker-inner">
+      <div class="picker-pill"></div>
+      <div class="picker-title">Accès aux résultats</div>
+      <div class="picker-option picker-selected"
+           onclick="pickOption('d15-picker-acces-res','d15-val-acces-res','d15-desc-acces-res','Public','Tout le monde peut consulter les résultats',false,event)">
+        <div class="picker-radio"></div>
+        <div class="picker-option-text">
+          <div class="picker-option-name">Public</div>
+          <div class="picker-option-sub">Tout le monde peut consulter les résultats</div>
+        </div>
+      </div>
+      <div class="picker-option"
+           onclick="pickOption('d15-picker-acces-res','d15-val-acces-res','d15-desc-acces-res','Privé','Résultats visibles pour les participants seulement',false,event)">
+        <div class="picker-radio"></div>
+        <div class="picker-option-text">
+          <div class="picker-option-name">Privé</div>
+          <div class="picker-option-sub">Résultats visibles pour les participants seulement</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PICKER : Niveau de transparence (D15) ── -->
+  <div id="d15-picker-transp" class="picker-sheet" onclick="closePicker(event,'d15-picker-transp')">
+    <div class="picker-inner">
+      <div class="picker-pill"></div>
+      <div class="picker-title">Niveau de transparence</div>
+      <div class="picker-option"
+           onclick="pickOption('d15-picker-transp','d15-val-transp','d15-desc-transp','Anonyme','Personne ne voit les votes individuels',false,event)">
+        <div class="picker-radio"></div>
+        <div class="picker-option-text">
+          <div class="picker-option-name">Anonyme</div>
+          <div class="picker-option-sub">Personne ne voit les votes individuels</div>
+        </div>
+      </div>
+      <div class="picker-option picker-selected"
+           onclick="pickOption('d15-picker-transp','d15-val-transp','d15-desc-transp','Émargement','On voit qui a voté, mais pas comment',false,event)">
+        <div class="picker-radio"></div>
+        <div class="picker-option-text">
+          <div class="picker-option-name">Liste d'émargement</div>
+          <div class="picker-option-sub">On voit qui a voté, mais pas comment</div>
+        </div>
+      </div>
+      <div class="picker-option"
+           onclick="pickOption('d15-picker-transp','d15-val-transp','d15-desc-transp','Transparent','Tout le monde voit les votes de tous',false,event)">
+        <div class="picker-radio"></div>
+        <div class="picker-option-text">
+          <div class="picker-option-name">Totalement transparent</div>
+          <div class="picker-option-sub">Tout le monde voit les votes de tous</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MODALE INFO (?) D15 ── -->
+  <div id="infoModal15" class="info-modal" onclick="if(event.target===this)this.classList.remove('open')">
+    <div class="info-modal-sheet">
+      <div class="info-modal-pill"></div>
+      <div class="info-modal-title">ℹ️ À propos du Scrutin</div>
+
+      <div class="info-item">
+        <div class="info-item-name">🔒 Accessibilité</div>
+        <div class="info-item-desc">Seuls les participants invités nominativement peuvent voter. Chaque invitation est personnelle et non transférable.</div>
+      </div>
+      <div class="info-item">
+        <div class="info-item-name">⏱️ Clôture obligatoire</div>
+        <div class="info-item-desc">Un scrutin doit avoir une clôture — par période ou manuellement. Les résultats ne sont pas accessibles tant que le vote est ouvert.</div>
+      </div>
+      <div class="info-item">
+        <div class="info-item-name">📊 Arrivée des résultats</div>
+        <div class="info-item-desc">Les résultats sont publiés à la clôture ou manuellement par l'organisateur.</div>
+      </div>
+      <div class="info-item">
+        <div class="info-item-name">👁️ Accès aux résultats</div>
+        <div class="info-item-desc">Les résultats peuvent être publics ou réservés aux participants selon votre choix.</div>
+      </div>
+
+      <div style="margin-top:16px;">
+        <button class="btn-ghost" onclick="document.getElementById('infoModal15').classList.remove('open')">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.direction').forEach(d => d.classList.remove('visible'));
+  document.querySelectorAll('.nav-btn').forEach(b => {
+    b.classList.remove('active');
+    if (b.getAttribute('onclick') === "show('" + id + "')") b.classList.add('active');
+  });
+  document.getElementById(id).classList.add('visible');
+  window.scrollTo(0, 0);
+}
+
+// Ouvre un picker (bottom sheet)
+function openPicker(id) {
+  document.getElementById(id).classList.add('open');
+}
+
+// Ferme au clic sur le fond
+function closePicker(e, id) {
+  if (!e.target.closest('.picker-inner')) {
+    document.getElementById(id).classList.remove('open');
+  }
+}
+
+// Sélectionne une option libre dans un picker
+function pickOption(pickerId, valId, descId, label, desc, locked, e) {
+  e.stopPropagation();
+  if (locked) return;
+  // Mise à jour du bouton et de la description dans la ligne settings
+  document.getElementById(valId).textContent = label;
+  document.getElementById(descId).textContent = desc;
+  // Mise à jour des radios dans le picker
+  const picker = document.getElementById(pickerId);
+  picker.querySelectorAll('.picker-option:not(.picker-option-locked)').forEach(o => o.classList.remove('picker-selected'));
+  e.currentTarget.classList.add('picker-selected');
+  // Ferme après 200ms
+  setTimeout(() => picker.classList.remove('open'), 200);
+}
+
+// Clic sur une option verrouillée → modale compte
+function pickLocked(title, desc, e) {
+  e.stopPropagation();
+  // Ferme le picker ouvert
+  document.querySelectorAll('.picker-sheet.open').forEach(p => p.classList.remove('open'));
+  document.getElementById('accountModalTitle').textContent = title;
+  document.getElementById('accountModalDesc').textContent = desc + ' Créez un compte gratuitement pour y accéder.';
+  document.getElementById('accountModal').classList.add('open');
+}
+
+function closeAccountModal() {
+  document.getElementById('accountModal').classList.remove('open');
+}
+
+document.addEventListener('click', function(e) {
+  const modal = document.getElementById('accountModal');
+  if (modal && modal.classList.contains('open') && e.target === modal) {
+    modal.classList.remove('open');
+  }
+});
+
+function toggleTip(el) {
+  const wasActive = el.classList.contains('active');
+  document.querySelectorAll('.emarg-chip.active, .merit-seg.active').forEach(c => c.classList.remove('active'));
+  if (!wasActive) el.classList.add('active');
+}
+// Ferme au clic ailleurs
+document.addEventListener('click', function(e) {
+  if (!e.target.classList.contains('emarg-chip') && !e.target.classList.contains('merit-seg')) {
+    document.querySelectorAll('.emarg-chip.active, .merit-seg.active').forEach(c => c.classList.remove('active'));
+  }
+});
+
+// Tabs invitations D10
+function d10SwitchTab(tab, btn) {
+  ['email','qr','lien'].forEach(t => {
+    const el = document.getElementById('d10-tab-' + t);
+    if (el) el.style.display = 'none';
+  });
+  const panel = document.getElementById('d10-tab-' + tab);
+  if (panel) panel.style.display = 'block';
+  document.querySelectorAll('.d10-inv-tab').forEach(b => {
+    b.style.opacity = '0.45';
+    b.style.fontWeight = '500';
+    b.style.borderBottom = '2px solid transparent';
+  });
+  btn.style.opacity = '1';
+  btn.style.fontWeight = '700';
+  btn.style.borderBottom = '2px solid white';
+}
+
+
+</script>
+</body>
+</html>
