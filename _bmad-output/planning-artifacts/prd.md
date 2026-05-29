@@ -12,10 +12,12 @@ classification:
   domain: govtech_civic
   complexity: high
   projectContext: greenfield
-lastEdited: '2026-05-13'
+lastEdited: '2026-05-29'
 editHistory:
   - date: '2026-05-13'
     changes: 'Réécriture des parcours utilisateurs (1-4) alignée sur la nouvelle matrice d'options (7 modes). Ajout des sections Functional Requirements (MVP/Post-MVP) et Non-Functional Requirements (performance, scalabilité, confidentialité, sécurité, RGPD, accessibilité, i18n).'
+  - date: '2026-05-29'
+    changes: 'Ajout de l'option "Autoriser les sans avis" (MVP) : colonne dans la matrice des modes, FR-13b (bulletin de vote), FR-13c/13d (option de création), FR-16b (affichage résultats). L'option est activable par l'organisateur pour tous les modes, désactivée par défaut.'
 ---
 
 # Product Requirements Document - perso-app.mieuxvoter.fr-v2
@@ -133,15 +135,15 @@ L'avantage structurel : la combinaison accessibilité + légitimité académique
 
 MieuxVoter v2 supporte six modes de vote correspondant à des intentions et contextes distincts :
 
-| Nom | Contexte | Type | Admin | Vote validé par mail | Qui a voté (admin) | Qui a voté (tous) | Qui a voté quoi | Suppression auto | Option résultat | Description | Usage estimé |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| **Vote rapide** | Informel | Public | Anonyme ou loggé | Non | Non | Non | Non | 30j | Résultat direct | Choix collectif anonyme sans friction — les utilisateurs peuvent voter plusieurs fois. | ⭐ Rare |
-| **Vote rapide semi-transparent** | Informel | Public | Anonyme ou loggé | Non | N/A | Oui | Non | 30J | Résultat direct | Choix collectif où la liste d'émargement est visible mais on n'a pas le détail des votes. | ⭐⭐⭐⭐⭐ Très fréquent |
-| **Vote rapide transparent** | Informel | Public | Anonyme ou loggé | Non | N/A | N/A | Oui | 30J | Résultat direct | Choix collectif transparent — tout le monde voit comment tout le monde a voté. | ⭐⭐⭐⭐⭐ Très fréquent |
-| **Sondage** | Organisé | Public | Loggé | Oui | Non | Non | Non | Non | Configurable (immédiat / à la clôture) | Recueil d'avis ouvert avec traçabilité — un email est requis pour limiter les votes multiples. | ⭐⭐ Occasionnel |
-| **Scrutin** | Organisé | Sur invitation | Loggé | N/A | Oui | Non | Non | Non | Configurable (immédiat / à la clôture) | Vote formel sur liste fermée — secret du vote garanti, émargement privé pour l'organisateur. | ⭐⭐⭐⭐ Fréquent |
-| **Scrutin avec liste d'émargement publique** | Organisé | Sur invitation | Loggé | N/A | Oui | Oui (nom choisi) | Non | Non | Configurable (immédiat / à la clôture) | Vote formel sur liste fermée — émargement visible par tous avec le nom choisi par l'électeur. Utile pour les AG avec obligation statutaire de transparence sur la participation. | ⭐⭐ Occasionnel |
-| **Scrutin transparent** | Organisé | Sur invitation | Loggé | N/A | N/A | N/A | Oui | Non | Configurable (immédiat / à la clôture) | Décision collégiale transparente — jury, comité de recrutement, CA. Chaque membre voit les votes de tous. | ⭐⭐ Occasionnel |
+| Nom | Contexte | Type | Admin | Vote validé par mail | Qui a voté (admin) | Qui a voté (tous) | Qui a voté quoi | Suppression auto | Option résultat | Sans avis activable | Description | Usage estimé |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| **Vote rapide** | Informel | Public | Anonyme ou loggé | Non | Non | Non | Non | 30j | Résultat direct | Oui | Choix collectif anonyme sans friction — les utilisateurs peuvent voter plusieurs fois. | ⭐ Rare |
+| **Vote rapide semi-transparent** | Informel | Public | Anonyme ou loggé | Non | N/A | Oui | Non | 30J | Résultat direct | Oui | Choix collectif où la liste d'émargement est visible mais on n'a pas le détail des votes. | ⭐⭐⭐⭐⭐ Très fréquent |
+| **Vote rapide transparent** | Informel | Public | Anonyme ou loggé | Non | N/A | N/A | Oui | 30J | Résultat direct | Oui | Choix collectif transparent — tout le monde voit comment tout le monde a voté. | ⭐⭐⭐⭐⭐ Très fréquent |
+| **Sondage** | Organisé | Public | Loggé | Oui | Non | Non | Non | Non | Configurable (immédiat / à la clôture) | Oui | Recueil d'avis ouvert avec traçabilité — un email est requis pour limiter les votes multiples. | ⭐⭐ Occasionnel |
+| **Scrutin** | Organisé | Sur invitation | Loggé | N/A | Oui | Non | Non | Non | Configurable (immédiat / à la clôture) | Oui | Vote formel sur liste fermée — secret du vote garanti, émargement privé pour l'organisateur. | ⭐⭐⭐⭐ Fréquent |
+| **Scrutin avec liste d'émargement publique** | Organisé | Sur invitation | Loggé | N/A | Oui | Oui (nom choisi) | Non | Non | Configurable (immédiat / à la clôture) | Oui | Vote formel sur liste fermée — émargement visible par tous avec le nom choisi par l'électeur. Utile pour les AG avec obligation statutaire de transparence sur la participation. | ⭐⭐ Occasionnel |
+| **Scrutin transparent** | Organisé | Sur invitation | Loggé | N/A | N/A | N/A | Oui | Non | Configurable (immédiat / à la clôture) | Oui | Décision collégiale transparente — jury, comité de recrutement, CA. Chaque membre voit les votes de tous. | ⭐⭐ Occasionnel |
 
 ## Parcours Utilisateurs
 
@@ -395,12 +397,19 @@ La combinaison token hashé + URL de vérification appliquée à un outil grand 
 - FR-11 : L'électeur accède au bulletin de vote via un lien partagé (modes publics) ou un lien unique personnel (modes sur invitation) — sans compte, sans friction.
 - FR-12 : Le bulletin de vote affiche un encart pédagogique expliquant le jugement majoritaire (2 phrases + exemple visuel), dismissable après première lecture.
 - FR-13 : L'électeur attribue une mention à chaque option parmi : Très bien / Bien / Assez bien / Passable / Insuffisant / À rejeter.
+- FR-13b : Si l'organisateur a activé l'option "Autoriser les sans avis", l'électeur peut choisir "Sans avis" pour une option donnée, en lieu et place d'une mention. Deux sous-options lui sont alors proposées avec une explication de leur impact sur le calcul JM : (a) **Sans impact** — aucune mention n'est attribuée à l'option pour cet électeur ; le profil de mérite de l'option est normalisé pour que tous les profils aient la même longueur avant application de l'algorithme JM ; (b) **À rejeter** — l'option reçoit la mention minimale "À rejeter".
 - FR-14 : La validation du vote déclenche une confirmation visuelle immédiate et la génération d'une preuve de vote (token unique hashé).
 - FR-15 : L'électeur peut vérifier à tout moment que son vote est comptabilisé dans l'urne via l'URL de vérification associée à sa preuve — sans révéler le contenu du vote.
+
+#### Options de création d'élection — Sans avis
+
+- FR-13c : L'organisateur peut activer l'option "Autoriser les sans avis" lors de la création de l'élection, pour tous les modes de vote.
+- FR-13d : Cette option est désactivée par défaut.
 
 #### Résultats
 
 - FR-16 : Les résultats sont calculés par l'algorithme du jugement majoritaire (méthode Balinski & Laraki) et affichent le classement des options avec leur mention majoritaire.
+- FR-16b : Si l'option "Autoriser les sans avis" est activée, l'onglet résultats indique, pour chaque option, le nombre et la proportion d'électeurs ayant choisi "Sans avis", avec la répartition entre "Sans impact" et "À rejeter".
 - FR-17 : L'affichage des résultats respecte la configuration choisie par l'organisateur : immédiat (visible dès le premier vote) ou à la clôture.
 
 #### Conformité minimale
