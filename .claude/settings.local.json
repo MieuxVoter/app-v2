@@ -11,7 +11,8 @@
       "WebFetch(domain:civs1.civs.us)",
       "WebFetch(domain:elekto.dev)",
       "WebFetch(domain:www.balotilo.org)",
-      "WebFetch(domain:opensourcepolitics.eu)"
+      "WebFetch(domain:opensourcepolitics.eu)",
+      "Bash(rtk grep *)"
     ]
   }
 }
