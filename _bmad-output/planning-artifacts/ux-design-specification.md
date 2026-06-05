@@ -324,10 +324,14 @@ Pattern établi (cartes de choix) + légèrement novateur (évaluation de tous l
 | Rôle | Hex | Usage |
 |---|---|---|
 | **Primary** | `#2400FD` | Fond principal, boutons primaires, stepper actif |
-| **Darker** | `#18048F` | Fond sections secondaires, cartes sombres |
-| **Darkest** | `#0A004C` | Fond le plus profond, ombres |
+| **Darker** | `#110081` | Fond app (avec back.svg + blur) |
+| **Darkest** | `#0A004C` | Fond le plus profond, cartes sombres, ombres |
 | **Coral** | `#FF3E37` | Illustrations, icônes destructives, erreurs |
-| **Surface** | `#FFFFFF` | Cartes, modales, champs de saisie |
+| **Surface** | `#EFEFFF` | Cartes, modales, champs de saisie (blanc bleuté v1, pas blanc pur) |
+| **Muted** | `#8F88BA` | Textes secondaires, ombres portées boutons |
+
+**Fond d'application :**
+- Image `back.svg` + couleur de base `#110081` avec `filter: blur(30px)` — signature visuelle v1 à conserver
 
 **Dégradé mentions (7 niveaux) :**
 
@@ -348,9 +352,9 @@ Pattern établi (cartes de choix) + légèrement novateur (évaluation de tous l
 
 ### Typography System
 
-- **Police :** DM Sans (Google Fonts, libre)
-- **Tailles :** à définir lors de l'implémentation
-- **Hiérarchie de niveaux :** H1 / H2 / H3 / Body / Label — DM Sans Bold pour les titres, Medium pour les labels, Regular pour le corps
+- **Polices :** DM Serif Display (H1/H2/H3) + DM Sans (H4/H5/body/boutons/labels) — Google Fonts, libres
+- **Tailles de référence v1 :** H2 = 56px / H3 = 40px / H4 = 24px / H5 = 18px / Body = 16px
+- **Graisses :** DM Serif Display weight normal pour les grands titres, DM Sans Bold pour H4/H5 et boutons, Medium pour le corps
 - **Ton :** moderne, accessible, pas austère
 
 ### Spacing & Layout Foundation
@@ -358,7 +362,8 @@ Pattern établi (cartes de choix) + légèrement novateur (évaluation de tous l
 - **Unité de base :** 8px
 - **Marges latérales mobiles :** 16px
 - **Espacement liste :** 12px entre items, 24px entre sections
-- **Border radius :** 2-4px sur boutons (style carré assumé), 8px sur cartes
+- **Border radius :** **0px strict** sur boutons et cartes — style carré assumé, signature v1 (pas d'arrondis)
+- **Ombre portée boutons :** `box-shadow: 0px 4px 0px` vers le bas (couleur selon contexte : `#7A64F9` pour primary, `#8F88BA` pour secondary) — signature v1
 - **Layout mobile :** colonne unique, CTA fixé en bas (safe area iOS)
 - **Layout desktop :** centré, max-width 800px formulaires, ~1200px dashboard admin
 

@@ -4,16 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MieuxVoter v2 — Directions Design</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --primary: #2400FD; --darker: #18048F; --darkest: #0A004C;
-    --coral: #FF3E37; --white: #FFFFFF; --grey-mid: #AAAACC;
+    --primary: #2400FD; --darker: #110081; --darkest: #0A004C;
+    --coral: #FF3E37; --surface: #EFEFFF; --muted: #8F88BA; --grey-mid: #AAAACC;
     --m1: #661800; --m2: #C23D13; --m3: #C27C13; --m4: #C2B113;
     --m5: #D3D715; --m6: #A0CF1C; --m7: #3A9918;
   }
-  body { font-family: 'DM Sans', sans-serif; background: #0D0D1A; color: white; min-height: 100vh; }
+  body { font-family: 'DM Sans', sans-serif; background: #110081; color: white; min-height: 100vh; }
+  h1, h2, h3 { font-family: 'DM Serif Display', serif; font-weight: normal; }
 
   /* NAV */
   .nav {
@@ -24,7 +25,7 @@
   .nav-title { font-weight: 700; font-size: 13px; color: var(--grey-mid); white-space: nowrap; margin-right: 4px; }
   .nav-btn {
     background: none; border: 1px solid rgba(255,255,255,0.2); color: white;
-    padding: 5px 12px; border-radius: 20px; font-family: 'DM Sans', sans-serif;
+    padding: 5px 12px; border-radius: 0; font-family: 'DM Sans', sans-serif;
     font-size: 12px; cursor: pointer; white-space: nowrap; transition: all 0.2s;
   }
   .nav-btn:hover { background: rgba(255,255,255,0.1); }
@@ -40,7 +41,7 @@
 
   /* PHONE */
   .phone {
-    background: var(--primary); border-radius: 28px; padding: 22px 18px 28px;
+    background: var(--primary); border-radius: 0; padding: 22px 18px 28px;
     box-shadow: 0 20px 60px rgba(0,0,0,0.6); position: relative;
   }
   .phone-dark { background: var(--darker); }
@@ -51,9 +52,10 @@
 
   /* FORMS */
   .field {
-    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.22);
-    border-radius: 6px; padding: 12px 14px; font-size: 14px; color: white;
+    background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.22);
+    border-radius: 0; padding: 12px 14px; font-size: 14px; color: white;
     width: 100%; font-family: 'DM Sans', sans-serif; margin-bottom: 10px;
+    box-shadow: 0px 4px 0px rgba(0,0,0,0.25);
   }
   .field::placeholder { opacity: 0.45; }
 
@@ -71,22 +73,24 @@
 
   /* BUTTONS */
   .btn-primary {
-    background: white; color: var(--primary); border: none; border-radius: 6px;
+    background: white; color: var(--primary); border: 2px solid white; border-radius: 0;
+    box-shadow: 0px 4px 0px var(--muted);
     padding: 13px 20px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 700;
     width: 100%; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
   }
   .btn-outline {
-    background: transparent; color: white; border: 1.5px solid rgba(255,255,255,0.5);
-    border-radius: 6px; padding: 11px 20px; font-family: 'DM Sans', sans-serif;
+    background: transparent; color: white; border: 2px solid rgba(255,255,255,0.5);
+    border-radius: 0; box-shadow: 0px 4px 0px rgba(255,255,255,0.18);
+    padding: 11px 20px; font-family: 'DM Sans', sans-serif;
     font-size: 14px; width: 100%; cursor: pointer;
   }
   .btn-ghost {
-    background: rgba(255,255,255,0.08); color: white; border: none; border-radius: 6px;
+    background: rgba(255,255,255,0.08); color: white; border: 2px solid rgba(255,255,255,0.15); border-radius: 0;
     padding: 11px 20px; font-family: 'DM Sans', sans-serif; font-size: 13px;
     width: 100%; cursor: pointer;
   }
   .btn-sm {
-    background: rgba(255,255,255,0.1); border: none; border-radius: 4px;
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 0;
     padding: 5px 10px; color: white; font-size: 11px; font-family: 'DM Sans', sans-serif; cursor: pointer;
   }
 
@@ -171,7 +175,7 @@
   }
   .picker-sheet.open { display: flex; }
   .picker-inner {
-    background: #1A0870; border-radius: 18px 18px 0 0;
+    background: #1A0870; border-radius: 0;
     padding: 20px 16px 36px; width: 100%; max-width: 420px;
   }
   .picker-pill {
@@ -206,7 +210,7 @@
   }
   .account-modal.open { display: flex; }
   .account-modal-sheet {
-    background: var(--darker); border-radius: 18px 18px 0 0;
+    background: var(--darker); border-radius: 0;
     padding: 24px 20px 36px; width: 100%; max-width: 420px;
   }
   .account-modal-pill {
@@ -219,19 +223,20 @@
 
   /* CANDIDATS */
   .cand-row {
-    background: rgba(255,255,255,0.08); border-radius: 7px; padding: 11px 12px;
+    background: rgba(255,255,255,0.08); border-radius: 0; padding: 11px 12px;
     margin-bottom: 7px; display: flex; align-items: center; gap: 10px;
+    border-left: 2px solid rgba(255,255,255,0.15);
   }
   .cand-avatar {
-    width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
+    width: 30px; height: 30px; border-radius: 0; flex-shrink: 0;
     display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700;
   }
   .drag-handle { opacity: 0.25; font-size: 15px; cursor: grab; }
   .delete-btn  { color: var(--coral); opacity: 0.6; font-size: 15px; cursor: pointer; padding: 3px; }
   .delete-btn:hover { opacity: 1; }
   .add-row {
-    background: rgba(255,255,255,0.04); border: 1.5px dashed rgba(255,255,255,0.18);
-    border-radius: 7px; padding: 11px 12px; display: flex; align-items: center;
+    background: rgba(255,255,255,0.04); border: 2px dashed rgba(255,255,255,0.18);
+    border-radius: 0; padding: 11px 12px; display: flex; align-items: center;
     gap: 10px; cursor: pointer; margin-bottom: 7px;
   }
 
@@ -239,24 +244,26 @@
   .ballot-scroll { overflow: hidden; }
   .ballot-row { display: flex; gap: 10px; padding-right: 28px; }
   .ballot-card {
-    background: white; color: #111; border-radius: 10px; padding: 14px;
+    background: var(--surface); color: #111; border-radius: 0; padding: 14px;
     flex-shrink: 0; width: calc(100% - 28px);
+    box-shadow: 0px 4px 0px var(--muted);
   }
   .ballot-peek {
-    background: white; color: #111; border-radius: 10px; padding: 14px;
+    background: var(--surface); color: #111; border-radius: 0; padding: 14px;
     flex-shrink: 0; width: calc(100% - 28px); opacity: 0.4; transform: scale(0.96);
   }
   .ballot-header { display: flex; align-items: center; gap: 9px; margin-bottom: 12px; }
   .ballot-avatar {
-    width: 34px; height: 34px; border-radius: 50%; background: rgba(36,0,253,0.1);
+    width: 34px; height: 34px; border-radius: 0; background: rgba(36,0,253,0.1);
     display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0;
   }
   /* Mentions du plus positif au plus négatif */
   .mention-btn {
-    display: block; width: 100%; border: none; border-radius: 4px; padding: 9px 12px;
+    display: block; width: 100%; border: none; border-radius: 0; padding: 9px 12px;
     font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500;
     text-align: left; cursor: pointer; margin-bottom: 4px;
     background: rgba(0,0,0,0.07); color: #888;
+    box-shadow: 0px 2px 0px rgba(0,0,0,0.15);
   }
   .mention-selected { font-weight: 700; }
   .m7s { background: var(--m7) !important; color: white !important; }
@@ -327,7 +334,7 @@
   .tab-active { border-bottom-color: white; opacity: 1; font-weight: 700; }
 
   /* LISTING */
-  .el-card { background: rgba(255,255,255,0.07); border-radius: 8px; padding: 12px 14px; margin-bottom: 8px; }
+  .el-card { background: rgba(255,255,255,0.07); border-radius: 0; padding: 12px 14px; margin-bottom: 8px; }
   .el-active      { border-left: 3px solid var(--m7); }
   .el-closed      { border-left: 3px solid rgba(255,255,255,0.12); opacity: 0.65; }
   .el-participated{ border-left: 3px solid var(--primary); }
@@ -386,11 +393,11 @@
 
   /* CONFIRMATION */
   .confirm-screen {
-    background: var(--primary); border-radius: 28px; padding: 28px 18px;
+    background: var(--primary); border-radius: 0; padding: 28px 18px;
     text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.6);
   }
   .confirm-cards { display: flex; gap: 8px; margin: 16px 0; }
-  .confirm-card { flex: 1; background: var(--darker); border-radius: 7px; padding: 10px; text-align: left; }
+  .confirm-card { flex: 1; background: var(--darker); border-radius: 0; padding: 10px; text-align: left; }
   .cc-title { font-size: 10px; opacity: 0.45; margin-bottom: 3px; }
   .cc-val   { font-size: 12px; font-weight: 700; }
   .proof-box {
@@ -425,7 +432,7 @@
   }
   .info-modal.open { display: flex; }
   .info-modal-sheet {
-    background: var(--darker); border-radius: 18px 18px 0 0;
+    background: var(--darker); border-radius: 0;
     padding: 24px 20px 36px; width: 100%; max-width: 420px;
   }
   .info-modal-pill {
@@ -442,6 +449,16 @@
   .more-options-link {
     display: block; text-align: center; font-size: 12px; color: #9B8FFF;
     text-decoration: underline; cursor: pointer; margin-top: 14px; padding-bottom: 2px;
+  }
+
+  /* HAMBURGER UNIVERSEL */
+  .phone-wrap { position: relative; }
+  .phone-hamburger {
+    position: absolute; top: 18px; right: 18px; z-index: 10;
+    width: 34px; height: 34px;
+    border: 2px solid rgba(255,255,255,0.4);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; background: transparent; flex-shrink: 0;
   }
 </style>
 </head>
@@ -469,44 +486,41 @@
 <!-- ══ D1 — ACCUEIL ══ -->
 <div id="d1" class="direction visible">
   <div class="direction-label">1 — Page d'accueil · Mobile</div>
-  <div class="phone">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;">
-      <div style="font-weight:700;font-size:17px;">🗳️ Mieux<strong>Voter</strong></div>
-      <button class="btn-sm" onclick="show('d11')" style="background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.22);border-radius:6px;padding:6px 11px;font-size:12px;font-weight:600;">Mes scrutins</button>
+  <div class="phone" style="background:#2400FD;padding:20px 16px 28px;position:relative;overflow:hidden;">
+    <!-- Logo -->
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px;">
+      <svg width="36" height="28" viewBox="0 0 36 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <polyline points="2,4 18,18 34,4" stroke="white" stroke-width="4" fill="none" stroke-linejoin="round"/>
+        <polyline points="2,14 18,28 34,14" stroke="white" stroke-width="4" fill="none" stroke-linejoin="round"/>
+      </svg>
+      <div style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:16px;line-height:1.1;color:white;">Mieux<br>Voter</div>
     </div>
-    <p style="font-size:11px;opacity:0.5;margin-bottom:6px;">Simple et gratuit</p>
-    <h1 style="font-size:24px;font-weight:700;line-height:1.2;margin-bottom:14px;">Organisez un vote avec le Jugement Majoritaire</h1>
-    <div class="spacer"></div>
-    <input class="field" type="text" placeholder="Posez la question de votre vote ici">
-    <button class="btn-primary" onclick="show('d3')">C'est parti →</button>
-    <div class="spacer"></div>
-    <p style="font-size:11px;opacity:0.35;text-align:center;">Pas de publicité, ni données personnelles.</p>
-    <div class="spacer"></div>
-    <div style="display:flex;gap:8px;">
-      <div style="flex:1;background:rgba(255,255,255,0.08);border-radius:7px;padding:10px;text-align:center;">
-        <div style="font-size:20px;margin-bottom:5px;">⚡</div>
-        <div style="font-size:11px;font-weight:700;">Simple</div>
-        <div style="font-size:10px;opacity:0.4;margin-top:2px;">En moins d'une minute</div>
-      </div>
-      <div style="flex:1;background:rgba(255,255,255,0.08);border-radius:7px;padding:10px;text-align:center;">
-        <div style="font-size:20px;margin-bottom:5px;">🎁</div>
-        <div style="font-size:11px;font-weight:700;">Gratuit</div>
-        <div style="font-size:10px;opacity:0.4;margin-top:2px;">Toujours</div>
-      </div>
-      <div style="flex:1;background:rgba(255,255,255,0.08);border-radius:7px;padding:10px;text-align:center;">
-        <div style="font-size:20px;margin-bottom:5px;">✅</div>
-        <div style="font-size:11px;font-weight:700;">Fiable</div>
-        <div style="font-size:10px;opacity:0.4;margin-top:2px;">Preuve de vote</div>
-      </div>
-    </div>
+    <!-- Accroche -->
+    <p style="font-family:'DM Sans',sans-serif;font-size:12px;color:white;opacity:1;margin-bottom:6px;font-weight:400;">Simple et gratuit</p>
+    <h1 style="font-family:'DM Serif Display',serif;font-size:30px;line-height:1.15;margin-bottom:22px;font-weight:normal;color:white;">Organisez un vote avec le Jugement Majoritaire</h1>
+    <!-- Label champ -->
+    <p style="font-family:'DM Sans',sans-serif;font-size:12px;color:white;opacity:0.7;margin-bottom:6px;">Poser la question de votre vote ici :</p>
+    <!-- Champ question — underline seul, style v1 -->
+    <input type="text" placeholder="ex : Quel restaurant ce soir ?" style="background:transparent;border:none;border-bottom:2px solid rgba(255,255,255,0.6);outline:none;color:white;font-family:'DM Sans',sans-serif;font-size:15px;width:100%;padding-bottom:8px;margin-bottom:20px;"/>
+    <!-- Bouton C'est parti — outlined blanc, ombre blanche, flèche -->
+    <button onclick="show('d3')" style="background:transparent;border:2px solid white;box-shadow:0px 4px 0px rgba(255,255,255,0.35);color:white;font-family:'DM Sans',sans-serif;font-weight:700;font-size:15px;padding:12px 20px;width:auto;cursor:pointer;border-radius:0;display:inline-flex;align-items:center;gap:8px;">C'est parti →</button>
+    <p style="font-family:'DM Sans',sans-serif;font-size:10px;color:white;opacity:0.4;margin-top:10px;">Pas de publicité, ni données personnelles.</p>
   </div>
 </div>
 
 <!-- ══ D1b — ACCUEIL (variante type de vote) ══ -->
 <div id="d1b" class="direction">
   <div class="direction-label">1b — Page d'accueil · Variante sélection du type de vote</div>
-  <div class="phone">
-    <div style="font-weight:700;font-size:17px;margin-bottom:24px;">🗳️ Mieux<strong>Voter</strong></div>
+  <div class="phone phone-dark">
+    <!-- Stepper v1 — étape 1 terminée, étape 2 active -->
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:24px;">
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:white;opacity:0.45;">1</span>
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:white;opacity:0.45;">·</span>
+      <div style="width:26px;height:26px;background:white;color:#2400FD;font-family:'DM Sans',sans-serif;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</div>
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:white;opacity:0.45;">·</span>
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:white;opacity:0.45;">3</span>
+      <div style="flex:1;"></div>
+    </div>
     <h1 style="font-size:22px;font-weight:700;line-height:1.2;margin-bottom:6px;">Quel périmètre ?</h1>
     <p style="font-size:13px;opacity:0.55;margin-bottom:20px;">Choisissez selon vos besoins.</p>
 
@@ -650,10 +664,14 @@
 <div id="d2" class="direction">
   <div class="direction-label">2 — Paramètres du vote · Mobile (iOS settings + bottom sheet)</div>
   <div class="phone phone-dark">
-    <div class="stepper">
-      <div class="step step-done">✓</div><div class="step-line step-line-done"></div>
-      <div class="step step-done">✓</div><div class="step-line step-line-done"></div>
-      <div class="step step-active">3</div>
+    <!-- Stepper v1 — étape 3 active -->
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px;">
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:white;opacity:0.45;">1</span>
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:white;opacity:0.45;">·</span>
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:white;opacity:0.45;">2</span>
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:white;opacity:0.45;">·</span>
+      <div style="width:26px;height:26px;background:white;color:#2400FD;font-family:'DM Sans',sans-serif;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
+      <div style="flex:1;"></div>
     </div>
     <h2>Paramètres du vote</h2>
     <div class="spacer-sm"></div>
@@ -908,35 +926,53 @@
 
 <!-- ══ D3 — CANDIDATS ══ -->
 <div id="d3" class="direction">
-  <div class="direction-label">3 — Candidats · Mobile (corbeille rouge)</div>
-  <div class="phone phone-dark">
-    <div class="stepper">
-      <div class="step step-done">✓</div><div class="step-line step-line-done"></div>
-      <div class="step step-active">2</div><div class="step-line"></div>
-      <div class="step step-inactive">3</div>
+  <div class="direction-label">2 — Candidats · Mobile</div>
+  <div class="phone" style="background:#17048E;padding:20px 16px 28px;min-height:580px;display:flex;flex-direction:column;">
+
+    <!-- Stepper v1 : carré blanc actif + chiffres grisés + séparateur · -->
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px;">
+      <div style="width:26px;height:26px;background:white;color:#2400FD;font-family:'DM Sans',sans-serif;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</div>
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:white;opacity:0.45;">·</span>
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:white;opacity:0.45;">2</span>
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:white;opacity:0.45;">·</span>
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:white;opacity:0.45;">3</span>
+      <div style="flex:1;"></div>
     </div>
-    <h2>Saisissez vos candidats.</h2>
-    <div class="spacer-sm"></div>
-    <div class="cand-row">
-      <div class="drag-handle">⠿</div>
-      <div class="cand-avatar" style="background:rgba(160,207,28,0.18);color:var(--m6);">C</div>
-      <div style="flex:1;font-size:13px;font-weight:500;">Cameron Williamson</div>
-      <div class="delete-btn">🗑</div>
+
+    <!-- Question du scrutin -->
+    <p style="font-family:'DM Sans',sans-serif;font-size:11px;color:white;opacity:0.5;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.08em;">Question de votre scrutin</p>
+    <p style="font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;color:white;margin-bottom:20px;">Quel est le meilleur candidat pour le syndicat ?</p>
+
+    <!-- Titre section — style v1 : DM Serif Display, non-bold -->
+    <h2 style="font-family:'DM Serif Display',serif;font-size:28px;font-weight:normal;color:white;line-height:1.15;margin-bottom:16px;">Saisissez ici le nom de vos candidats.</h2>
+
+    <!-- Alerte 1 candidat minimum — style v1 : fond bleu vif, icône ℹ, croix -->
+    <div style="background:#2400FD;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <div style="display:flex;align-items:center;gap:8px;font-family:'DM Sans',sans-serif;font-size:13px;color:white;">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;"><circle cx="8" cy="8" r="7" stroke="white" stroke-width="1.5"/><line x1="8" y1="7" x2="8" y2="12" stroke="white" stroke-width="1.5"/><circle cx="8" cy="4.5" r="0.8" fill="white"/></svg>
+        <span>1 candidat minimum</span>
+      </div>
+      <span style="cursor:pointer;opacity:0.6;font-size:16px;color:white;">✕</span>
     </div>
-    <div class="cand-row">
-      <div class="drag-handle">⠿</div>
-      <div class="cand-avatar" style="background:rgba(36,0,253,0.2);color:#9B8FFF;">E</div>
-      <div style="flex:1;font-size:13px;font-weight:500;">Esther Howard</div>
-      <div class="delete-btn">🗑</div>
+
+    <!-- Ligne candidat 1 — dashed -->
+    <div style="border:2px dashed rgba(255,255,255,0.3);padding:14px 12px;display:flex;align-items:center;gap:12px;margin-bottom:10px;cursor:pointer;">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="opacity:0.4;flex-shrink:0;"><circle cx="8" cy="5" r="3" stroke="white" stroke-width="1.5"/><path d="M2 14c0-3.314 2.686-6 6-6s6 2.686 6 6" stroke="white" stroke-width="1.5"/></svg>
+      <span style="font-family:'DM Sans',sans-serif;font-size:14px;color:white;opacity:0.45;flex:1;">Ajouter un candidat</span>
+      <span style="font-size:22px;color:white;opacity:0.5;font-weight:300;line-height:1;">+</span>
     </div>
-    <div class="add-row">
-      <div style="width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-size:16px;">+</div>
-      <div style="font-size:13px;opacity:0.45;">Ajouter un candidat</div>
+
+    <!-- Ligne candidat 2 — dashed -->
+    <div style="border:2px dashed rgba(255,255,255,0.3);padding:14px 12px;display:flex;align-items:center;gap:12px;margin-bottom:10px;cursor:pointer;">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="opacity:0.4;flex-shrink:0;"><circle cx="8" cy="5" r="3" stroke="white" stroke-width="1.5"/><path d="M2 14c0-3.314 2.686-6 6-6s6 2.686 6 6" stroke="white" stroke-width="1.5"/></svg>
+      <span style="font-family:'DM Sans',sans-serif;font-size:14px;color:white;opacity:0.45;flex:1;">Ajouter un candidat</span>
+      <span style="font-size:22px;color:white;opacity:0.5;font-weight:300;line-height:1;">+</span>
     </div>
-    <p style="font-size:11px;opacity:0.25;text-align:center;margin:8px 0 12px;">Glissez ⠿ pour réordonner</p>
-    <div class="cta-bar">
-      <button class="btn-primary" onclick="show('d1b')">Valider les candidats →</button>
-    </div>
+
+    <div style="flex:1;"></div>
+
+    <!-- CTA bas — outlined grisé (désactivé car 0 candidat) -->
+    <button onclick="show('d1b')" style="background:transparent;border:2px solid rgba(255,255,255,0.3);box-shadow:0px 4px 0px rgba(255,255,255,0.1);color:rgba(255,255,255,0.4);font-family:'DM Sans',sans-serif;font-weight:700;font-size:15px;padding:14px 20px;width:100%;cursor:pointer;border-radius:0;">Valider les candidats</button>
   </div>
 </div>
 
@@ -944,47 +980,41 @@
 <div id="d4" class="direction">
   <div class="direction-label">4 — Bulletin · Mobile (badge transparence en-tête + rappel popup)</div>
 
-  <!-- Variante: Anonyme -->
+  <!-- Variante: Anonyme — style v1 fidèle -->
   <div class="stitle" style="margin-bottom:8px;">Variante A — Anonyme</div>
-  <div class="phone phone-darkest" style="margin-bottom:28px;">
-    <div style="font-size:11px;opacity:0.4;text-align:center;margin-bottom:14px;">Vote ouvert jusqu'au 30 sept. 2025</div>
-    <div style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.07);border-radius:8px;padding:7px 11px;margin-bottom:14px;font-size:12px;">
-      <span style="font-size:14px;">🔒</span>
-      <div><span style="font-weight:600;">Vote anonyme</span><span style="opacity:0.45;margin-left:4px;">— rien ne vous identifie</span></div>
+  <div class="phone" style="background:#2400FD;padding:0;overflow:hidden;margin-bottom:28px;display:flex;flex-direction:column;">
+    <!-- Header question -->
+    <div style="padding:20px 16px 14px;">
+      <h2 style="font-family:'DM Serif Display',serif;font-size:20px;font-weight:normal;line-height:1.25;padding-right:44px;">Quel est le meilleur candidat pour le syndicat ?</h2>
     </div>
-    <div style="font-size:15px;font-weight:700;margin-bottom:12px;">Quel est le meilleur candidat pour le syndicat ?</div>
-    <div class="ballot-scroll">
-      <div class="ballot-row">
-        <div class="ballot-card">
-          <div class="ballot-header">
-            <div class="ballot-avatar">👤</div>
-            <div>
-              <div style="font-size:14px;font-weight:700;">Cameron Williamson</div>
-              <div style="font-size:11px;color:#888;">En savoir plus →</div>
-            </div>
-          </div>
-          <button class="mention-btn">Excellent</button>
-          <button class="mention-btn m6s mention-selected">✓ Très bien</button>
-          <button class="mention-btn">Bien</button>
-          <button class="mention-btn">Assez bien</button>
-          <button class="mention-btn">Passable</button>
-          <button class="mention-btn">Insuffisant</button>
-          <button class="mention-btn">À rejeter</button>
+    <!-- Carte candidat (fond blanc-bleuté v1) -->
+    <div style="background:#EFEFFF;color:#0A004C;margin:0 16px;box-shadow:0px 4px 0px #8F88BA;">
+      <div style="padding:14px 14px 10px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(10,0,76,0.1);">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;opacity:0.5;"><circle cx="10" cy="6" r="4" stroke="#0A004C" stroke-width="1.5"/><path d="M2 18c0-4.418 3.582-8 8-8s8 3.582 8 8" stroke="#0A004C" stroke-width="1.5"/></svg>
+        <div style="flex:1;">
+          <div style="font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;">Cameron Williamson</div>
+          <div style="font-family:'DM Sans',sans-serif;font-size:11px;opacity:0.5;">Cliquez pour en savoir plus</div>
         </div>
-        <div class="ballot-peek">
-          <div class="ballot-header">
-            <div class="ballot-avatar">👤</div>
-            <div><div style="font-size:14px;font-weight:700;">Esther Howard</div></div>
-          </div>
-          <button class="mention-btn">Excellent</button>
-          <button class="mention-btn">Très bien</button>
-          <button class="mention-btn">Bien</button>
-        </div>
+        <span style="font-size:12px;opacity:0.4;">›</span>
+      </div>
+      <!-- Mentions v1 : boutons pleine largeur, fond gris clair, 0px radius -->
+      <div style="padding:10px 12px;display:flex;flex-direction:column;gap:6px;">
+        <button style="background:#C3BFD8;border:none;border-radius:0;padding:11px 12px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:#0A004C;text-align:center;cursor:pointer;box-shadow:0px 2px 0px #8F88BA;">Insuffisant</button>
+        <button style="background:#C3BFD8;border:none;border-radius:0;padding:11px 12px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:#0A004C;text-align:center;cursor:pointer;box-shadow:0px 2px 0px #8F88BA;">Passable</button>
+        <button style="background:#C3BFD8;border:none;border-radius:0;padding:11px 12px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:#0A004C;text-align:center;cursor:pointer;box-shadow:0px 2px 0px #8F88BA;">Assez bien</button>
+        <button style="background:#C3BFD8;border:none;border-radius:0;padding:11px 12px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:#0A004C;text-align:center;cursor:pointer;box-shadow:0px 2px 0px #8F88BA;">Bien</button>
+        <button style="background:#A0CF1C;border:none;border-radius:0;padding:11px 12px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;color:#0A004C;text-align:center;cursor:pointer;box-shadow:0px 2px 0px #5a8a00;display:flex;align-items:center;justify-content:center;gap:6px;"><svg width="14" height="10" viewBox="0 0 14 10" fill="none"><polyline points="1,5 5,9 13,1" stroke="#0A004C" stroke-width="2"/></svg>Très bien</button>
+        <button style="background:#C3BFD8;border:none;border-radius:0;padding:11px 12px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:#0A004C;text-align:center;cursor:pointer;box-shadow:0px 2px 0px #8F88BA;">Excellent</button>
       </div>
     </div>
-    <div class="pagination"><div class="dot dot-active"></div><div class="dot"></div></div>
-    <div class="cta-bar">
-      <button class="btn-primary" style="font-size:13px;" onclick="document.getElementById('d4-modal-anon').classList.add('open')">Envoyer mon vote →</button>
+    <!-- Pagination v1 : carrés numérotés -->
+    <div style="display:flex;align-items:center;justify-content:center;gap:10px;padding:14px 0;">
+      <div style="width:24px;height:24px;background:white;color:#2400FD;font-family:'DM Sans',sans-serif;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;">1</div>
+      <span style="font-family:'DM Sans',sans-serif;font-size:14px;opacity:0.5;">2</span>
+    </div>
+    <!-- CTA bas v1 : outlined blanc -->
+    <div style="padding:0 16px 20px;">
+      <button onclick="document.getElementById('d4-modal-anon').classList.add('open')" style="background:transparent;border:2px solid white;box-shadow:0px 4px 0px rgba(255,255,255,0.35);color:white;font-family:'DM Sans',sans-serif;font-weight:700;font-size:14px;padding:14px 20px;width:100%;cursor:pointer;border-radius:0;display:flex;align-items:center;justify-content:center;gap:8px;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polyline points="1,7 6,12 13,2" stroke="white" stroke-width="2"/></svg>Envoyez mon vote</button>
     </div>
   </div>
   <div id="d4-modal-anon" class="info-modal" onclick="if(event.target===this)this.classList.remove('open')">
@@ -1466,7 +1496,7 @@
 <!-- ══ D5 — CONFIRMATION ══ -->
 <div id="d5" class="direction">
   <div class="direction-label">5 — Confirmation · Mobile</div>
-  <div class="confirm-screen">
+  <div class="confirm-screen phone">
     <div style="font-size:52px;margin-bottom:16px;">🗳️</div>
     <h2 style="font-size:20px;margin-bottom:8px;">Votre voix a été<br>enregistrée !</h2>
     <p style="font-size:13px;margin-bottom:0;">Merci pour votre participation.</p>
@@ -2293,9 +2323,8 @@
 <div id="d10" class="direction">
   <div class="direction-label">10 — Configuration des invitations · Mobile (tabs email / QR / lien)</div>
   <div class="phone phone-dark">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-      <h2 style="margin-bottom:0;">Invitations</h2>
-      <button class="btn-sm" onclick="show('d11')" style="background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.22);border-radius:6px;padding:6px 11px;font-size:12px;font-weight:600;">Mes scrutins</button>
+    <div style="margin-bottom:16px;">
+      <h2 style="margin-bottom:0;padding-right:44px;">Invitations</h2>
     </div>
 
     <div style="background:rgba(255,255,255,0.05);border-radius:10px;overflow:hidden;">
@@ -2689,10 +2718,13 @@
   <!-- ── Vote Rapide ── -->
   <div class="stitle" style="margin-bottom:8px;">Vote public rapide</div>
   <div class="phone phone-dark" style="margin-bottom:28px;">
-    <div class="stepper">
-      <div class="step step-done">✓</div><div class="step-line step-line-done"></div>
-      <div class="step step-done">✓</div><div class="step-line step-line-done"></div>
-      <div class="step step-active">3</div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px;">
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:white;opacity:0.45;">1</span>
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:white;opacity:0.45;">·</span>
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:white;opacity:0.45;">2</span>
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:white;opacity:0.45;">·</span>
+      <div style="width:26px;height:26px;background:white;color:#2400FD;font-family:'DM Sans',sans-serif;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
+      <div style="flex:1;"></div>
     </div>
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
       <h2 style="margin-bottom:0;flex:1;">Vote public rapide</h2>
@@ -2741,10 +2773,13 @@
   <!-- ── Sondage mail vérifié ── -->
   <div class="stitle" style="margin-bottom:8px;">Vérification par email</div>
   <div class="phone phone-dark" style="margin-bottom:28px;">
-    <div class="stepper">
-      <div class="step step-done">✓</div><div class="step-line step-line-done"></div>
-      <div class="step step-done">✓</div><div class="step-line step-line-done"></div>
-      <div class="step step-active">3</div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px;">
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:white;opacity:0.45;">1</span>
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:white;opacity:0.45;">·</span>
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:white;opacity:0.45;">2</span>
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:white;opacity:0.45;">·</span>
+      <div style="width:26px;height:26px;background:white;color:#2400FD;font-family:'DM Sans',sans-serif;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
+      <div style="flex:1;"></div>
     </div>
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
       <h2 style="margin-bottom:0;flex:1;">Vérification par email</h2>
@@ -2789,10 +2824,13 @@
   <!-- ── Scrutin ── -->
   <div class="stitle" style="margin-bottom:8px;">Par invitation</div>
   <div class="phone phone-dark" style="margin-bottom:28px;">
-    <div class="stepper">
-      <div class="step step-done">✓</div><div class="step-line step-line-done"></div>
-      <div class="step step-done">✓</div><div class="step-line step-line-done"></div>
-      <div class="step step-active">3</div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px;">
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:white;opacity:0.45;">1</span>
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:white;opacity:0.45;">·</span>
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:white;opacity:0.45;">2</span>
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:white;opacity:0.45;">·</span>
+      <div style="width:26px;height:26px;background:white;color:#2400FD;font-family:'DM Sans',sans-serif;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
+      <div style="flex:1;"></div>
     </div>
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
       <h2 style="margin-bottom:0;flex:1;">Par invitation</h2>
@@ -2866,10 +2904,13 @@
   <!-- ── Avancé (paramètres complets) ── -->
   <div class="stitle" style="margin-bottom:8px;">Avancé</div>
   <div class="phone phone-dark" style="margin-bottom:28px;">
-    <div class="stepper">
-      <div class="step step-done">✓</div><div class="step-line step-line-done"></div>
-      <div class="step step-done">✓</div><div class="step-line step-line-done"></div>
-      <div class="step step-active">3</div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px;">
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:white;opacity:0.45;">1</span>
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:white;opacity:0.45;">·</span>
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:white;opacity:0.45;">2</span>
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:white;opacity:0.45;">·</span>
+      <div style="width:26px;height:26px;background:white;color:#2400FD;font-family:'DM Sans',sans-serif;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
+      <div style="flex:1;"></div>
     </div>
     <h2>Paramètres du vote</h2>
     <div class="spacer-sm"></div>
@@ -3085,10 +3126,13 @@
 <div id="d13" class="direction">
   <div class="direction-label">13 — Vote Rapide · Mobile (variante : options minimales + lien "Plus d'options")</div>
   <div class="phone phone-dark">
-    <div class="stepper">
-      <div class="step step-done">✓</div><div class="step-line step-line-done"></div>
-      <div class="step step-done">✓</div><div class="step-line step-line-done"></div>
-      <div class="step step-active">3</div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px;">
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:white;opacity:0.45;">1</span>
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:white;opacity:0.45;">·</span>
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:white;opacity:0.45;">2</span>
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:white;opacity:0.45;">·</span>
+      <div style="width:26px;height:26px;background:white;color:#2400FD;font-family:'DM Sans',sans-serif;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
+      <div style="flex:1;"></div>
     </div>
 
     <!-- Titre + bouton (?) -->
@@ -3204,10 +3248,13 @@
 <div id="d14" class="direction">
   <div class="direction-label">14 — Sondage mail vérifié · Mobile (vote par lien, email requis pour valider)</div>
   <div class="phone phone-dark">
-    <div class="stepper">
-      <div class="step step-done">✓</div><div class="step-line step-line-done"></div>
-      <div class="step step-done">✓</div><div class="step-line step-line-done"></div>
-      <div class="step step-active">3</div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px;">
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:white;opacity:0.45;">1</span>
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:white;opacity:0.45;">·</span>
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:white;opacity:0.45;">2</span>
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:white;opacity:0.45;">·</span>
+      <div style="width:26px;height:26px;background:white;color:#2400FD;font-family:'DM Sans',sans-serif;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
+      <div style="flex:1;"></div>
     </div>
 
     <!-- Titre + bouton (?) -->
@@ -3315,10 +3362,13 @@
 <div id="d15" class="direction">
   <div class="direction-label">15 — Scrutin · Mobile (clôture obligatoire, résultats différés, invitations)</div>
   <div class="phone phone-dark">
-    <div class="stepper">
-      <div class="step step-done">✓</div><div class="step-line step-line-done"></div>
-      <div class="step step-done">✓</div><div class="step-line step-line-done"></div>
-      <div class="step step-active">3</div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px;">
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:white;opacity:0.45;">1</span>
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:white;opacity:0.45;">·</span>
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:white;opacity:0.45;">2</span>
+      <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:white;opacity:0.45;">·</span>
+      <div style="width:26px;height:26px;background:white;color:#2400FD;font-family:'DM Sans',sans-serif;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
+      <div style="flex:1;"></div>
     </div>
     <!-- Titre + bouton (?) -->
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
@@ -3617,6 +3667,20 @@ function d10SwitchTab(tab, btn) {
   btn.style.borderBottom = '2px solid white';
 }
 
+// Injecte le hamburger sur tous les .phone qui n'en ont pas déjà un
+(function injectHamburgers() {
+  const hamburgerSVG = `<svg width="16" height="12" viewBox="0 0 16 12" fill="none"><line x1="0" y1="1" x2="16" y2="1" stroke="white" stroke-width="2"/><line x1="0" y1="6" x2="16" y2="6" stroke="white" stroke-width="2"/><line x1="0" y1="11" x2="16" y2="11" stroke="white" stroke-width="2"/></svg>`;
+  document.querySelectorAll('.phone').forEach(function(phone) {
+    // Skip si déjà traité ou si le hamburger existe déjà à l'intérieur
+    if (phone.querySelector('.phone-hamburger')) return;
+    // S'assurer que position:relative est sur le phone
+    if (!phone.style.position) phone.style.position = 'relative';
+    const btn = document.createElement('div');
+    btn.className = 'phone-hamburger';
+    btn.innerHTML = hamburgerSVG;
+    phone.appendChild(btn);
+  });
+})();
 
 </script>
 </body>

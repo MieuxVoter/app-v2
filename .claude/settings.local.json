@@ -12,7 +12,9 @@
       "WebFetch(domain:elekto.dev)",
       "WebFetch(domain:www.balotilo.org)",
       "WebFetch(domain:opensourcepolitics.eu)",
-      "Bash(rtk grep *)"
+      "Bash(rtk grep *)",
+      "Bash(rtk ls *)",
+      "WebFetch(domain:app.mieuxvoter.fr)"
     ]
   }
 }
